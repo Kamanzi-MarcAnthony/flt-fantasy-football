@@ -1,16 +1,16 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="h-screen min-w-screen bg-gray-100 flex items-center justify-center px-4">
-        <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
-            <div class="mb-8">
-                <h1 class="text-2xl font-bold text-gray-900">
+        <div class="w-full max-w-md  rounded-2xl gap-2 p-8 shadow-sm flex flex-col justify-center  ">
+            <div class="mb-8 p-2">
+                <h1 class="text-3xl font-sans font-black text-gray-900">
                     Fantasy Football
                 </h1>
                 <p class="mt-2 text-sm text-gray-500">
                     Sign in to your admin account
                 </p>
             </div>
-            <form class="space-y-5">
+            <form class="space-y-5 flex flex-col  justify-between gap-4 ">
                 <div>
                     <label for="email" class="mb-2 block text-sm font-medium text-gray-700">
                         Email
