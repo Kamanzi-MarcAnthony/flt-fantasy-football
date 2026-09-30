@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div class="h-screen min-w-screen bg-gray-100 flex items-center justify-center px-4">
+    <div class="h-screen min-w-screen bg-blue-50 flex items-center justify-center px-4">
         <div class="w-full max-w-md  rounded-2xl gap-2 p-8 shadow-sm flex flex-col justify-center  ">
             <div class="mb-8 p-2">
                 <h1 class="text-3xl font-sans font-black text-gray-900">
