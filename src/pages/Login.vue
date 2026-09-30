@@ -18,7 +18,7 @@ const handleLogin = async () => {
   )
 
   if (success) {
-    router.push('/leagues')
+    router.push('/Leagues')
   }
 }
 </script>
