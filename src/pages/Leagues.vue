@@ -17,8 +17,8 @@ import pitch from '../assets/images/pitch.jpg'
 const leagues = [
   {
     id: 1,
-    name: 'Friday Office League',
-    location: 'Kampala',
+    name: 'Friday Night Football',
+    location: 'Arches Gardens',
     startDate: '02 Oct 2026',
     endDate: '18 Dec 2026',
     status: 'ACTIVE',

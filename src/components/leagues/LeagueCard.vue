@@ -20,8 +20,8 @@ defineProps({
 
     <!-- League information -->
 
-    <div class="min-w-0 flex-1">
-      <div class="flex items-center gap-2">
+    <div class="w-2/2 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
         <h3 class="truncate text-base font-semibold text-white">
           {{ league.name }}
         </h3>
