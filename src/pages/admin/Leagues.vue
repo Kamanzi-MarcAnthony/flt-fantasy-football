@@ -2,17 +2,17 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../../stores/auth'
 
 import {
-  Play,
+  // Play,
   MoreVertical,
   Plus,
   Trophy,
 } from 'lucide-vue-next'
 
-import LeagueCard from '../components/leagues/LeagueCard.vue'
-import pitch from '../assets/images/pitch.jpg'
+import LeagueCard from '../../components/leagues/LeagueCard.vue'
+import pitch from '../../assets/images/pitch.jpg'
 
 const leagues = [
   {
@@ -138,7 +138,7 @@ const handleLogout = () => {
               football games running.
             </p>
 
-            <RouterLink to="/leagues/create"
+            <RouterLink to="/admin/leagues/create"
               class="mt-6 max-w-48 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/90">
               <Plus class="h-4 w-4 fill-current" />
               Create a league
@@ -195,7 +195,7 @@ const handleLogout = () => {
             Create your first fantasy football league to get started.
           </p>
 
-          <RouterLink to="/leagues/create"
+          <RouterLink to="/admin/leagues/create"
             class="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black">
             <Plus class="h-4 w-4" />
             Create League

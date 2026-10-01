@@ -18,7 +18,11 @@ const handleLogin = async () => {
     )
 
     if (success) {
-        router.push('/Leagues')
+        if (authStore.user.role === 'player') {
+            router.push('/fantasy')
+        } else {
+            router.push('/admin')
+        }
     }
 }
 </script>

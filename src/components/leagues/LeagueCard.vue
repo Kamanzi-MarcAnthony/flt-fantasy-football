@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <RouterLink :to="`/leagues/${league.id}`"
+  <RouterLink :to="`/admin/leagues/${league.id}`"
     class="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4 transition hover:border-white/20 hover:bg-white/[0.1]">
     <!-- League icon -->
 
