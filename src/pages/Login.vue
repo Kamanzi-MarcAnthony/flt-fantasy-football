@@ -30,7 +30,7 @@ const handleLogin = async () => {
             class="w-full max-w-md bg-white/10 backdrop-blur-xl rounded-3xl gap-2 p-8 shadow-sm flex flex-col justify-center outline outline-blue-500/75">
             <div class="mb-8 p-2 text-center">
                 <h1 class="text-3xl font-sans text-white">
-                    Fantasy Football
+                    FLT Fantasy Football
                 </h1>
                 <p class="mt-2 text-sm text-white font-medium pt-2">
                     Sign in to your admin account
