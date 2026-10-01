@@ -1,5 +1,5 @@
 <template>
     <div>
-        <h1>League Details</h1>
+        <h1 class="text-white">League Details</h1>
     </div>
 </template>
