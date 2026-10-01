@@ -28,7 +28,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <div class="h-screen min-w-screen min-h-screen bg-cover bg-center bg-no-repeat bg-blend-multiply flex items-center justify-center px-4"
+    <div class="h-screen min-w-screen h-screen bg-cover bg-center bg-no-repeat bg-blend-multiply flex items-center justify-center px-4"
         :style="{ backgroundImage: `url(${pitch})` }">
         <div
             class="w-full max-w-md bg-white/10 backdrop-blur-xl rounded-3xl gap-2 p-8 shadow-sm flex flex-col justify-center outline outline-blue-500/75">
