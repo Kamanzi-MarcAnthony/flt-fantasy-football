@@ -37,9 +37,9 @@ defineProps({
       </p>
 
       <div class="mt-2 flex items-center gap-4 text-xs text-white/40">
-        <span>
+        <!-- <span>
           {{ league.startDate }} — {{ league.endDate }}
-        </span>
+        </span> -->
 
         <span class="flex items-center gap-1">
           <Users class="h-3.5 w-3.5" />
@@ -50,9 +50,9 @@ defineProps({
 
     <!-- Arrow -->
 
-    <div
+    <!-- <div
       class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/50 transition group-hover:border-white/20 group-hover:text-white">
       <ChevronRight class="h-5 w-5" />
-    </div>
+    </div> -->
   </RouterLink>
 </template>

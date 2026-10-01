@@ -133,7 +133,7 @@ const handleLogout = () => {
               Manage your leagues.
             </h2>
 
-            <p class="mt-3 max-w-md text-sm leading-6 text-white/60 sm:text-base">
+            <p class="mt-3 max-w-md text-sm leading-6 text-white/80 sm:text-base">
               Create competitions, manage players and keep your fantasy
               football games running.
             </p>
@@ -164,16 +164,9 @@ const handleLogout = () => {
             </h2>
 
             <p class="mt-4 text-sm text-white/40 ">
-              {{ leagues.length }} competitions
+              Select a League to play
             </p>
           </div>
-
-          <RouterLink to="/leagues/create"
-            class="flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90">
-            <Plus class="h-4 w-4" />
-            Create League
-          </RouterLink>
-
         </div>
 
 
