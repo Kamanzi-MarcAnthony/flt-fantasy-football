@@ -55,7 +55,8 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#061112] text-white justify-center items-center">
+  <div
+    class="min-h-screen bg-linear-to-t from-[#011f22] from-80% via-cyan-900 via-100% to-cyan-950 to-160% bg text-white">
 
     <!-- Header -->
 
@@ -103,7 +104,7 @@ const handleLogout = () => {
 
       <!-- Hero -->
 
-      <section class="relative overflow-hidden rounded-[28px] border border-white/10">
+      <section class="relative overflow-hidden rounded-[28px] border border-white/10 ">
 
         <!-- Background image -->
 
@@ -115,12 +116,10 @@ const handleLogout = () => {
 
         <!-- Content -->
 
-        <div class="relative flex min-h-[280px] items-end p-6 sm:min-h-[320px] sm:p-8 lg:min-h-[350px] lg:p-10">
-
-          <div class="max-w-lg">
-
+        <div class="relative flex min-h-[280px] items-center p-6 sm:min-h-[320px] sm:p-8 lg:min-h-[350px] lg:p-10">
+          <div class="flex flex-col gap-4">
             <div
-              class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 backdrop-blur-md">
+              class="mb-4 max-w-40 inline-flex items-center gap- rounded-full border border-white/10 bg-black/20 px-3 py-1.5 backdrop-blur-md">
               <span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
                 <Trophy class="h-3.5 w-3.5" />
               </span>
@@ -140,8 +139,8 @@ const handleLogout = () => {
             </p>
 
             <RouterLink to="/leagues/create"
-              class="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/90">
-              <Play class="h-4 w-4 fill-current" />
+              class="mt-6 max-w-48 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/90">
+              <Plus class="h-4 w-4 fill-current" />
               Create a league
             </RouterLink>
 
@@ -153,18 +152,18 @@ const handleLogout = () => {
 
       <!-- Leagues section -->
 
-      <section class="mt-10">
+      <section class="mt-8 pt-4 flex flex-col gap-4">
 
         <!-- Section heading -->
 
-        <div class="mb-5 flex items-center justify-between">
+        <div class="mb-5 flex items-center justify-between gap-6">
 
           <div>
             <h2 class="text-2xl font-bold tracking-tight">
               Leagues
             </h2>
 
-            <p class="mt-1 text-sm text-white/40">
+            <p class="mt-4 text-sm text-white/40 ">
               {{ leagues.length }} competitions
             </p>
           </div>
@@ -180,7 +179,7 @@ const handleLogout = () => {
 
         <!-- League list -->
 
-        <div v-if="leagues.length" class="space-y-3">
+        <div v-if="leagues.length" class="space-y-3 flex flex-col gap-4">
 
           <LeagueCard v-for="league in leagues" :key="league.id" :league="league" />
 
