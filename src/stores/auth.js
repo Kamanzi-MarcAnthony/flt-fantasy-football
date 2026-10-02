@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import api from '../services/api'
 
 const STORAGE_KEY = 'fantasy_auth'
 
@@ -17,28 +18,23 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
 
       try {
-        const adminEmail = import.meta.env.VITE_SUPER_ADMIN_EMAIL
-        const adminPassword = import.meta.env.VITE_SUPER_ADMIN_PASSWORD
-
-        if (email !== adminEmail || password !== adminPassword) {
-          throw new Error('Invalid email or password')
-        }
-
-        this.user = {
-          id: 1,
-          name: 'Super Admin',
+        const response = await api.post('/auth/login', {
           email,
-          role: 'super_admin',
-        }
+          password,
+        })
 
-        this.token = 'temporary-admin-token'
+        const { token, user } = response.data.data
+
+        this.user = user
+        this.token = token
         this.isAuthenticated = true
 
         this.saveAuth()
 
         return true
       } catch (error) {
-        this.error = error.message
+        this.error = error.response?.data?.message || 'Unable to login. Please try again.'
+
         return false
       } finally {
         this.loading = false
