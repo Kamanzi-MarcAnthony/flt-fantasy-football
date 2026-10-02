@@ -1,11 +1,12 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import api from '../../services/api'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 
 import {
-  // Play,
+  LogOut,
   MoreVertical,
   Plus,
   Trophy,
@@ -14,35 +15,32 @@ import {
 import LeagueCard from '../../components/leagues/LeagueCard.vue'
 import pitch from '../../assets/images/pitch.jpg'
 
-const leagues = [
-  {
-    id: 1,
-    name: 'Friday Night Football',
-    location: 'Arches Gardens',
-    startDate: '02 Oct 2026',
-    endDate: '18 Dec 2026',
-    status: 'ACTIVE',
-    playerCount: 12,
-  },
-  {
-    id: 2,
-    name: 'Golden Friday Cup',
-    location: 'Kampala',
-    startDate: '09 Oct 2026',
-    endDate: '20 Nov 2026',
-    status: 'ACTIVE',
-    playerCount: 18,
-  },
-  {
-    id: 3,
-    name: 'End of Year League',
-    location: 'Kampala',
-    startDate: '01 Dec 2026',
-    endDate: '20 Dec 2026',
-    status: 'UPCOMING',
-    playerCount: 24,
-  },
-]
+const leagues = ref([])
+const loading = ref(false)
+const error = ref(null)
+
+const fetchLeagues = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const response = await api.get('/leagues')
+
+    leagues.value = response.data.data.leagues
+  } catch (err) {
+    console.error('Failed to fetch leagues:', err)
+
+    error.value =
+      err.response?.data?.message ||
+      'Unable to load leagues.'
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchLeagues()
+})
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -172,17 +170,34 @@ const handleLogout = () => {
 
         <!-- League list -->
 
-        <div v-if="leagues.length" class="space-y-3 flex flex-col gap-4">
+        <div v-if="loading" class="rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-16 text-center">
+          <div class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white"></div>
 
-          <LeagueCard v-for="league in leagues" :key="league.id" :league="league" />
-
+          <p class="mt-4 text-sm text-white/40">
+            Loading leagues...
+          </p>
         </div>
 
+        <div v-else-if="error" class="rounded-3xl border border-red-400/10 bg-red-400/[0.04] px-6 py-16 text-center">
+          <h3 class="text-lg font-semibold">
+            Something went wrong
+          </h3>
 
-        <!-- Empty state -->
+          <p class="mx-auto mt-2 max-w-sm text-sm text-white/40">
+            {{ error }}
+          </p>
+
+          <button type="button" class="mt-6 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black"
+            @click="fetchLeagues">
+            Try again
+          </button>
+        </div>
+
+        <div v-else-if="leagues.length" class="flex flex-col gap-4">
+          <LeagueCard v-for="league in leagues" :key="league.id" :league="league" />
+        </div>
 
         <div v-else class="rounded-3xl border border-dashed border-white/10 bg-white/[0.03] px-6 py-16 text-center">
-
           <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
             <Trophy class="h-6 w-6 text-white/60" />
           </div>
