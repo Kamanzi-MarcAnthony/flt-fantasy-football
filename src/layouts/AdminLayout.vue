@@ -39,11 +39,11 @@ const handleLogout = () => {
 
             <!-- Navigation -->
 
-            <nav class="flex-1 space-y-1 p-4">
+            <nav class="flex-1 space-y-1 p-4 flex flex-col gap-2">
 
                 <RouterLink to="/admin"
                     class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white"
-                    active-class="bg-white/10 !text-white">
+                    active-class="!text-white">
                     <LayoutDashboard class="h-5 w-5" />
                     Dashboard
                 </RouterLink>
