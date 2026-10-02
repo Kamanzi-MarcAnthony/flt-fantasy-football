@@ -5,10 +5,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
 
   routes: [
-    // --------------------------------------------------
     // AUTH
-    // --------------------------------------------------
-
     {
       path: '/login',
       name: 'login',
@@ -18,16 +15,13 @@ const router = createRouter({
       },
     },
 
-    // --------------------------------------------------
     // ADMIN PORTAL
-    // --------------------------------------------------
-
     {
       path: '/admin',
       component: () => import('../layouts/AdminLayout.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['super_admin', 'admin'],
+        roles: ['SUPER_ADMIN', 'ADMIN'],
       },
 
       children: [
@@ -62,16 +56,13 @@ const router = createRouter({
       ],
     },
 
-    // --------------------------------------------------
     // FANTASY USER PORTAL
-    // --------------------------------------------------
-
     {
       path: '/fantasy',
       component: () => import('../layouts/FantasyLayout.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['player'],
+        roles: ['PLAYER'],
       },
 
       children: [
@@ -113,10 +104,7 @@ const router = createRouter({
       ],
     },
 
-    // --------------------------------------------------
     // OLD URL REDIRECTS
-    // --------------------------------------------------
-
     {
       path: '/leagues',
       redirect: '/admin/leagues',
@@ -139,34 +127,42 @@ const router = createRouter({
   ],
 })
 
-// --------------------------------------------------
 // AUTHENTICATION GUARD
-// --------------------------------------------------
-
 router.beforeEach((to) => {
   const authStore = useAuthStore()
 
-  // User needs to be logged in
+  // Not logged in → login
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return '/login'
   }
 
-  // Logged-in users don't need to see login
+  // Logged-in user trying to access login
   if (to.meta.guestOnly && authStore.isAuthenticated) {
-    if (authStore.user?.role === 'player') {
+    if (authStore.user?.role === 'PLAYER') {
       return '/fantasy'
     }
 
-    return '/admin'
+    if (authStore.user?.role === 'SUPER_ADMIN' || authStore.user?.role === 'ADMIN') {
+      return '/admin'
+    }
+
+    // Invalid stored auth
+    authStore.logout()
+    return '/login'
   }
 
   // Check role
   if (to.meta.roles && !to.meta.roles.includes(authStore.user?.role)) {
-    if (authStore.user?.role === 'player') {
+    if (authStore.user?.role === 'PLAYER') {
       return '/fantasy'
     }
 
-    return '/admin'
+    if (authStore.user?.role === 'SUPER_ADMIN' || authStore.user?.role === 'ADMIN') {
+      return '/admin'
+    }
+
+    authStore.logout()
+    return '/login'
   }
 })
 

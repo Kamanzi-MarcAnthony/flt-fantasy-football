@@ -62,9 +62,15 @@ export const useAuthStore = defineStore('auth', {
       try {
         const auth = JSON.parse(storedAuth)
 
+        // Make sure the saved authentication is actually valid
+        if (!auth.token || !auth.user || !auth.user.role) {
+          this.logout()
+          return
+        }
+
         this.user = auth.user
         this.token = auth.token
-        this.isAuthenticated = auth.isAuthenticated
+        this.isAuthenticated = true
       } catch (error) {
         console.error('Failed to load authentication:', error)
         this.logout()
