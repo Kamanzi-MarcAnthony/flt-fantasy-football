@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-
 import authRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import leagueRoutes from './routes/leagueRoutes.js'
@@ -9,7 +8,7 @@ const app = express()
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://flt-fantasy-football.vercel.app'],
   }),
 )
 
