@@ -43,8 +43,6 @@ export const createLeague = async (req, res) => {
   }
 }
 
-// ADD THIS BELOW createLeague
-
 export const getLeagues = async (req, res) => {
   try {
     const leagues = await prisma.league.findMany({
@@ -65,6 +63,49 @@ export const getLeagues = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Unable to fetch leagues',
+    })
+  }
+}
+
+export const getLeagueById = async (req, res) => {
+  try {
+    const leagueId = Number(req.params.id)
+
+    if (!Number.isInteger(leagueId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const league = await prisma.league.findUnique({
+      where: {
+        id: leagueId,
+      },
+      include: {
+        players: true,
+      },
+    })
+
+    if (!league) {
+      return res.status(404).json({
+        success: false,
+        message: 'League not found',
+      })
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        league,
+      },
+    })
+  } catch (error) {
+    console.error('Get league error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to fetch league',
     })
   }
 }
