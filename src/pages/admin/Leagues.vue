@@ -6,10 +6,14 @@ import { useLeagueStore } from '@/stores/leagues'
 import { storeToRefs } from 'pinia'
 
 import {
+  CalendarDays,
+  LayoutDashboard,
   LogOut,
   MoreVertical,
   Plus,
+  ShieldCheck,
   Trophy,
+  Users,
 } from 'lucide-vue-next'
 
 import LeagueCard from '../../components/leagues/LeagueCard.vue'
@@ -66,16 +70,66 @@ const handleLogout = () => {
 
           <!-- Menu -->
 
-          <div v-if="showMenu"
-            class="absolute right-0 top-14 z-50 w-44 overflow-hidden rounded-2xl border border-white/10 bg-[#111c1d] p-1.5 shadow-2xl">
-            <button type="button"
-              class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
-              @click="handleLogout">
-              <LogOut class="h-4 w-4" />
+<div
+  v-if="showMenu"
+  class="absolute right-0 top-14 z-50 w-48 overflow-hidden rounded-2xl border border-white/10 bg-[#111c1d] p-1.5 shadow-2xl"
+>
+  <RouterLink
+    to="/admin"
+    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
+    @click="showMenu = false"
+  >
+    <LayoutDashboard class="h-4 w-4" />
+    <span>Dashboard</span>
+  </RouterLink>
 
-              <span>Logout</span>
-            </button>
-          </div>
+  <RouterLink
+    to="/admin/leagues"
+    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
+    @click="showMenu = false"
+  >
+    <Trophy class="h-4 w-4" />
+    <span>Leagues</span>
+  </RouterLink>
+
+  <RouterLink
+    to="/admin/players"
+    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
+    @click="showMenu = false"
+  >
+    <Users class="h-4 w-4" />
+    <span>Players</span>
+  </RouterLink>
+
+  <RouterLink
+    to="/admin/matches"
+    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
+    @click="showMenu = false"
+  >
+    <CalendarDays class="h-4 w-4" />
+    <span>Matches</span>
+  </RouterLink>
+
+  <RouterLink
+    to="/admin/admins"
+    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/10 hover:text-white"
+    @click="showMenu = false"
+  >
+    <ShieldCheck class="h-4 w-4" />
+    <span>Admins</span>
+  </RouterLink>
+
+  <div class="my-1.5 border-t border-white/10"></div>
+
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
+    @click="handleLogout"
+  >
+    <LogOut class="h-4 w-4" />
+    <span>Logout</span>
+  </button>
+</div>
         </div>
 
       </div>
