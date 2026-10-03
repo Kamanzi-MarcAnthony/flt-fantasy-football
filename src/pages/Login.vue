@@ -4,7 +4,10 @@ import pitch from '../assets/images/bg-1.jpg'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { Eye, EyeOff } from 'lucide-vue-next'
 
+
+const showPassword = ref(false)
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -55,8 +58,33 @@ const handleLogin = async () => {
                         Password
                     </label>
 
-                    <input id="password" v-model="password" type="password" placeholder="Enter your password"
-                        class="bg-white w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10" />
+                    <!-- <input id="password" v-model="password" type="password" placeholder="Enter your password"
+                        class="bg-white w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10" /> -->
+                        <div class="relative">
+  <input
+    v-model="password"
+    :type="showPassword ? 'text' : 'password'"
+    placeholder="Password"
+    class="bg-white w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
+  />
+
+  <button
+    type="button"
+    class="absolute right-3 top-1/2 -translate-y-1/2"
+    @click="showPassword = !showPassword"
+    :aria-label="showPassword ? 'Hide password' : 'Show password'"
+  >
+    <EyeOff
+      v-if="showPassword"
+      :size="20"
+    />
+
+    <Eye
+      v-else
+      :size="20"
+    />
+  </button>
+</div>
                 </div>
 
                 <!-- Error -->
