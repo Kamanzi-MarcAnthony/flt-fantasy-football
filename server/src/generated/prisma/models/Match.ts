@@ -40,7 +40,6 @@ export type MatchMinAggregateOutputType = {
   id: number | null
   leagueId: number | null
   matchDate: Date | null
-  status: $Enums.MatchStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -49,7 +48,6 @@ export type MatchMaxAggregateOutputType = {
   id: number | null
   leagueId: number | null
   matchDate: Date | null
-  status: $Enums.MatchStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,7 +56,6 @@ export type MatchCountAggregateOutputType = {
   id: number
   leagueId: number
   matchDate: number
-  status: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -79,7 +76,6 @@ export type MatchMinAggregateInputType = {
   id?: true
   leagueId?: true
   matchDate?: true
-  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,7 +84,6 @@ export type MatchMaxAggregateInputType = {
   id?: true
   leagueId?: true
   matchDate?: true
-  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,7 +92,6 @@ export type MatchCountAggregateInputType = {
   id?: true
   leagueId?: true
   matchDate?: true
-  status?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -193,7 +187,6 @@ export type MatchGroupByOutputType = {
   id: number
   leagueId: number
   matchDate: Date
-  status: $Enums.MatchStatus
   createdAt: Date
   updatedAt: Date
   _count: MatchCountAggregateOutputType | null
@@ -225,7 +218,6 @@ export type MatchWhereInput = {
   id?: Prisma.IntFilter<"Match"> | number
   leagueId?: Prisma.IntFilter<"Match"> | number
   matchDate?: Prisma.DateTimeFilter<"Match"> | Date | string
-  status?: Prisma.EnumMatchStatusFilter<"Match"> | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
@@ -236,7 +228,6 @@ export type MatchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   league?: Prisma.LeagueOrderByWithRelationInput
@@ -250,7 +241,6 @@ export type MatchWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MatchWhereInput | Prisma.MatchWhereInput[]
   leagueId?: Prisma.IntFilter<"Match"> | number
   matchDate?: Prisma.DateTimeFilter<"Match"> | Date | string
-  status?: Prisma.EnumMatchStatusFilter<"Match"> | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
@@ -261,7 +251,6 @@ export type MatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MatchCountOrderByAggregateInput
@@ -278,14 +267,12 @@ export type MatchScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Match"> | number
   leagueId?: Prisma.IntWithAggregatesFilter<"Match"> | number
   matchDate?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
-  status?: Prisma.EnumMatchStatusWithAggregatesFilter<"Match"> | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
 }
 
 export type MatchCreateInput = {
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   league: Prisma.LeagueCreateNestedOneWithoutMatchesInput
@@ -296,7 +283,6 @@ export type MatchUncheckedCreateInput = {
   id?: number
   leagueId: number
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.MatchEventUncheckedCreateNestedManyWithoutMatchInput
@@ -304,7 +290,6 @@ export type MatchUncheckedCreateInput = {
 
 export type MatchUpdateInput = {
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   league?: Prisma.LeagueUpdateOneRequiredWithoutMatchesNestedInput
@@ -315,7 +300,6 @@ export type MatchUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.MatchEventUncheckedUpdateManyWithoutMatchNestedInput
@@ -325,14 +309,12 @@ export type MatchCreateManyInput = {
   id?: number
   leagueId: number
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type MatchUpdateManyMutationInput = {
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,7 +323,6 @@ export type MatchUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,7 +341,6 @@ export type MatchCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -374,7 +354,6 @@ export type MatchMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -383,7 +362,6 @@ export type MatchMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -440,10 +418,6 @@ export type MatchUncheckedUpdateManyWithoutLeagueNestedInput = {
   deleteMany?: Prisma.MatchScalarWhereInput | Prisma.MatchScalarWhereInput[]
 }
 
-export type EnumMatchStatusFieldUpdateOperationsInput = {
-  set?: $Enums.MatchStatus
-}
-
 export type MatchCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.MatchCreateWithoutEventsInput, Prisma.MatchUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.MatchCreateOrConnectWithoutEventsInput
@@ -460,7 +434,6 @@ export type MatchUpdateOneRequiredWithoutEventsNestedInput = {
 
 export type MatchCreateWithoutLeagueInput = {
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.MatchEventCreateNestedManyWithoutMatchInput
@@ -469,7 +442,6 @@ export type MatchCreateWithoutLeagueInput = {
 export type MatchUncheckedCreateWithoutLeagueInput = {
   id?: number
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.MatchEventUncheckedCreateNestedManyWithoutMatchInput
@@ -508,14 +480,12 @@ export type MatchScalarWhereInput = {
   id?: Prisma.IntFilter<"Match"> | number
   leagueId?: Prisma.IntFilter<"Match"> | number
   matchDate?: Prisma.DateTimeFilter<"Match"> | Date | string
-  status?: Prisma.EnumMatchStatusFilter<"Match"> | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
 }
 
 export type MatchCreateWithoutEventsInput = {
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   league: Prisma.LeagueCreateNestedOneWithoutMatchesInput
@@ -525,7 +495,6 @@ export type MatchUncheckedCreateWithoutEventsInput = {
   id?: number
   leagueId: number
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -548,7 +517,6 @@ export type MatchUpdateToOneWithWhereWithoutEventsInput = {
 
 export type MatchUpdateWithoutEventsInput = {
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   league?: Prisma.LeagueUpdateOneRequiredWithoutMatchesNestedInput
@@ -558,7 +526,6 @@ export type MatchUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -566,14 +533,12 @@ export type MatchUncheckedUpdateWithoutEventsInput = {
 export type MatchCreateManyLeagueInput = {
   id?: number
   matchDate: Date | string
-  status?: $Enums.MatchStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type MatchUpdateWithoutLeagueInput = {
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.MatchEventUpdateManyWithoutMatchNestedInput
@@ -582,7 +547,6 @@ export type MatchUpdateWithoutLeagueInput = {
 export type MatchUncheckedUpdateWithoutLeagueInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.MatchEventUncheckedUpdateManyWithoutMatchNestedInput
@@ -591,7 +555,6 @@ export type MatchUncheckedUpdateWithoutLeagueInput = {
 export type MatchUncheckedUpdateManyWithoutLeagueInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -631,7 +594,6 @@ export type MatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   leagueId?: boolean
   matchDate?: boolean
-  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
@@ -643,7 +605,6 @@ export type MatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   leagueId?: boolean
   matchDate?: boolean
-  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
@@ -653,7 +614,6 @@ export type MatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   leagueId?: boolean
   matchDate?: boolean
-  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
@@ -663,12 +623,11 @@ export type MatchSelectScalar = {
   id?: boolean
   leagueId?: boolean
   matchDate?: boolean
-  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leagueId" | "matchDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["match"]>
+export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leagueId" | "matchDate" | "createdAt" | "updatedAt", ExtArgs["result"]["match"]>
 export type MatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
   events?: boolean | Prisma.Match$eventsArgs<ExtArgs>
@@ -691,7 +650,6 @@ export type $MatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: number
     leagueId: number
     matchDate: Date
-    status: $Enums.MatchStatus
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["match"]>
@@ -1122,7 +1080,6 @@ export interface MatchFieldRefs {
   readonly id: Prisma.FieldRef<"Match", 'Int'>
   readonly leagueId: Prisma.FieldRef<"Match", 'Int'>
   readonly matchDate: Prisma.FieldRef<"Match", 'DateTime'>
-  readonly status: Prisma.FieldRef<"Match", 'MatchStatus'>
   readonly createdAt: Prisma.FieldRef<"Match", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Match", 'DateTime'>
 }

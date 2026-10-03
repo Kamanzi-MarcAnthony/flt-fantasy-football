@@ -30,14 +30,12 @@ export type MatchEventAvgAggregateOutputType = {
   id: number | null
   matchId: number | null
   playerId: number | null
-  value: number | null
 }
 
 export type MatchEventSumAggregateOutputType = {
   id: number | null
   matchId: number | null
   playerId: number | null
-  value: number | null
 }
 
 export type MatchEventMinAggregateOutputType = {
@@ -45,7 +43,6 @@ export type MatchEventMinAggregateOutputType = {
   matchId: number | null
   playerId: number | null
   type: $Enums.MatchEventType | null
-  value: number | null
   createdAt: Date | null
 }
 
@@ -54,7 +51,6 @@ export type MatchEventMaxAggregateOutputType = {
   matchId: number | null
   playerId: number | null
   type: $Enums.MatchEventType | null
-  value: number | null
   createdAt: Date | null
 }
 
@@ -63,7 +59,6 @@ export type MatchEventCountAggregateOutputType = {
   matchId: number
   playerId: number
   type: number
-  value: number
   createdAt: number
   _all: number
 }
@@ -73,14 +68,12 @@ export type MatchEventAvgAggregateInputType = {
   id?: true
   matchId?: true
   playerId?: true
-  value?: true
 }
 
 export type MatchEventSumAggregateInputType = {
   id?: true
   matchId?: true
   playerId?: true
-  value?: true
 }
 
 export type MatchEventMinAggregateInputType = {
@@ -88,7 +81,6 @@ export type MatchEventMinAggregateInputType = {
   matchId?: true
   playerId?: true
   type?: true
-  value?: true
   createdAt?: true
 }
 
@@ -97,7 +89,6 @@ export type MatchEventMaxAggregateInputType = {
   matchId?: true
   playerId?: true
   type?: true
-  value?: true
   createdAt?: true
 }
 
@@ -106,7 +97,6 @@ export type MatchEventCountAggregateInputType = {
   matchId?: true
   playerId?: true
   type?: true
-  value?: true
   createdAt?: true
   _all?: true
 }
@@ -202,7 +192,6 @@ export type MatchEventGroupByOutputType = {
   matchId: number
   playerId: number
   type: $Enums.MatchEventType
-  value: number
   createdAt: Date
   _count: MatchEventCountAggregateOutputType | null
   _avg: MatchEventAvgAggregateOutputType | null
@@ -234,7 +223,6 @@ export type MatchEventWhereInput = {
   matchId?: Prisma.IntFilter<"MatchEvent"> | number
   playerId?: Prisma.IntFilter<"MatchEvent"> | number
   type?: Prisma.EnumMatchEventTypeFilter<"MatchEvent"> | $Enums.MatchEventType
-  value?: Prisma.IntFilter<"MatchEvent"> | number
   createdAt?: Prisma.DateTimeFilter<"MatchEvent"> | Date | string
   match?: Prisma.XOR<Prisma.MatchScalarRelationFilter, Prisma.MatchWhereInput>
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
@@ -245,7 +233,6 @@ export type MatchEventOrderByWithRelationInput = {
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   match?: Prisma.MatchOrderByWithRelationInput
   player?: Prisma.PlayerOrderByWithRelationInput
@@ -259,7 +246,6 @@ export type MatchEventWhereUniqueInput = Prisma.AtLeast<{
   matchId?: Prisma.IntFilter<"MatchEvent"> | number
   playerId?: Prisma.IntFilter<"MatchEvent"> | number
   type?: Prisma.EnumMatchEventTypeFilter<"MatchEvent"> | $Enums.MatchEventType
-  value?: Prisma.IntFilter<"MatchEvent"> | number
   createdAt?: Prisma.DateTimeFilter<"MatchEvent"> | Date | string
   match?: Prisma.XOR<Prisma.MatchScalarRelationFilter, Prisma.MatchWhereInput>
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
@@ -270,7 +256,6 @@ export type MatchEventOrderByWithAggregationInput = {
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.MatchEventCountOrderByAggregateInput
   _avg?: Prisma.MatchEventAvgOrderByAggregateInput
@@ -287,13 +272,11 @@ export type MatchEventScalarWhereWithAggregatesInput = {
   matchId?: Prisma.IntWithAggregatesFilter<"MatchEvent"> | number
   playerId?: Prisma.IntWithAggregatesFilter<"MatchEvent"> | number
   type?: Prisma.EnumMatchEventTypeWithAggregatesFilter<"MatchEvent"> | $Enums.MatchEventType
-  value?: Prisma.IntWithAggregatesFilter<"MatchEvent"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MatchEvent"> | Date | string
 }
 
 export type MatchEventCreateInput = {
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
   match: Prisma.MatchCreateNestedOneWithoutEventsInput
   player: Prisma.PlayerCreateNestedOneWithoutEventsInput
@@ -304,13 +287,11 @@ export type MatchEventUncheckedCreateInput = {
   matchId: number
   playerId: number
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
 }
 
 export type MatchEventUpdateInput = {
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   match?: Prisma.MatchUpdateOneRequiredWithoutEventsNestedInput
   player?: Prisma.PlayerUpdateOneRequiredWithoutEventsNestedInput
@@ -321,7 +302,6 @@ export type MatchEventUncheckedUpdateInput = {
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -330,13 +310,11 @@ export type MatchEventCreateManyInput = {
   matchId: number
   playerId: number
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
 }
 
 export type MatchEventUpdateManyMutationInput = {
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -345,7 +323,6 @@ export type MatchEventUncheckedUpdateManyInput = {
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -364,7 +341,6 @@ export type MatchEventCountOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -372,7 +348,6 @@ export type MatchEventAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  value?: Prisma.SortOrder
 }
 
 export type MatchEventMaxOrderByAggregateInput = {
@@ -380,7 +355,6 @@ export type MatchEventMaxOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -389,7 +363,6 @@ export type MatchEventMinOrderByAggregateInput = {
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -397,7 +370,6 @@ export type MatchEventSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   matchId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  value?: Prisma.SortOrder
 }
 
 export type MatchEventCreateNestedManyWithoutPlayerInput = {
@@ -490,7 +462,6 @@ export type EnumMatchEventTypeFieldUpdateOperationsInput = {
 
 export type MatchEventCreateWithoutPlayerInput = {
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
   match: Prisma.MatchCreateNestedOneWithoutEventsInput
 }
@@ -499,7 +470,6 @@ export type MatchEventUncheckedCreateWithoutPlayerInput = {
   id?: number
   matchId: number
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
 }
 
@@ -537,13 +507,11 @@ export type MatchEventScalarWhereInput = {
   matchId?: Prisma.IntFilter<"MatchEvent"> | number
   playerId?: Prisma.IntFilter<"MatchEvent"> | number
   type?: Prisma.EnumMatchEventTypeFilter<"MatchEvent"> | $Enums.MatchEventType
-  value?: Prisma.IntFilter<"MatchEvent"> | number
   createdAt?: Prisma.DateTimeFilter<"MatchEvent"> | Date | string
 }
 
 export type MatchEventCreateWithoutMatchInput = {
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
   player: Prisma.PlayerCreateNestedOneWithoutEventsInput
 }
@@ -552,7 +520,6 @@ export type MatchEventUncheckedCreateWithoutMatchInput = {
   id?: number
   playerId: number
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
 }
 
@@ -586,13 +553,11 @@ export type MatchEventCreateManyPlayerInput = {
   id?: number
   matchId: number
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
 }
 
 export type MatchEventUpdateWithoutPlayerInput = {
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   match?: Prisma.MatchUpdateOneRequiredWithoutEventsNestedInput
 }
@@ -601,7 +566,6 @@ export type MatchEventUncheckedUpdateWithoutPlayerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -609,7 +573,6 @@ export type MatchEventUncheckedUpdateManyWithoutPlayerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   matchId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -617,13 +580,11 @@ export type MatchEventCreateManyMatchInput = {
   id?: number
   playerId: number
   type: $Enums.MatchEventType
-  value?: number
   createdAt?: Date | string
 }
 
 export type MatchEventUpdateWithoutMatchInput = {
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   player?: Prisma.PlayerUpdateOneRequiredWithoutEventsNestedInput
 }
@@ -632,7 +593,6 @@ export type MatchEventUncheckedUpdateWithoutMatchInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -640,7 +600,6 @@ export type MatchEventUncheckedUpdateManyWithoutMatchInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMatchEventTypeFieldUpdateOperationsInput | $Enums.MatchEventType
-  value?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -651,7 +610,6 @@ export type MatchEventSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   matchId?: boolean
   playerId?: boolean
   type?: boolean
-  value?: boolean
   createdAt?: boolean
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
@@ -662,7 +620,6 @@ export type MatchEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   matchId?: boolean
   playerId?: boolean
   type?: boolean
-  value?: boolean
   createdAt?: boolean
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
@@ -673,7 +630,6 @@ export type MatchEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   matchId?: boolean
   playerId?: boolean
   type?: boolean
-  value?: boolean
   createdAt?: boolean
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
@@ -684,11 +640,10 @@ export type MatchEventSelectScalar = {
   matchId?: boolean
   playerId?: boolean
   type?: boolean
-  value?: boolean
   createdAt?: boolean
 }
 
-export type MatchEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matchId" | "playerId" | "type" | "value" | "createdAt", ExtArgs["result"]["matchEvent"]>
+export type MatchEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matchId" | "playerId" | "type" | "createdAt", ExtArgs["result"]["matchEvent"]>
 export type MatchEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   match?: boolean | Prisma.MatchDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
@@ -713,7 +668,6 @@ export type $MatchEventPayload<ExtArgs extends runtime.Types.Extensions.Internal
     matchId: number
     playerId: number
     type: $Enums.MatchEventType
-    value: number
     createdAt: Date
   }, ExtArgs["result"]["matchEvent"]>
   composites: {}
@@ -1144,7 +1098,6 @@ export interface MatchEventFieldRefs {
   readonly matchId: Prisma.FieldRef<"MatchEvent", 'Int'>
   readonly playerId: Prisma.FieldRef<"MatchEvent", 'Int'>
   readonly type: Prisma.FieldRef<"MatchEvent", 'MatchEventType'>
-  readonly value: Prisma.FieldRef<"MatchEvent", 'Int'>
   readonly createdAt: Prisma.FieldRef<"MatchEvent", 'DateTime'>
 }
     

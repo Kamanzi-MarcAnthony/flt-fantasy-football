@@ -28,23 +28,26 @@ export type AggregateLeague = {
 
 export type LeagueAvgAggregateOutputType = {
   id: number | null
+  transferDeadlineMinutes: number | null
+  maxTransfers: number | null
   createdById: number | null
 }
 
 export type LeagueSumAggregateOutputType = {
   id: number | null
+  transferDeadlineMinutes: number | null
+  maxTransfers: number | null
   createdById: number | null
 }
 
 export type LeagueMinAggregateOutputType = {
   id: number | null
   name: string | null
-  startDate: Date | null
-  endDate: Date | null
-  recurring: boolean | null
-  recurrenceType: string | null
   location: string | null
-  status: $Enums.LeagueStatus | null
+  matchDay: string | null
+  matchTime: string | null
+  transferDeadlineMinutes: number | null
+  maxTransfers: number | null
   createdById: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -53,12 +56,11 @@ export type LeagueMinAggregateOutputType = {
 export type LeagueMaxAggregateOutputType = {
   id: number | null
   name: string | null
-  startDate: Date | null
-  endDate: Date | null
-  recurring: boolean | null
-  recurrenceType: string | null
   location: string | null
-  status: $Enums.LeagueStatus | null
+  matchDay: string | null
+  matchTime: string | null
+  transferDeadlineMinutes: number | null
+  maxTransfers: number | null
   createdById: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -67,13 +69,11 @@ export type LeagueMaxAggregateOutputType = {
 export type LeagueCountAggregateOutputType = {
   id: number
   name: number
-  startDate: number
-  endDate: number
-  recurring: number
-  recurrenceType: number
   location: number
-  scoringConfig: number
-  status: number
+  matchDay: number
+  matchTime: number
+  transferDeadlineMinutes: number
+  maxTransfers: number
   createdById: number
   createdAt: number
   updatedAt: number
@@ -83,23 +83,26 @@ export type LeagueCountAggregateOutputType = {
 
 export type LeagueAvgAggregateInputType = {
   id?: true
+  transferDeadlineMinutes?: true
+  maxTransfers?: true
   createdById?: true
 }
 
 export type LeagueSumAggregateInputType = {
   id?: true
+  transferDeadlineMinutes?: true
+  maxTransfers?: true
   createdById?: true
 }
 
 export type LeagueMinAggregateInputType = {
   id?: true
   name?: true
-  startDate?: true
-  endDate?: true
-  recurring?: true
-  recurrenceType?: true
   location?: true
-  status?: true
+  matchDay?: true
+  matchTime?: true
+  transferDeadlineMinutes?: true
+  maxTransfers?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -108,12 +111,11 @@ export type LeagueMinAggregateInputType = {
 export type LeagueMaxAggregateInputType = {
   id?: true
   name?: true
-  startDate?: true
-  endDate?: true
-  recurring?: true
-  recurrenceType?: true
   location?: true
-  status?: true
+  matchDay?: true
+  matchTime?: true
+  transferDeadlineMinutes?: true
+  maxTransfers?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -122,13 +124,11 @@ export type LeagueMaxAggregateInputType = {
 export type LeagueCountAggregateInputType = {
   id?: true
   name?: true
-  startDate?: true
-  endDate?: true
-  recurring?: true
-  recurrenceType?: true
   location?: true
-  scoringConfig?: true
-  status?: true
+  matchDay?: true
+  matchTime?: true
+  transferDeadlineMinutes?: true
+  maxTransfers?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -224,13 +224,11 @@ export type LeagueGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type LeagueGroupByOutputType = {
   id: number
   name: string
-  startDate: Date
-  endDate: Date
-  recurring: boolean
-  recurrenceType: string | null
   location: string | null
-  scoringConfig: runtime.JsonValue
-  status: $Enums.LeagueStatus
+  matchDay: string | null
+  matchTime: string | null
+  transferDeadlineMinutes: number
+  maxTransfers: number
   createdById: number
   createdAt: Date
   updatedAt: Date
@@ -262,39 +260,35 @@ export type LeagueWhereInput = {
   NOT?: Prisma.LeagueWhereInput | Prisma.LeagueWhereInput[]
   id?: Prisma.IntFilter<"League"> | number
   name?: Prisma.StringFilter<"League"> | string
-  startDate?: Prisma.DateTimeFilter<"League"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"League"> | Date | string
-  recurring?: Prisma.BoolFilter<"League"> | boolean
-  recurrenceType?: Prisma.StringNullableFilter<"League"> | string | null
   location?: Prisma.StringNullableFilter<"League"> | string | null
-  scoringConfig?: Prisma.JsonFilter<"League">
-  status?: Prisma.EnumLeagueStatusFilter<"League"> | $Enums.LeagueStatus
+  matchDay?: Prisma.StringNullableFilter<"League"> | string | null
+  matchTime?: Prisma.StringNullableFilter<"League"> | string | null
+  transferDeadlineMinutes?: Prisma.IntFilter<"League"> | number
+  maxTransfers?: Prisma.IntFilter<"League"> | number
   createdById?: Prisma.IntFilter<"League"> | number
   createdAt?: Prisma.DateTimeFilter<"League"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"League"> | Date | string
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   players?: Prisma.PlayerListRelationFilter
-  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
   matches?: Prisma.MatchListRelationFilter
+  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
 }
 
 export type LeagueOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
-  recurring?: Prisma.SortOrder
-  recurrenceType?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
-  scoringConfig?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  matchDay?: Prisma.SortOrderInput | Prisma.SortOrder
+  matchTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdBy?: Prisma.UserOrderByWithRelationInput
   players?: Prisma.PlayerOrderByRelationAggregateInput
-  fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
   matches?: Prisma.MatchOrderByRelationAggregateInput
+  fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
 }
 
 export type LeagueWhereUniqueInput = Prisma.AtLeast<{
@@ -303,32 +297,28 @@ export type LeagueWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LeagueWhereInput[]
   NOT?: Prisma.LeagueWhereInput | Prisma.LeagueWhereInput[]
   name?: Prisma.StringFilter<"League"> | string
-  startDate?: Prisma.DateTimeFilter<"League"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"League"> | Date | string
-  recurring?: Prisma.BoolFilter<"League"> | boolean
-  recurrenceType?: Prisma.StringNullableFilter<"League"> | string | null
   location?: Prisma.StringNullableFilter<"League"> | string | null
-  scoringConfig?: Prisma.JsonFilter<"League">
-  status?: Prisma.EnumLeagueStatusFilter<"League"> | $Enums.LeagueStatus
+  matchDay?: Prisma.StringNullableFilter<"League"> | string | null
+  matchTime?: Prisma.StringNullableFilter<"League"> | string | null
+  transferDeadlineMinutes?: Prisma.IntFilter<"League"> | number
+  maxTransfers?: Prisma.IntFilter<"League"> | number
   createdById?: Prisma.IntFilter<"League"> | number
   createdAt?: Prisma.DateTimeFilter<"League"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"League"> | Date | string
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   players?: Prisma.PlayerListRelationFilter
-  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
   matches?: Prisma.MatchListRelationFilter
+  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
 }, "id">
 
 export type LeagueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
-  recurring?: Prisma.SortOrder
-  recurrenceType?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
-  scoringConfig?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  matchDay?: Prisma.SortOrderInput | Prisma.SortOrder
+  matchTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -345,13 +335,11 @@ export type LeagueScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LeagueScalarWhereWithAggregatesInput | Prisma.LeagueScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"League"> | number
   name?: Prisma.StringWithAggregatesFilter<"League"> | string
-  startDate?: Prisma.DateTimeWithAggregatesFilter<"League"> | Date | string
-  endDate?: Prisma.DateTimeWithAggregatesFilter<"League"> | Date | string
-  recurring?: Prisma.BoolWithAggregatesFilter<"League"> | boolean
-  recurrenceType?: Prisma.StringNullableWithAggregatesFilter<"League"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"League"> | string | null
-  scoringConfig?: Prisma.JsonWithAggregatesFilter<"League">
-  status?: Prisma.EnumLeagueStatusWithAggregatesFilter<"League"> | $Enums.LeagueStatus
+  matchDay?: Prisma.StringNullableWithAggregatesFilter<"League"> | string | null
+  matchTime?: Prisma.StringNullableWithAggregatesFilter<"League"> | string | null
+  transferDeadlineMinutes?: Prisma.IntWithAggregatesFilter<"League"> | number
+  maxTransfers?: Prisma.IntWithAggregatesFilter<"League"> | number
   createdById?: Prisma.IntWithAggregatesFilter<"League"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"League"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"League"> | Date | string
@@ -359,84 +347,74 @@ export type LeagueScalarWhereWithAggregatesInput = {
 
 export type LeagueCreateInput = {
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutLeaguesCreatedInput
   players?: Prisma.PlayerCreateNestedManyWithoutLeagueInput
-  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutLeagueInput
   matches?: Prisma.MatchCreateNestedManyWithoutLeagueInput
+  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutLeagueInput
 }
 
 export type LeagueUncheckedCreateInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdById: number
   createdAt?: Date | string
   updatedAt?: Date | string
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutLeagueInput
-  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutLeagueInput
   matches?: Prisma.MatchUncheckedCreateNestedManyWithoutLeagueInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutLeagueInput
 }
 
 export type LeagueUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutLeaguesCreatedNestedInput
   players?: Prisma.PlayerUpdateManyWithoutLeagueNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutLeagueNestedInput
   matches?: Prisma.MatchUpdateManyWithoutLeagueNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutLeagueNestedInput
 }
 
 export type LeagueUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   players?: Prisma.PlayerUncheckedUpdateManyWithoutLeagueNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutLeagueNestedInput
   matches?: Prisma.MatchUncheckedUpdateManyWithoutLeagueNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutLeagueNestedInput
 }
 
 export type LeagueCreateManyInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdById: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -444,13 +422,11 @@ export type LeagueCreateManyInput = {
 
 export type LeagueUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -458,13 +434,11 @@ export type LeagueUpdateManyMutationInput = {
 export type LeagueUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -483,13 +457,11 @@ export type LeagueOrderByRelationAggregateInput = {
 export type LeagueCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
-  recurring?: Prisma.SortOrder
-  recurrenceType?: Prisma.SortOrder
   location?: Prisma.SortOrder
-  scoringConfig?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  matchDay?: Prisma.SortOrder
+  matchTime?: Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -497,18 +469,19 @@ export type LeagueCountOrderByAggregateInput = {
 
 export type LeagueAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
 
 export type LeagueMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
-  recurring?: Prisma.SortOrder
-  recurrenceType?: Prisma.SortOrder
   location?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  matchDay?: Prisma.SortOrder
+  matchTime?: Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -517,12 +490,11 @@ export type LeagueMaxOrderByAggregateInput = {
 export type LeagueMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
-  recurring?: Prisma.SortOrder
-  recurrenceType?: Prisma.SortOrder
   location?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  matchDay?: Prisma.SortOrder
+  matchTime?: Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -530,6 +502,8 @@ export type LeagueMinOrderByAggregateInput = {
 
 export type LeagueSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  transferDeadlineMinutes?: Prisma.SortOrder
+  maxTransfers?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
 
@@ -580,10 +554,6 @@ export type LeagueUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.LeagueScalarWhereInput | Prisma.LeagueScalarWhereInput[]
 }
 
-export type EnumLeagueStatusFieldUpdateOperationsInput = {
-  set?: $Enums.LeagueStatus
-}
-
 export type LeagueCreateNestedOneWithoutPlayersInput = {
   create?: Prisma.XOR<Prisma.LeagueCreateWithoutPlayersInput, Prisma.LeagueUncheckedCreateWithoutPlayersInput>
   connectOrCreate?: Prisma.LeagueCreateOrConnectWithoutPlayersInput
@@ -628,35 +598,31 @@ export type LeagueUpdateOneRequiredWithoutMatchesNestedInput = {
 
 export type LeagueCreateWithoutCreatedByInput = {
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   players?: Prisma.PlayerCreateNestedManyWithoutLeagueInput
-  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutLeagueInput
   matches?: Prisma.MatchCreateNestedManyWithoutLeagueInput
+  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutLeagueInput
 }
 
 export type LeagueUncheckedCreateWithoutCreatedByInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutLeagueInput
-  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutLeagueInput
   matches?: Prisma.MatchUncheckedCreateNestedManyWithoutLeagueInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutLeagueInput
 }
 
 export type LeagueCreateOrConnectWithoutCreatedByInput = {
@@ -691,13 +657,11 @@ export type LeagueScalarWhereInput = {
   NOT?: Prisma.LeagueScalarWhereInput | Prisma.LeagueScalarWhereInput[]
   id?: Prisma.IntFilter<"League"> | number
   name?: Prisma.StringFilter<"League"> | string
-  startDate?: Prisma.DateTimeFilter<"League"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"League"> | Date | string
-  recurring?: Prisma.BoolFilter<"League"> | boolean
-  recurrenceType?: Prisma.StringNullableFilter<"League"> | string | null
   location?: Prisma.StringNullableFilter<"League"> | string | null
-  scoringConfig?: Prisma.JsonFilter<"League">
-  status?: Prisma.EnumLeagueStatusFilter<"League"> | $Enums.LeagueStatus
+  matchDay?: Prisma.StringNullableFilter<"League"> | string | null
+  matchTime?: Prisma.StringNullableFilter<"League"> | string | null
+  transferDeadlineMinutes?: Prisma.IntFilter<"League"> | number
+  maxTransfers?: Prisma.IntFilter<"League"> | number
   createdById?: Prisma.IntFilter<"League"> | number
   createdAt?: Prisma.DateTimeFilter<"League"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"League"> | Date | string
@@ -705,35 +669,31 @@ export type LeagueScalarWhereInput = {
 
 export type LeagueCreateWithoutPlayersInput = {
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutLeaguesCreatedInput
-  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutLeagueInput
   matches?: Prisma.MatchCreateNestedManyWithoutLeagueInput
+  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutLeagueInput
 }
 
 export type LeagueUncheckedCreateWithoutPlayersInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdById: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutLeagueInput
   matches?: Prisma.MatchUncheckedCreateNestedManyWithoutLeagueInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutLeagueInput
 }
 
 export type LeagueCreateOrConnectWithoutPlayersInput = {
@@ -754,46 +714,40 @@ export type LeagueUpdateToOneWithWhereWithoutPlayersInput = {
 
 export type LeagueUpdateWithoutPlayersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutLeaguesCreatedNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutLeagueNestedInput
   matches?: Prisma.MatchUpdateManyWithoutLeagueNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutLeagueNestedInput
 }
 
 export type LeagueUncheckedUpdateWithoutPlayersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutLeagueNestedInput
   matches?: Prisma.MatchUncheckedUpdateManyWithoutLeagueNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutLeagueNestedInput
 }
 
 export type LeagueCreateWithoutFantasyTeamsInput = {
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutLeaguesCreatedInput
@@ -804,13 +758,11 @@ export type LeagueCreateWithoutFantasyTeamsInput = {
 export type LeagueUncheckedCreateWithoutFantasyTeamsInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdById: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -836,13 +788,11 @@ export type LeagueUpdateToOneWithWhereWithoutFantasyTeamsInput = {
 
 export type LeagueUpdateWithoutFantasyTeamsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutLeaguesCreatedNestedInput
@@ -853,13 +803,11 @@ export type LeagueUpdateWithoutFantasyTeamsInput = {
 export type LeagueUncheckedUpdateWithoutFantasyTeamsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -869,13 +817,11 @@ export type LeagueUncheckedUpdateWithoutFantasyTeamsInput = {
 
 export type LeagueCreateWithoutMatchesInput = {
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutLeaguesCreatedInput
@@ -886,13 +832,11 @@ export type LeagueCreateWithoutMatchesInput = {
 export type LeagueUncheckedCreateWithoutMatchesInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdById: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -918,13 +862,11 @@ export type LeagueUpdateToOneWithWhereWithoutMatchesInput = {
 
 export type LeagueUpdateWithoutMatchesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutLeaguesCreatedNestedInput
@@ -935,13 +877,11 @@ export type LeagueUpdateWithoutMatchesInput = {
 export type LeagueUncheckedUpdateWithoutMatchesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdById?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -952,60 +892,52 @@ export type LeagueUncheckedUpdateWithoutMatchesInput = {
 export type LeagueCreateManyCreatedByInput = {
   id?: number
   name: string
-  startDate: Date | string
-  endDate: Date | string
-  recurring?: boolean
-  recurrenceType?: string | null
   location?: string | null
-  scoringConfig: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: $Enums.LeagueStatus
+  matchDay?: string | null
+  matchTime?: string | null
+  transferDeadlineMinutes?: number
+  maxTransfers?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type LeagueUpdateWithoutCreatedByInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   players?: Prisma.PlayerUpdateManyWithoutLeagueNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutLeagueNestedInput
   matches?: Prisma.MatchUpdateManyWithoutLeagueNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutLeagueNestedInput
 }
 
 export type LeagueUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   players?: Prisma.PlayerUncheckedUpdateManyWithoutLeagueNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutLeagueNestedInput
   matches?: Prisma.MatchUncheckedUpdateManyWithoutLeagueNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutLeagueNestedInput
 }
 
 export type LeagueUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  recurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  recurrenceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  scoringConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.EnumLeagueStatusFieldUpdateOperationsInput | $Enums.LeagueStatus
+  matchDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferDeadlineMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  maxTransfers?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1017,14 +949,14 @@ export type LeagueUncheckedUpdateManyWithoutCreatedByInput = {
 
 export type LeagueCountOutputType = {
   players: number
-  fantasyTeams: number
   matches: number
+  fantasyTeams: number
 }
 
 export type LeagueCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   players?: boolean | LeagueCountOutputTypeCountPlayersArgs
-  fantasyTeams?: boolean | LeagueCountOutputTypeCountFantasyTeamsArgs
   matches?: boolean | LeagueCountOutputTypeCountMatchesArgs
+  fantasyTeams?: boolean | LeagueCountOutputTypeCountFantasyTeamsArgs
 }
 
 /**
@@ -1047,48 +979,44 @@ export type LeagueCountOutputTypeCountPlayersArgs<ExtArgs extends runtime.Types.
 /**
  * LeagueCountOutputType without action
  */
-export type LeagueCountOutputTypeCountFantasyTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FantasyTeamWhereInput
+export type LeagueCountOutputTypeCountMatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MatchWhereInput
 }
 
 /**
  * LeagueCountOutputType without action
  */
-export type LeagueCountOutputTypeCountMatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MatchWhereInput
+export type LeagueCountOutputTypeCountFantasyTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FantasyTeamWhereInput
 }
 
 
 export type LeagueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  startDate?: boolean
-  endDate?: boolean
-  recurring?: boolean
-  recurrenceType?: boolean
   location?: boolean
-  scoringConfig?: boolean
-  status?: boolean
+  matchDay?: boolean
+  matchTime?: boolean
+  transferDeadlineMinutes?: boolean
+  maxTransfers?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   players?: boolean | Prisma.League$playersArgs<ExtArgs>
-  fantasyTeams?: boolean | Prisma.League$fantasyTeamsArgs<ExtArgs>
   matches?: boolean | Prisma.League$matchesArgs<ExtArgs>
+  fantasyTeams?: boolean | Prisma.League$fantasyTeamsArgs<ExtArgs>
   _count?: boolean | Prisma.LeagueCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["league"]>
 
 export type LeagueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  startDate?: boolean
-  endDate?: boolean
-  recurring?: boolean
-  recurrenceType?: boolean
   location?: boolean
-  scoringConfig?: boolean
-  status?: boolean
+  matchDay?: boolean
+  matchTime?: boolean
+  transferDeadlineMinutes?: boolean
+  maxTransfers?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1098,13 +1026,11 @@ export type LeagueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type LeagueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  startDate?: boolean
-  endDate?: boolean
-  recurring?: boolean
-  recurrenceType?: boolean
   location?: boolean
-  scoringConfig?: boolean
-  status?: boolean
+  matchDay?: boolean
+  matchTime?: boolean
+  transferDeadlineMinutes?: boolean
+  maxTransfers?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1114,24 +1040,22 @@ export type LeagueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type LeagueSelectScalar = {
   id?: boolean
   name?: boolean
-  startDate?: boolean
-  endDate?: boolean
-  recurring?: boolean
-  recurrenceType?: boolean
   location?: boolean
-  scoringConfig?: boolean
-  status?: boolean
+  matchDay?: boolean
+  matchTime?: boolean
+  transferDeadlineMinutes?: boolean
+  maxTransfers?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LeagueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "recurring" | "recurrenceType" | "location" | "scoringConfig" | "status" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["league"]>
+export type LeagueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "location" | "matchDay" | "matchTime" | "transferDeadlineMinutes" | "maxTransfers" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["league"]>
 export type LeagueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   players?: boolean | Prisma.League$playersArgs<ExtArgs>
-  fantasyTeams?: boolean | Prisma.League$fantasyTeamsArgs<ExtArgs>
   matches?: boolean | Prisma.League$matchesArgs<ExtArgs>
+  fantasyTeams?: boolean | Prisma.League$fantasyTeamsArgs<ExtArgs>
   _count?: boolean | Prisma.LeagueCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeagueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1146,19 +1070,17 @@ export type $LeaguePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     createdBy: Prisma.$UserPayload<ExtArgs>
     players: Prisma.$PlayerPayload<ExtArgs>[]
-    fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
     matches: Prisma.$MatchPayload<ExtArgs>[]
+    fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
-    startDate: Date
-    endDate: Date
-    recurring: boolean
-    recurrenceType: string | null
     location: string | null
-    scoringConfig: runtime.JsonValue
-    status: $Enums.LeagueStatus
+    matchDay: string | null
+    matchTime: string | null
+    transferDeadlineMinutes: number
+    maxTransfers: number
     createdById: number
     createdAt: Date
     updatedAt: Date
@@ -1558,8 +1480,8 @@ export interface Prisma__LeagueClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   players<T extends Prisma.League$playersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.League$playersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  fantasyTeams<T extends Prisma.League$fantasyTeamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.League$fantasyTeamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   matches<T extends Prisma.League$matchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.League$matchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  fantasyTeams<T extends Prisma.League$fantasyTeamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.League$fantasyTeamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1591,13 +1513,11 @@ export interface Prisma__LeagueClient<T, Null = never, ExtArgs extends runtime.T
 export interface LeagueFieldRefs {
   readonly id: Prisma.FieldRef<"League", 'Int'>
   readonly name: Prisma.FieldRef<"League", 'String'>
-  readonly startDate: Prisma.FieldRef<"League", 'DateTime'>
-  readonly endDate: Prisma.FieldRef<"League", 'DateTime'>
-  readonly recurring: Prisma.FieldRef<"League", 'Boolean'>
-  readonly recurrenceType: Prisma.FieldRef<"League", 'String'>
   readonly location: Prisma.FieldRef<"League", 'String'>
-  readonly scoringConfig: Prisma.FieldRef<"League", 'Json'>
-  readonly status: Prisma.FieldRef<"League", 'LeagueStatus'>
+  readonly matchDay: Prisma.FieldRef<"League", 'String'>
+  readonly matchTime: Prisma.FieldRef<"League", 'String'>
+  readonly transferDeadlineMinutes: Prisma.FieldRef<"League", 'Int'>
+  readonly maxTransfers: Prisma.FieldRef<"League", 'Int'>
   readonly createdById: Prisma.FieldRef<"League", 'Int'>
   readonly createdAt: Prisma.FieldRef<"League", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"League", 'DateTime'>
@@ -2026,30 +1946,6 @@ export type League$playersArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * League.fantasyTeams
- */
-export type League$fantasyTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FantasyTeam
-   */
-  select?: Prisma.FantasyTeamSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FantasyTeam
-   */
-  omit?: Prisma.FantasyTeamOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FantasyTeamInclude<ExtArgs> | null
-  where?: Prisma.FantasyTeamWhereInput
-  orderBy?: Prisma.FantasyTeamOrderByWithRelationInput | Prisma.FantasyTeamOrderByWithRelationInput[]
-  cursor?: Prisma.FantasyTeamWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FantasyTeamScalarFieldEnum | Prisma.FantasyTeamScalarFieldEnum[]
-}
-
-/**
  * League.matches
  */
 export type League$matchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2071,6 +1967,30 @@ export type League$matchesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.MatchScalarFieldEnum | Prisma.MatchScalarFieldEnum[]
+}
+
+/**
+ * League.fantasyTeams
+ */
+export type League$fantasyTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FantasyTeam
+   */
+  select?: Prisma.FantasyTeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FantasyTeam
+   */
+  omit?: Prisma.FantasyTeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FantasyTeamInclude<ExtArgs> | null
+  where?: Prisma.FantasyTeamWhereInput
+  orderBy?: Prisma.FantasyTeamOrderByWithRelationInput | Prisma.FantasyTeamOrderByWithRelationInput[]
+  cursor?: Prisma.FantasyTeamWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FantasyTeamScalarFieldEnum | Prisma.FantasyTeamScalarFieldEnum[]
 }
 
 /**
