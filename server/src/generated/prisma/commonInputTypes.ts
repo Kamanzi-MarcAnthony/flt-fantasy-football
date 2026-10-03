@@ -167,74 +167,6 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
-export type JsonFilter<$PrismaModel = never> =
-| Prisma.PatchUndefined<
-    Prisma.Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-    Required<JsonFilterBase<$PrismaModel>>
-  >
-| Prisma.OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-export type JsonFilterBase<$PrismaModel = never> = {
-  equals?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-  path?: string[]
-  mode?: Prisma.QueryMode | Prisma.EnumQueryModeFieldRefInput<$PrismaModel>
-  string_contains?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  string_starts_with?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  string_ends_with?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  array_starts_with?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  array_ends_with?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  array_contains?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  lt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  lte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-}
-
-export type EnumLeagueStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.LeagueStatus | Prisma.EnumLeagueStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLeagueStatusFilter<$PrismaModel> | $Enums.LeagueStatus
-}
-
-export type JsonWithAggregatesFilter<$PrismaModel = never> =
-| Prisma.PatchUndefined<
-    Prisma.Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-    Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-  >
-| Prisma.OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-  equals?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-  path?: string[]
-  mode?: Prisma.QueryMode | Prisma.EnumQueryModeFieldRefInput<$PrismaModel>
-  string_contains?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  string_starts_with?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  string_ends_with?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  array_starts_with?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  array_ends_with?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  array_contains?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  lt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  lte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedJsonFilter<$PrismaModel>
-  _max?: Prisma.NestedJsonFilter<$PrismaModel>
-}
-
-export type EnumLeagueStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.LeagueStatus | Prisma.EnumLeagueStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLeagueStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeagueStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumLeagueStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumLeagueStatusFilter<$PrismaModel>
-}
-
 export type EnumPlayerPositionFilter<$PrismaModel = never> = {
   equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel>
   in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel>
@@ -277,23 +209,6 @@ export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalFilter<$PrismaModel>
-}
-
-export type EnumMatchStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.MatchStatus | Prisma.EnumMatchStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel> | $Enums.MatchStatus
-}
-
-export type EnumMatchStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.MatchStatus | Prisma.EnumMatchStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.MatchStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel>
 }
 
 export type EnumMatchEventTypeFilter<$PrismaModel = never> = {
@@ -479,47 +394,6 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
-export type NestedEnumLeagueStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.LeagueStatus | Prisma.EnumLeagueStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLeagueStatusFilter<$PrismaModel> | $Enums.LeagueStatus
-}
-
-export type NestedJsonFilter<$PrismaModel = never> =
-| Prisma.PatchUndefined<
-    Prisma.Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-    Required<NestedJsonFilterBase<$PrismaModel>>
-  >
-| Prisma.OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
-
-export type NestedJsonFilterBase<$PrismaModel = never> = {
-  equals?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-  path?: string[]
-  mode?: Prisma.QueryMode | Prisma.EnumQueryModeFieldRefInput<$PrismaModel>
-  string_contains?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  string_starts_with?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  string_ends_with?: string | Prisma.StringFieldRefInput<$PrismaModel>
-  array_starts_with?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  array_ends_with?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  array_contains?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
-  lt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  lte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
-  not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-}
-
-export type NestedEnumLeagueStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.LeagueStatus | Prisma.EnumLeagueStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LeagueStatus[] | Prisma.ListEnumLeagueStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLeagueStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeagueStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumLeagueStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumLeagueStatusFilter<$PrismaModel>
-}
-
 export type NestedEnumPlayerPositionFilter<$PrismaModel = never> = {
   equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel>
   in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel>
@@ -562,23 +436,6 @@ export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalFilter<$PrismaModel>
-}
-
-export type NestedEnumMatchStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.MatchStatus | Prisma.EnumMatchStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel> | $Enums.MatchStatus
-}
-
-export type NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.MatchStatus | Prisma.EnumMatchStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.MatchStatus[] | Prisma.ListEnumMatchStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.MatchStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumMatchStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumMatchEventTypeFilter<$PrismaModel = never> = {

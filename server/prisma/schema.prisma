@@ -39,37 +39,37 @@ enum MatchEventType {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      UserRole @default(PLAYER)
-  isActive Boolean @default(true)
+  id               Int      @id @default(autoincrement())
+  name             String
+  email            String   @unique
+  password         String
+  role             UserRole @default(PLAYER)
+  isActive         Boolean  @default(true)
   refreshTokenHash String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   leaguesCreated League[]      @relation("LeagueCreator")
   fantasyTeams   FantasyTeam[]
 }
 
 model League {
-  id             Int          @id @default(autoincrement())
-  name           String
-  startDate      DateTime
-  endDate        DateTime
-  recurring      Boolean      @default(false)
-  recurrenceType String?
-  location       String?
-  scoringConfig  Json
-  status         LeagueStatus @default(DRAFT)
+  id        Int     @id @default(autoincrement())
+  name      String
+  location  String?
+  matchDay  String?
+  matchTime String?
+
+  // Fantasy settings
+  transferDeadlineMinutes Int @default(180)
+  maxTransfers Int @default(3)
 
   createdById Int
   createdBy   User @relation("LeagueCreator", fields: [createdById], references: [id])
 
   players      Player[]
-  fantasyTeams FantasyTeam[]
   matches      Match[]
+  fantasyTeams FantasyTeam[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -132,7 +132,6 @@ model Match {
   league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
 
   matchDate DateTime
-  status    MatchStatus @default(SCHEDULED)
 
   events MatchEvent[]
 
@@ -148,8 +147,7 @@ model MatchEvent {
   match  Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
-  type  MatchEventType
-  value Int            @default(1)
+  type MatchEventType
 
   createdAt DateTime @default(now())
 }

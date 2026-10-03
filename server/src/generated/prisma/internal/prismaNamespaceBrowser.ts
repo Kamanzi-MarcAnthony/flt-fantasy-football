@@ -94,13 +94,11 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const LeagueScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  recurring: 'recurring',
-  recurrenceType: 'recurrenceType',
   location: 'location',
-  scoringConfig: 'scoringConfig',
-  status: 'status',
+  matchDay: 'matchDay',
+  matchTime: 'matchTime',
+  transferDeadlineMinutes: 'transferDeadlineMinutes',
+  maxTransfers: 'maxTransfers',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -152,7 +150,6 @@ export const MatchScalarFieldEnum = {
   id: 'id',
   leagueId: 'leagueId',
   matchDate: 'matchDate',
-  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -165,7 +162,6 @@ export const MatchEventScalarFieldEnum = {
   matchId: 'matchId',
   playerId: 'playerId',
   type: 'type',
-  value: 'value',
   createdAt: 'createdAt'
 } as const
 
@@ -178,13 +174,6 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -201,13 +190,4 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

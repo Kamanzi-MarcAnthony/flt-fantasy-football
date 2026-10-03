@@ -3,25 +3,34 @@ import prisma from '../config/prisma.js'
 export const createLeague = async (req, res) => {
   try {
     console.log('CREATE LEAGUE BODY:', req.body)
-    const { name, startDate, endDate, recurring, recurrenceType, location, scoringConfig } =
-      req.body || {}
 
-    if (!name || !startDate || !endDate) {
+    const { name, location, matchDay, matchTime, maxTransfers } = req.body || {}
+
+    if (!name || !matchDay) {
       return res.status(400).json({
         success: false,
-        message: 'Name, start date and end date are required',
+        message: 'Name and match day are required',
+      })
+    }
+
+     // Transfer limit validation
+    if (
+      !Number.isInteger(maxTransfers) ||
+      maxTransfers < 1 ||
+      maxTransfers > 7
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Maximum transfers must be between 1 and 7',
       })
     }
 
     const league = await prisma.league.create({
       data: {
-        name,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        recurring: recurring ?? false,
-        recurrenceType: recurrenceType || null,
-        location: location || null,
-        scoringConfig: scoringConfig || {},
+        name: name.trim(),
+        location: location?.trim() || null,
+        matchDay: matchDay.trim(),
+        matchTime: matchTime?.trim() || null,
         createdById: req.user.id,
       },
     })
@@ -29,9 +38,7 @@ export const createLeague = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: 'League created successfully',
-      data: {
-        league,
-      },
+      data: { league },
     })
   } catch (error) {
     console.error('Create league error:', error)
@@ -41,21 +48,26 @@ export const createLeague = async (req, res) => {
       message: 'Unable to create league',
     })
   }
-}
+  } 
+
 
 export const getLeagues = async (req, res) => {
   try {
     const leagues = await prisma.league.findMany({
-      orderBy: {
-        createdAt: 'desc',
+      orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: {
+            players: true,
+            matches: true,
+          },
+        },
       },
     })
 
     return res.json({
       success: true,
-      data: {
-        leagues,
-      },
+      data: { leagues },
     })
   } catch (error) {
     console.error('Get leagues error:', error)
@@ -65,6 +77,7 @@ export const getLeagues = async (req, res) => {
       message: 'Unable to fetch leagues',
     })
   }
+
 }
 
 export const getLeagueById = async (req, res) => {
@@ -79,11 +92,18 @@ export const getLeagueById = async (req, res) => {
     }
 
     const league = await prisma.league.findUnique({
-      where: {
-        id: leagueId,
-      },
+      where: { id: leagueId },
       include: {
-        players: true,
+        players: {
+          orderBy: { name: 'asc' },
+        },
+        _count: {
+          select: {
+            players: true,
+            matches: true,
+            fantasyTeams: true,
+          },
+        },
       },
     })
 
@@ -96,9 +116,7 @@ export const getLeagueById = async (req, res) => {
 
     return res.json({
       success: true,
-      data: {
-        league,
-      },
+      data: { league },
     })
   } catch (error) {
     console.error('Get league error:', error)
