@@ -35,6 +35,11 @@ const router = createRouter({
           name: 'admin-dashboard',
           component: () => import('../pages/admin/Dashboard.vue'),
         },
+        {
+          path: 'admins',
+          name: 'admin-admins',
+          component: () => import('../pages/admin/Admins.vue'),
+        },
 
         {
           path: 'leagues',

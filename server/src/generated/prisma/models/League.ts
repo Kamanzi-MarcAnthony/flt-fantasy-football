@@ -580,10 +580,6 @@ export type LeagueUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.LeagueScalarWhereInput | Prisma.LeagueScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type EnumLeagueStatusFieldUpdateOperationsInput = {
   set?: $Enums.LeagueStatus
 }
