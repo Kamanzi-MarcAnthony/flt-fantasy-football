@@ -1,9 +1,9 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { onMounted, ref } from 'vue'
-import api from '../../services/api'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
+import { useLeagueStore } from '@/stores/leagues'
+import { storeToRefs } from 'pinia'
 
 import {
   LogOut,
@@ -15,32 +15,18 @@ import {
 import LeagueCard from '../../components/leagues/LeagueCard.vue'
 import pitch from '../../assets/images/pitch.jpg'
 
-const leagues = ref([])
-const loading = ref(false)
-const error = ref(null)
+const leagueStore = useLeagueStore()
 
-const fetchLeagues = async () => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const response = await api.get('/leagues')
-
-    leagues.value = response.data.data.leagues
-  } catch (err) {
-    console.error('Failed to fetch leagues:', err)
-
-    error.value =
-      err.response?.data?.message ||
-      'Unable to load leagues.'
-  } finally {
-    loading.value = false
-  }
-}
+const {
+  leagues,
+  loading,
+  error,
+} = storeToRefs(leagueStore)
 
 onMounted(() => {
-  fetchLeagues()
+  leagueStore.fetchLeagues()
 })
+
 const router = useRouter()
 const authStore = useAuthStore()
 
