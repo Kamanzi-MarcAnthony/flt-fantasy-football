@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     token: null,
+    refreshToken: null,
     isAuthenticated: false,
     loading: false,
     error: null,
@@ -23,17 +24,24 @@ export const useAuthStore = defineStore('auth', {
           password,
         })
 
-        const { token, user } = response.data.data
+        const {
+          token,
+          refreshToken,
+          user,
+        } = response.data.data
 
         this.user = user
         this.token = token
+        this.refreshToken = refreshToken
         this.isAuthenticated = true
 
         this.saveAuth()
 
         return true
       } catch (error) {
-        this.error = error.response?.data?.message || 'Unable to login. Please try again.'
+        this.error =
+          error.response?.data?.message ||
+          'Unable to login. Please try again.'
 
         return false
       } finally {
@@ -47,6 +55,7 @@ export const useAuthStore = defineStore('auth', {
         JSON.stringify({
           user: this.user,
           token: this.token,
+          refreshToken: this.refreshToken,
           isAuthenticated: this.isAuthenticated,
         }),
       )
@@ -55,31 +64,46 @@ export const useAuthStore = defineStore('auth', {
     loadAuth() {
       const storedAuth = localStorage.getItem(STORAGE_KEY)
 
-      if (!storedAuth) {
-        return
-      }
+      if (!storedAuth) return
 
       try {
         const auth = JSON.parse(storedAuth)
 
-        // Make sure the saved authentication is actually valid
-        if (!auth.token || !auth.user || !auth.user.role) {
+        if (
+          !auth.token ||
+          !auth.refreshToken ||
+          !auth.user ||
+          !auth.user.role
+        ) {
           this.logout()
           return
         }
 
         this.user = auth.user
         this.token = auth.token
+        this.refreshToken = auth.refreshToken
         this.isAuthenticated = true
       } catch (error) {
-        console.error('Failed to load authentication:', error)
+        console.error(
+          'Failed to load authentication:',
+          error,
+        )
+
         this.logout()
       }
+    },
+
+    updateTokens(token, refreshToken) {
+      this.token = token
+      this.refreshToken = refreshToken
+
+      this.saveAuth()
     },
 
     logout() {
       this.user = null
       this.token = null
+      this.refreshToken = null
       this.isAuthenticated = false
       this.error = null
 
