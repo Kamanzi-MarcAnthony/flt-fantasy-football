@@ -13,7 +13,6 @@ export const authenticate = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1]
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
     const user = await prisma.user.findUnique({
@@ -25,6 +24,7 @@ export const authenticate = async (req, res, next) => {
         name: true,
         email: true,
         role: true,
+        isActive: true,
       },
     })
 
@@ -32,6 +32,13 @@ export const authenticate = async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'User no longer exists',
+      })
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been deactivated',
       })
     }
 

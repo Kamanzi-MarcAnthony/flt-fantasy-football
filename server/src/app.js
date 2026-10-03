@@ -3,6 +3,7 @@ import cors from 'cors'
 import authRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import leagueRoutes from './routes/leagueRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 
 const app = express()
 
@@ -24,5 +25,6 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/leagues', leagueRoutes)
+app.use('/api/admins', adminRoutes)
 
 export default app

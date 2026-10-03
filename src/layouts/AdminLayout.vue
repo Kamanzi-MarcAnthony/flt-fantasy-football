@@ -7,10 +7,13 @@ import {
     Users,
     CalendarDays,
     LogOut,
+    ShieldCheck,
 } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
+
+
 
 const handleLogout = () => {
     authStore.logout()
@@ -60,6 +63,13 @@ const handleLogout = () => {
                     active-class="bg-white/10 !text-white">
                     <Users class="h-5 w-5" />
                     Players
+                </RouterLink>
+
+                <RouterLink
+                    to="/admin/admins"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white"
+                    active-class="bg-white/10 !text-white">
+                    <ShieldCheck class="h-5 w-5" />Admins
                 </RouterLink>
 
                 <RouterLink to="/admin/matches"

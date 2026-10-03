@@ -164,6 +164,13 @@ export const refreshToken = async (req, res) => {
       })
     }
 
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been deactivated',
+      })
+    }
+
     // Create a new short-lived access token
     const newToken = jwt.sign(
       {
