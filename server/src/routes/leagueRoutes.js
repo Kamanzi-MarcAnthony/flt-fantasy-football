@@ -4,6 +4,9 @@ import {
   createLeague,
   getLeagues,
   getLeagueById,
+  updateLeague,
+  deleteLeague,
+  getLeagueStats,
 } from '../controllers/leagueController.js'
 
 import { createPlayer } from '../controllers/playerController.js'
@@ -18,6 +21,13 @@ router.get(
   authenticate,
   authorize('SUPER_ADMIN', 'ADMIN'),
   getLeagues,
+)
+
+router.get(
+  '/:id/stats',
+  authenticate,
+  authorize('SUPER_ADMIN', 'ADMIN'),
+  getLeagueStats,
 )
 
 router.get(
@@ -39,6 +49,20 @@ router.post(
   authenticate,
   authorize('SUPER_ADMIN', 'ADMIN'),
   createPlayer,
+)
+
+router.patch(
+  '/:id',
+  authenticate,
+  authorize('SUPER_ADMIN', 'ADMIN'),
+  updateLeague,
+)
+
+router.delete(
+  '/:id',
+  authenticate,
+  authorize('SUPER_ADMIN'),
+  deleteLeague,
 )
 
 export default router

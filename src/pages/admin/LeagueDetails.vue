@@ -1,28 +1,46 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/auth'
+
 import {
   ArrowLeft,
   CalendarDays,
   Clock,
+  Loader2,
   MapPin,
+  MoreVertical,
+  Pencil,
   Plus,
+  Trash2,
   Trophy,
   Users,
 } from 'lucide-vue-next'
-import api from '../../services/api'
-import PlayerFormModal from '../../components/players/PlayerFormModal.vue'
 
+import api from '../../services/api'
+
+import PlayerFormModal from '../../components/players/PlayerFormModal.vue'
+import RecordGoalModal from '../../components/matches/RecordGoalModal.vue'
+import AwardCleanSheetModal from '../../components/matches/AwardCleanSheetModal.vue'
+import LeagueFormModal from '../../components/leagues/LeagueFormModal.vue'
+
+const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
+
+// --------------------------------------------------
+// League
+// --------------------------------------------------
 
 const league = ref(null)
 const loading = ref(true)
 const error = ref(null)
+
+// --------------------------------------------------
+// Tabs
+// --------------------------------------------------
+
 const activeTab = ref('players')
-const showPlayerModal = ref(false)
-const playerSaving = ref(false)
-const addingPlayer = ref(false)
 
 const tabs = computed(() => [
   {
@@ -39,77 +57,15 @@ const tabs = computed(() => [
   },
 ])
 
-const openAddPlayer = () => {
-  showPlayerModal.value = true
-}
+// --------------------------------------------------
+// Player
+// --------------------------------------------------
+
+const showPlayerModal = ref(false)
+const playerSaving = ref(false)
 
 const handlePlayerSubmit = async (playerData) => {
   playerSaving.value = true
-
-  try {
-    await api.post(
-      `/leagues/${route.params.id}/players`,
-      playerData,
-    )
-
-    showPlayerModal.value = false
-
-    await fetchLeague()
-  } catch (err) {
-    console.error('Failed to add player:', err)
-  } finally {
-    playerSaving.value = false
-  }
-}
-
-const fetchLeague = async () => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const response = await api.get(`/leagues/${route.params.id}`)
-    league.value = response.data.data.league
-  } catch (err) {
-    console.error('Failed to fetch league:', err)
-
-    error.value =
-      err.response?.data?.message ||
-      'Unable to load league.'
-  } finally {
-    loading.value = false
-  }
-}
-
-const formatMatchDay = (day) => {
-  if (!day) return 'Match day not set'
-  return day
-}
-
-const formatMatchTime = (time) => {
-  if (!time) return 'Match time not set'
-
-  const [hours, minutes] = time.split(':')
-  const date = new Date()
-  date.setHours(Number(hours), Number(minutes), 0, 0)
-
-  return date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-  })
-}
-
-const isTransfersOpen = computed(() => {
-  // Temporary UI state.
-  // Transfer-window calculation will be connected later.
-  return true
-})
-
-const totalPoints = (player) => {
-  return player.totalPoints || 0
-}
-
-const addPlayer = async (playerData) => {
-  addingPlayer.value = true
 
   try {
     const response = await api.post(
@@ -128,29 +84,330 @@ const addPlayer = async (playerData) => {
   } catch (err) {
     console.error('Failed to add player:', err)
 
-    // We'll improve modal-level API errors shortly.
     alert(
       err.response?.data?.message ||
-      'Unable to add player. Please try again.',
+        'Unable to add player. Please try again.',
     )
   } finally {
-    addingPlayer.value = false
+    playerSaving.value = false
   }
 }
 
+// --------------------------------------------------
+// Matchday
+// --------------------------------------------------
+
+const matchday = ref(null)
+const matchdayLoading = ref(false)
+const matchdayError = ref(null)
+
+const showGoalModal = ref(false)
+const showCleanSheetModal = ref(false)
+
+const goalSaving = ref(false)
+const cleanSheetSaving = ref(false)
+
+const fetchMatchday = async () => {
+  matchdayLoading.value = true
+  matchdayError.value = null
+
+  try {
+    const response = await api.get(
+      `/leagues/${route.params.id}/matchday`,
+    )
+
+    matchday.value = response.data.data
+  } catch (err) {
+    console.error('Failed to fetch matchday:', err)
+
+    matchdayError.value =
+      err.response?.data?.message ||
+      'Unable to load matchday.'
+  } finally {
+    matchdayLoading.value = false
+  }
+}
+
+// --------------------------------------------------
+// League Stats
+// --------------------------------------------------
+
+const leagueStats = ref({
+  topGoalscorers: [],
+  topAssists: [],
+})
+
+const statsLoading = ref(false)
+const statsError = ref(null)
+
+const fetchLeagueStats = async () => {
+  statsLoading.value = true
+  statsError.value = null
+
+  try {
+    const response = await api.get(
+      `/leagues/${route.params.id}/stats`,
+    )
+
+    leagueStats.value = response.data.data
+  } catch (err) {
+    console.error(
+      'Failed to fetch league stats:',
+      err,
+    )
+
+    statsError.value =
+      err.response?.data?.message ||
+      'Unable to load league statistics.'
+  } finally {
+    statsLoading.value = false
+  }
+}
+
+// --------------------------------------------------
+// Transfer Status
+// --------------------------------------------------
+
+const isTransfersOpen = computed(() => {
+  return matchday.value?.status === 'UPCOMING'
+})
+
+// --------------------------------------------------
+// League Formatting
+// --------------------------------------------------
+
+const formatMatchDay = (day) => {
+  if (!day) return 'Match day not set'
+
+  return day
+}
+
+const formatMatchTime = (time) => {
+  if (!time) return 'Match time not set'
+
+  const [hours, minutes] = time.split(':')
+
+  const date = new Date()
+
+  date.setHours(
+    Number(hours),
+    Number(minutes),
+    0,
+    0,
+  )
+
+  return date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
+// --------------------------------------------------
+// Player Points
+// --------------------------------------------------
+
+const totalPoints = (player) => {
+  return player.totalPoints || 0
+}
+
+// --------------------------------------------------
+// Match Events
+// --------------------------------------------------
+
+const recordGoal = async (payload) => {
+  if (!matchday.value?.match?.id) return
+
+  goalSaving.value = true
+
+  try {
+    const response = await api.post(
+      `/matches/${matchday.value.match.id}/goals`,
+      payload,
+    )
+
+    matchday.value.match = response.data.data.match
+
+    showGoalModal.value = false
+  } catch (err) {
+    console.error('Failed to record goal:', err)
+
+    alert(
+      err.response?.data?.message ||
+        'Unable to record goal.',
+    )
+  } finally {
+    goalSaving.value = false
+  }
+}
+
+const awardCleanSheets = async (payload) => {
+  if (!matchday.value?.match?.id) return
+
+  cleanSheetSaving.value = true
+
+  try {
+    const response = await api.post(
+      `/matches/${matchday.value.match.id}/clean-sheets`,
+      payload,
+    )
+
+    matchday.value.match = response.data.data.match
+
+    showCleanSheetModal.value = false
+  } catch (err) {
+    console.error(
+      'Failed to award clean sheets:',
+      err,
+    )
+
+    alert(
+      err.response?.data?.message ||
+        'Unable to award clean sheets.',
+    )
+  } finally {
+    cleanSheetSaving.value = false
+  }
+}
+
+// --------------------------------------------------
+// League Actions
+// --------------------------------------------------
+
+const showActionMenu = ref(false)
+
+const showEditLeagueModal = ref(false)
+const leagueSaving = ref(false)
+
+const showDeleteLeagueModal = ref(false)
+const deletingLeague = ref(false)
+
+const openEditLeague = () => {
+  showActionMenu.value = false
+  showEditLeagueModal.value = true
+}
+
+const openDeleteLeague = () => {
+  showActionMenu.value = false
+  showDeleteLeagueModal.value = true
+}
+
+// --------------------------------------------------
+// Edit League
+// --------------------------------------------------
+
+const handleLeagueUpdate = async (leagueData) => {
+  leagueSaving.value = true
+
+  try {
+    const response = await api.patch(
+      `/leagues/${league.value.id}`,
+      {
+        name: leagueData.name,
+        location: leagueData.location,
+        matchDay: leagueData.matchDay,
+        matchTime: leagueData.matchTime,
+        maxTransfers: leagueData.maxTransfers,
+      },
+    )
+
+    league.value = {
+      ...league.value,
+      ...response.data.data.league,
+    }
+
+    showEditLeagueModal.value = false
+
+    // Refresh matchday because match day/time may have changed.
+    await fetchMatchday()
+  } catch (err) {
+    console.error(
+      'Failed to update league:',
+      err,
+    )
+
+    alert(
+      err.response?.data?.message ||
+        'Unable to update league.',
+    )
+  } finally {
+    leagueSaving.value = false
+  }
+}
+
+// --------------------------------------------------
+// Delete League
+// --------------------------------------------------
+
+const handleDeleteLeague = async () => {
+  if (!league.value) return
+
+  deletingLeague.value = true
+
+  try {
+    await api.delete(
+      `/leagues/${league.value.id}`,
+    )
+
+    router.push('/admin/leagues')
+  } catch (err) {
+    console.error(
+      'Failed to delete league:',
+      err,
+    )
+
+    alert(
+      err.response?.data?.message ||
+        'Unable to delete league.',
+    )
+  } finally {
+    deletingLeague.value = false
+  }
+}
+
+// --------------------------------------------------
+// Fetch League
+// --------------------------------------------------
+
+const fetchLeague = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const response = await api.get(
+      `/leagues/${route.params.id}`,
+    )
+
+    league.value = response.data.data.league
+  } catch (err) {
+    console.error(
+      'Failed to fetch league:',
+      err,
+    )
+
+    error.value =
+      err.response?.data?.message ||
+      'Unable to load league.'
+  } finally {
+    loading.value = false
+  }
+}
+
+// --------------------------------------------------
+// Lifecycle
+// --------------------------------------------------
+
 onMounted(() => {
   fetchLeague()
+  fetchMatchday()
+  fetchLeagueStats()
 })
 </script>
 
 <template>
   <div class="min-h-screen bg-[#061112] text-white">
-
     <!-- Header -->
-
     <header class="border-b border-white/10 px-5 py-5 sm:px-8">
       <div class="mx-auto flex max-w-7xl items-center justify-between">
-
         <button
           type="button"
           class="flex items-center gap-2 text-sm text-white/50 transition hover:text-white"
@@ -167,18 +424,54 @@ onMounted(() => {
           {{ league.name }}
         </div>
 
+        <!-- Actions -->
+        <div class="relative">
+          <button
+            type="button"
+            class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/60 transition hover:bg-white/[0.08] hover:text-white"
+            @click="showActionMenu = !showActionMenu"
+          >
+            <MoreVertical class="h-5 w-5" />
+          </button>
+
+          <div
+            v-if="showActionMenu"
+            class="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-white/10 bg-[#171717] p-1 shadow-2xl"
+          >
+            <!-- Edit -->
+<button
+  type="button"
+  class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/70 transition hover:bg-white/[0.06] hover:text-white"
+  @click="openEditLeague"
+>
+  <Pencil class="h-4 w-4" />
+  <span>Edit League</span>
+</button>
+
+            <!-- Delete -->
+            <template v-if="authStore.user?.role === 'SUPER_ADMIN'">
+              <div class="my-1 border-t border-white/10"></div>
+
+<button
+  type="button"
+  class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-400 transition hover:bg-red-400/[0.08]"
+  @click="openDeleteLeague"
+>
+  <Trash2 class="h-4 w-4" />
+  <span>Delete League</span>
+</button>
+            </template>
+          </div>
+        </div>
       </div>
     </header>
 
-
     <!-- Loading -->
-
     <div
       v-if="loading"
       class="flex min-h-[70vh] items-center justify-center"
     >
       <div class="text-center">
-
         <div
           class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white"
         ></div>
@@ -186,13 +479,10 @@ onMounted(() => {
         <p class="mt-4 text-sm text-white/40">
           Loading league...
         </p>
-
       </div>
     </div>
 
-
     <!-- Error -->
-
     <div
       v-else-if="error"
       class="mx-auto max-w-xl px-5 py-20 text-center"
@@ -214,26 +504,20 @@ onMounted(() => {
       </button>
     </div>
 
-
     <!-- League -->
-
     <main
       v-else-if="league"
       class="mx-auto max-w-7xl px-5 py-8 sm:px-8 lg:px-10"
     >
-
-      <!-- League summary -->
-
+      <!-- League Summary -->
       <section
         class="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8"
       >
-
-        <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-
-          <!-- League identity -->
-
+        <div
+          class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between"
+        >
+          <!-- League Identity -->
           <div class="flex items-start gap-4">
-
             <div
               class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10"
             >
@@ -241,13 +525,13 @@ onMounted(() => {
             </div>
 
             <div>
-
               <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">
                 {{ league.name }}
               </h1>
 
-              <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/40">
-
+              <div
+                class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/40"
+              >
                 <span class="flex items-center gap-2">
                   <MapPin class="h-4 w-4" />
                   {{ league.location || 'Location not set' }}
@@ -262,16 +546,11 @@ onMounted(() => {
                   <Clock class="h-4 w-4" />
                   {{ formatMatchTime(league.matchTime) }}
                 </span>
-
               </div>
-
             </div>
-
           </div>
 
-
-          <!-- Transfer status -->
-
+          <!-- Transfer Status -->
           <div
             class="flex items-center gap-3 rounded-2xl border px-4 py-3"
             :class="
@@ -280,7 +559,6 @@ onMounted(() => {
                 : 'border-red-400/20 bg-red-400/[0.06]'
             "
           >
-
             <span
               class="h-2.5 w-2.5 rounded-full"
               :class="
@@ -291,7 +569,6 @@ onMounted(() => {
             ></span>
 
             <div>
-
               <p class="text-xs text-white/40">
                 Transfers
               </p>
@@ -306,22 +583,89 @@ onMounted(() => {
               >
                 {{ isTransfersOpen ? 'Open' : 'Closed' }}
               </p>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
 
+      <!-- Matchday Live -->
+      <section
+        class="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+      >
+        <div
+          class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <p
+              class="text-xs font-bold uppercase tracking-[0.2em] text-white/30"
+            >
+              Matchday
+            </p>
+
+            <div
+              v-if="matchdayLoading"
+              class="mt-2 text-sm text-white/40"
+            >
+              Loading matchday...
+            </div>
+
+            <div v-else-if="matchday">
+              <h2 class="mt-2 text-xl font-semibold">
+                {{ league.matchDay }} · {{ league.matchTime }}
+              </h2>
+
+              <p class="mt-1 text-sm text-white/40">
+                {{
+                  matchday.status === 'ACTIVE'
+                    ? 'Matchday is currently active'
+                    : 'Next matchday is upcoming'
+                }}
+              </p>
+            </div>
+
+            <p
+              v-if="matchdayError"
+              class="mt-2 text-sm text-red-300"
+            >
+              {{ matchdayError }}
+            </p>
+          </div>
+
+          <!-- Actions -->
+          <div
+            v-if="matchday?.status === 'ACTIVE'"
+            class="flex flex-wrap gap-3"
+          >
+            <button
+              type="button"
+              class="inline-flex items-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#111c1d] transition hover:bg-white/90"
+              @click="showGoalModal = true"
+            >
+              <Plus class="mr-2 h-4 w-4" />
+              Record Goal
+            </button>
+
+            <button
+              type="button"
+              class="inline-flex items-center rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+              @click="showCleanSheetModal = true"
+            >
+              Award Clean Sheets
+            </button>
+          </div>
+
+          <div
+            v-else-if="matchday?.status === 'UPCOMING'"
+            class="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/50"
+          >
+            Matchday hasn't started yet.
+          </div>
+        </div>
+      </section>
 
       <!-- Tabs -->
-
       <div class="mt-8 border-b border-white/10">
-
         <nav class="flex gap-6 overflow-x-auto">
-
           <button
             v-for="tab in tabs"
             :key="tab.key"
@@ -341,21 +685,15 @@ onMounted(() => {
               class="absolute inset-x-0 -bottom-px h-0.5 bg-white"
             ></span>
           </button>
-
         </nav>
-
       </div>
 
-
       <!-- Players -->
-
       <section
         v-if="activeTab === 'players'"
         class="mt-6"
       >
-
         <div class="mb-5 flex items-center justify-between">
-
           <div>
             <h2 class="text-xl font-semibold">
               Players
@@ -368,139 +706,114 @@ onMounted(() => {
 
           <button
             type="button"
-            @click="showPlayerModal = true"
             class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90"
+            @click="showPlayerModal = true"
           >
             <Plus class="h-4 w-4" />
+
             <span class="hidden sm:inline">
               Add Player
             </span>
           </button>
-
         </div>
 
-
-        <!-- Player table -->
-
+        <!-- Player Table -->
         <div
           v-if="league.players?.length"
           class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]"
         >
+          <!-- Table Header -->
+          <div
+            class="grid grid-cols-[minmax(0,3fr)_45px_55px_55px] items-center gap-2 border-b border-white/10 px-4 py-3 text-[11px] font-medium uppercase tracking-wider text-white/30 sm:grid-cols-[minmax(0,1fr)_80px_110px_110px] sm:gap-3 sm:px-6"
+          >
+            <span>Player</span>
 
-          <!-- Table header -->
+            <span class="text-right">
+              OVR
+            </span>
 
-        <!-- Table header -->
+            <span class="text-right">
+              Price
+            </span>
 
-<div
-  class="grid grid-cols-[minmax(0,3fr)_45px_55px_55px] items-center gap-2 border-b border-white/10 px-4 py-3 text-[11px] font-medium uppercase tracking-wider text-white/30 sm:grid-cols-[minmax(0,1fr)_80px_110px_110px] sm:gap-3 sm:px-6"
->
-  <span>
-    Player
-  </span>
-
-  <span class="text-right">
-    OVR
-  </span>
-
-  <span class="text-right">
-    Price
-  </span>
-
-  <span class="text-right">
-    Points
-  </span>
-</div>
+            <span class="text-right">
+              Points
+            </span>
+          </div>
 
           <!-- Rows -->
-           <div class="divide-y divide-white/10">
+          <div class="divide-y divide-white/10">
             <div
-                v-for="player in league.players"
-                :key="player.id"
-                class="grid grid-cols-[minmax(0,3fr)_45px_55px_55px] items-center gap-2 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_80px_110px_110px] sm:gap-3 sm:px-6">
+              v-for="player in league.players"
+              :key="player.id"
+              class="grid grid-cols-[minmax(0,3fr)_45px_55px_55px] items-center gap-2 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_80px_110px_110px] sm:gap-3 sm:px-6"
+            >
+              <!-- Player -->
+              <div class="flex min-w-0 items-center gap-3">
+                <!-- Player Portrait -->
+                <div
+                  class="h-16 w-12 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]"
+                >
+                  <img
+                    v-if="player.photoUrl"
+                    :src="player.photoUrl"
+                    :alt="player.name"
+                    class="h-full w-full object-cover"
+                  />
 
-    <!-- Player -->
+                  <div
+                    v-else
+                    class="flex h-full w-full items-center justify-center text-xs font-semibold text-white/30"
+                  >
+                    {{ player.name?.charAt(0)?.toUpperCase() }}
+                  </div>
+                </div>
 
-    <div class="flex min-w-0 items-center gap-3">
+                <!-- Player Name + Position -->
+                <div class="min-w-0">
+                  <button
+                    type="button"
+                    class="truncate text-left text-sm font-medium transition hover:text-white/60"
+                    @click="router.push(`/admin/players/${player.id}`)"
+                  >
+                    {{ player.name }}
+                  </button>
 
-      <!-- Player portrait -->
+                  <p class="mt-0.5 text-xs text-white/40">
+                    {{ player.position }}
+                  </p>
+                </div>
+              </div>
 
-      <div
-        class="h-16 w-12 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]"
-      >
-        <img
-          v-if="player.photoUrl"
-          :src="player.photoUrl"
-          :alt="player.name"
-          class="h-full w-full object-cover"
-        />
+              <!-- OVR -->
+              <div class="text-right">
+                <span class="text-sm font-semibold">
+                  {{ player.ovr }}
+                </span>
+              </div>
 
-        <div
-          v-else
-          class="flex h-full w-full items-center justify-center text-xs font-semibold text-white/30"
-        >
-          {{ player.name?.charAt(0)?.toUpperCase() }}
+              <!-- Price -->
+              <div class="text-right">
+                <span class="text-sm font-medium text-white/70">
+                  {{ player.price }}
+                </span>
+              </div>
+
+              <!-- Points -->
+              <div class="text-right">
+                <span class="text-sm font-semibold">
+                  {{ totalPoints(player) }}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- Player name + position -->
-
-      <div class="min-w-0">
-        <button
-        type="button"
-        class="truncate text-left text-sm font-medium transition hover:text-white/60"
-        @click="router.push(`/admin/players/${player.id}`)"
-        >
-        {{ player.name }}
-        </button>
-
-        <p class="mt-0.5 text-xs text-white/40">
-          {{ player.position }}
-        </p>
-      </div>
-
-    </div>
-
-
-    <!-- OVR -->
-
-    <div class="text-right">
-      <span class="text-sm font-semibold">
-        {{ player.ovr }}
-      </span>
-    </div>
-
-
-    <!-- Price -->
-
-    <div class="text-right">
-      <span class="text-sm font-medium text-white/70">
-        {{ player.price }}
-      </span>
-    </div>
-
-
-    <!-- Points -->
-
-    <div class="text-right">
-      <span class="text-sm font-semibold">
-        {{ totalPoints(player) }}
-      </span>
-    </div>
-
-  </div>
-
-</div>
-
-        </div>
-
 
         <!-- Empty -->
-
         <div
           v-else
           class="flex min-h-[350px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03] px-5 text-center"
         >
-
           <div
             class="flex h-14 w-14 items-center justify-center rounded-full bg-white/10"
           >
@@ -516,89 +829,249 @@ onMounted(() => {
           </p>
 
           <button
-            @click="showPlayerModal = true"
             type="button"
             class="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black"
+            @click="showPlayerModal = true"
           >
             <Plus class="h-4 w-4" />
             Add Player
           </button>
-
         </div>
-
       </section>
-
 
       <!-- Stats -->
+<!-- Stats -->
+<section
+  v-else-if="activeTab === 'stats'"
+  class="mt-6"
+>
+  <!-- Loading -->
+  <div
+    v-if="statsLoading"
+    class="flex min-h-[300px] items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03]"
+  >
+    <div class="text-center">
+      <div
+        class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white"
+      ></div>
 
-      <section
-        v-else-if="activeTab === 'stats'"
-        class="mt-6"
+      <p class="mt-4 text-sm text-white/40">
+        Loading statistics...
+      </p>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div
+    v-else-if="statsError"
+    class="rounded-3xl border border-red-400/20 bg-red-400/[0.04] p-6 text-center"
+  >
+    <p class="text-sm text-red-300">
+      {{ statsError }}
+    </p>
+
+    <button
+      type="button"
+      class="mt-4 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+      @click="fetchLeagueStats"
+    >
+      Try Again
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div
+    v-else
+    class="grid gap-6 lg:grid-cols-2"
+  >
+    <!-- Top Goalscorers -->
+    <div
+      class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]"
+    >
+      <div class="border-b border-white/10 p-6">
+        <h2 class="text-lg font-semibold">
+          Top Goalscorers
+        </h2>
+
+        <p class="mt-1 text-sm text-white/40">
+          Leading players by goals.
+        </p>
+      </div>
+
+      <div
+        v-if="leagueStats.topGoalscorers.length"
+        class="divide-y divide-white/10"
       >
+        <div
+          v-for="(player, index) in leagueStats.topGoalscorers"
+          :key="player.id"
+          class="flex items-center gap-4 px-6 py-4"
+        >
+          <!-- Rank -->
+          <div
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-xs font-semibold text-white/40"
+          >
+            {{ index + 1 }}
+          </div>
 
-        <div class="grid gap-6 lg:grid-cols-2">
+          <!-- Player -->
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <div
+              class="h-11 w-9 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]"
+            >
+              <img
+                v-if="player.photoUrl"
+                :src="player.photoUrl"
+                :alt="player.name"
+                class="h-full w-full object-cover"
+              />
+
+              <div
+                v-else
+                class="flex h-full w-full items-center justify-center text-xs font-semibold text-white/30"
+              >
+                {{ player.name?.charAt(0)?.toUpperCase() }}
+              </div>
+            </div>
+
+            <div class="min-w-0">
+              <button
+                type="button"
+                class="truncate text-left text-sm font-medium transition hover:text-white/60"
+                @click="router.push(`/admin/players/${player.id}`)"
+              >
+                {{ player.name }}
+              </button>
+
+              <p class="mt-0.5 text-xs text-white/40">
+                {{ player.position }}
+              </p>
+            </div>
+          </div>
 
           <!-- Goals -->
-
-          <div
-            class="rounded-3xl border border-white/10 bg-white/[0.03] p-6"
-          >
-
-            <h2 class="text-lg font-semibold">
-              Top Goalscorers
-            </h2>
-
-            <p class="mt-1 text-sm text-white/40">
-              Leading players by goals.
+          <div class="text-right">
+            <p class="text-lg font-bold">
+              {{ player.goals }}
             </p>
 
-            <div class="mt-6 flex min-h-[250px] items-center justify-center text-center">
-              <p class="text-sm text-white/30">
-                Match statistics will appear here.
-              </p>
-            </div>
+            <p class="text-[11px] uppercase tracking-wider text-white/30">
+              Goals
+            </p>
+          </div>
+        </div>
+      </div>
 
+      <!-- Empty -->
+      <div
+        v-else
+        class="flex min-h-[250px] items-center justify-center px-6 text-center"
+      >
+        <p class="text-sm text-white/30">
+          No goals recorded yet.
+        </p>
+      </div>
+    </div>
+
+    <!-- Top Assists -->
+    <div
+      class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]"
+    >
+      <div class="border-b border-white/10 p-6">
+        <h2 class="text-lg font-semibold">
+          Top Assists
+        </h2>
+
+        <p class="mt-1 text-sm text-white/40">
+          Leading players by assists.
+        </p>
+      </div>
+
+      <div
+        v-if="leagueStats.topAssists.length"
+        class="divide-y divide-white/10"
+      >
+        <div
+          v-for="(player, index) in leagueStats.topAssists"
+          :key="player.id"
+          class="flex items-center gap-4 px-6 py-4"
+        >
+          <!-- Rank -->
+          <div
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-xs font-semibold text-white/40"
+          >
+            {{ index + 1 }}
           </div>
 
+          <!-- Player -->
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <div
+              class="h-11 w-9 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]"
+            >
+              <img
+                v-if="player.photoUrl"
+                :src="player.photoUrl"
+                :alt="player.name"
+                class="h-full w-full object-cover"
+              />
+
+              <div
+                v-else
+                class="flex h-full w-full items-center justify-center text-xs font-semibold text-white/30"
+              >
+                {{ player.name?.charAt(0)?.toUpperCase() }}
+              </div>
+            </div>
+
+            <div class="min-w-0">
+              <button
+                type="button"
+                class="truncate text-left text-sm font-medium transition hover:text-white/60"
+                @click="router.push(`/admin/players/${player.id}`)"
+              >
+                {{ player.name }}
+              </button>
+
+              <p class="mt-0.5 text-xs text-white/40">
+                {{ player.position }}
+              </p>
+            </div>
+          </div>
 
           <!-- Assists -->
-
-          <div
-            class="rounded-3xl border border-white/10 bg-white/[0.03] p-6"
-          >
-
-            <h2 class="text-lg font-semibold">
-              Top Assists
-            </h2>
-
-            <p class="mt-1 text-sm text-white/40">
-              Leading players by assists.
+          <div class="text-right">
+            <p class="text-lg font-bold">
+              {{ player.assists }}
             </p>
 
-            <div class="mt-6 flex min-h-[250px] items-center justify-center text-center">
-              <p class="text-sm text-white/30">
-                Match statistics will appear here.
-              </p>
-            </div>
-
+            <p class="text-[11px] uppercase tracking-wider text-white/30">
+              Assists
+            </p>
           </div>
-
         </div>
+      </div>
 
-      </section>
-
+      <!-- Empty -->
+      <div
+        v-else
+        class="flex min-h-[250px] items-center justify-center px-6 text-center"
+      >
+        <p class="text-sm text-white/30">
+          No assists recorded yet.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
       <!-- Leaderboards -->
-
       <section
         v-else-if="activeTab === 'leaderboards'"
         class="mt-6"
       >
-
         <div
           class="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03] px-5 text-center"
         >
-
           <div
             class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10"
           >
@@ -612,26 +1085,106 @@ onMounted(() => {
           <p class="mt-2 max-w-md text-sm leading-6 text-white/40">
             Fantasy leaderboards will appear here once the fantasy competition begins.
           </p>
-
         </div>
-
       </section>
-
     </main>
 
+    <!-- Delete League Modal -->
+    <div
+      v-if="showDeleteLeagueModal"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+      @click.self="showDeleteLeagueModal = false"
+    >
+      <div
+        class="w-full max-w-md rounded-2xl border border-white/10 bg-[#171717] p-6 shadow-2xl"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-400/10 text-red-400"
+          >
+            <Trash2 class="h-5 w-5" />
+          </div>
+
+          <div>
+            <h2 class="text-lg font-semibold text-white">
+              Delete League?
+            </h2>
+
+            <p class="mt-1 text-sm leading-6 text-white/50">
+              This will permanently delete
+              <span class="font-medium text-white/80">
+                {{ league?.name }}
+              </span>
+              and all associated players, matches, events and fantasy teams.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            class="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/[0.06] hover:text-white disabled:opacity-50"
+            :disabled="deletingLeague"
+            @click="showDeleteLeagueModal = false"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+            :disabled="deletingLeague"
+            @click="handleDeleteLeague"
+          >
+            <Loader2
+              v-if="deletingLeague"
+              class="h-4 w-4 animate-spin"
+            />
+
+            <Trash2
+              v-else
+              class="h-4 w-4"
+            />
+
+            {{ deletingLeague ? 'Deleting...' : 'Delete League' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player Modal -->
     <PlayerFormModal
-  :open="showPlayerModal"
-  :loading="addingPlayer"
-  @close="showPlayerModal = false"
-  @submit="addPlayer"
-/>
+      :open="showPlayerModal"
+      :loading="playerSaving"
+      @close="showPlayerModal = false"
+      @submit="handlePlayerSubmit"
+    />
 
-<PlayerFormModal
-  :open="showPlayerModal"
-  :loading="playerSaving"
-  @close="showPlayerModal = false"
-  @submit="handlePlayerSubmit"
-/>
+    <!-- Record Goal Modal -->
+    <RecordGoalModal
+      :open="showGoalModal"
+      :players="league?.players || []"
+      :loading="goalSaving"
+      @close="showGoalModal = false"
+      @submit="recordGoal"
+    />
 
+    <!-- Clean Sheet Modal -->
+    <AwardCleanSheetModal
+      :open="showCleanSheetModal"
+      :players="league?.players || []"
+      :loading="cleanSheetSaving"
+      @close="showCleanSheetModal = false"
+      @submit="awardCleanSheets"
+    />
+
+    <!-- Edit League Modal -->
+    <LeagueFormModal
+      :open="showEditLeagueModal"
+      :league="league"
+      :loading="leagueSaving"
+      @close="showEditLeagueModal = false"
+      @submit="handleLeagueUpdate"
+    />
   </div>
 </template>

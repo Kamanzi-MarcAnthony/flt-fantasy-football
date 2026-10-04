@@ -46,7 +46,87 @@ export const createLeague = async (req, res) => {
       message: 'Unable to create league',
     })
   }
-  } 
+  }
+  
+export const updateLeague = async (req, res) => {
+  try {
+    const leagueId = Number(req.params.id)
+
+    if (!Number.isInteger(leagueId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const {
+      name,
+      location,
+      matchDay,
+      matchTime,
+      maxTransfers,
+    } = req.body || {}
+
+    if (!name || !matchDay || !matchTime) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, match day and match time are required',
+      })
+    }
+
+    if (
+      !Number.isInteger(Number(maxTransfers)) ||
+      Number(maxTransfers) < 1 ||
+      Number(maxTransfers) > 7
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Maximum transfers must be between 1 and 7',
+      })
+    }
+
+    const existingLeague = await prisma.league.findUnique({
+      where: {
+        id: leagueId,
+      },
+    })
+
+    if (!existingLeague) {
+      return res.status(404).json({
+        success: false,
+        message: 'League not found',
+      })
+    }
+
+    const league = await prisma.league.update({
+      where: {
+        id: leagueId,
+      },
+      data: {
+        name: name.trim(),
+        location: location?.trim() || null,
+        matchDay: matchDay.trim(),
+        matchTime: matchTime.trim(),
+        maxTransfers: Number(maxTransfers),
+      },
+    })
+
+    return res.json({
+      success: true,
+      message: 'League updated successfully',
+      data: {
+        league,
+      },
+    })
+  } catch (error) {
+    console.error('Update league error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to update league',
+    })
+  }
+}
 
 
 export const getLeagues = async (req, res) => {
@@ -122,6 +202,163 @@ export const getLeagueById = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Unable to fetch league',
+    })
+  }
+}
+
+export const deleteLeague = async (req, res) => {
+  try {
+    const leagueId = Number(req.params.id)
+
+    if (!Number.isInteger(leagueId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const league = await prisma.league.findUnique({
+      where: { id: leagueId },
+    })
+
+    if (!league) {
+      return res.status(404).json({
+        success: false,
+        message: 'League not found',
+      })
+    }
+
+    await prisma.league.delete({
+      where: { id: leagueId },
+    })
+
+    return res.json({
+      success: true,
+      message: 'League deleted successfully',
+    })
+  } catch (error) {
+    console.error('Delete league error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to delete league',
+    })
+  }
+}
+
+export const getLeagueStats = async (req, res) => {
+  try {
+    const leagueId = Number(req.params.id)
+
+    if (!Number.isInteger(leagueId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const league = await prisma.league.findUnique({
+      where: { id: leagueId },
+      select: { id: true },
+    })
+
+    if (!league) {
+      return res.status(404).json({
+        success: false,
+        message: 'League not found',
+      })
+    }
+
+    const [goalStats, assistStats] = await Promise.all([
+      prisma.matchEvent.groupBy({
+        by: ['playerId'],
+        where: {
+          type: 'GOAL',
+          player: {
+            leagueId,
+            deletedAt: null,
+          },
+        },
+        _count: {
+          playerId: true,
+        },
+        orderBy: {
+          _count: {
+            playerId: 'desc',
+          },
+        },
+        take: 5,
+      }),
+
+      prisma.matchEvent.groupBy({
+        by: ['playerId'],
+        where: {
+          type: 'ASSIST',
+          player: {
+            leagueId,
+            deletedAt: null,
+          },
+        },
+        _count: {
+          playerId: true,
+        },
+        orderBy: {
+          _count: {
+            playerId: 'desc',
+          },
+        },
+        take: 5,
+      }),
+    ])
+
+    const playerIds = [
+      ...new Set([
+        ...goalStats.map((item) => item.playerId),
+        ...assistStats.map((item) => item.playerId),
+      ]),
+    ]
+
+    const players = await prisma.player.findMany({
+      where: {
+        id: {
+          in: playerIds,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        photoUrl: true,
+        position: true,
+      },
+    })
+
+    const playerMap = new Map(
+      players.map((player) => [player.id, player]),
+    )
+
+    const topGoalscorers = goalStats.map((item) => ({
+      ...playerMap.get(item.playerId),
+      goals: item._count.playerId,
+    }))
+
+    const topAssists = assistStats.map((item) => ({
+      ...playerMap.get(item.playerId),
+      assists: item._count.playerId,
+    }))
+
+    return res.json({
+      success: true,
+      data: {
+        topGoalscorers,
+        topAssists,
+      },
+    })
+  } catch (error) {
+    console.error('Get league stats error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load league statistics',
     })
   }
 }
