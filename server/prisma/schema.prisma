@@ -86,6 +86,8 @@ model Player {
   ovr      Int
   price    Decimal        @db.Decimal(10, 2)
 
+  deletedAt DateTime?
+
   teamPlayers FantasyTeamPlayer[]
   events      MatchEvent[]
 

@@ -115,6 +115,7 @@ export const PlayerScalarFieldEnum = {
   position: 'position',
   ovr: 'ovr',
   price: 'price',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

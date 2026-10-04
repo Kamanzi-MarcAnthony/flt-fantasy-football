@@ -58,6 +58,15 @@ const router = createRouter({
           name: 'admin-league-details',
           component: () => import('../pages/admin/LeagueDetails.vue'),
         },
+
+        {
+          path: '/admin/players',
+          component: () => import('../pages/admin/Players.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['SUPER_ADMIN', 'ADMIN'],
+          },
+        },
       ],
     },
 

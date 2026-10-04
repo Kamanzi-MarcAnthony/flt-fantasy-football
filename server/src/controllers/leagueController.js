@@ -2,8 +2,6 @@ import prisma from '../config/prisma.js'
 
 export const createLeague = async (req, res) => {
   try {
-    console.log('CREATE LEAGUE BODY:', req.body)
-
     const { name, location, matchDay, matchTime, maxTransfers } = req.body || {}
 
     if (!name || !matchDay) {
