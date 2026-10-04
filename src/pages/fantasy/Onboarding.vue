@@ -1,4 +1,4 @@
-<!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable vue/multi-word-component-names
 <script setup>
 import { useRouter } from 'vue-router'
 import pitch from '../../assets/images/pitch.jpg'
@@ -12,15 +12,11 @@ const handleStart = () => {
 
 <template>
   <div
-    class="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4"
-    :style="{ backgroundImage: `url(${pitch})` }"
+    class="min-h-screen bg-[#010056]  flex items-center justify-center px-4"
   >
-    <div
-      class="absolute inset-0 bg-black/60"
-    ></div>
 
     <div
-      class="relative w-full max-w-md bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-sm outline outline-blue-500/75 text-center"
+      class="relative w-full max-w-md bg-white/20 backdrop-blur-xl rounded-3xl p-8 shadow-sm outline outline-blue-500/75 text-center"
     >
       <div class="mb-8">
         <div
@@ -49,4 +45,4 @@ const handleStart = () => {
       </button>
     </div>
   </div>
-</template>
+</template> -->

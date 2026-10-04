@@ -385,3 +385,119 @@ export const resetAdminPassword = async (req, res) => {
     })
   }
 }
+
+export const getFantasyUsers = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        role: 'FANTASY_USER',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isActive: true,
+        createdAt: true,
+
+        fantasyMemberships: {
+          select: {
+            league: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+
+        fantasyTeams: {
+          select: {
+            id: true,
+            name: true,
+            leagueId: true,
+          },
+        },
+      },
+    })
+
+    const formattedUsers = users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      leagues: user.fantasyMemberships.map(
+        (membership) => membership.league,
+      ),
+      teams: user.fantasyTeams,
+    }))
+
+    return res.json({
+      success: true,
+      data: {
+        users: formattedUsers,
+      },
+    })
+  } catch (error) {
+    console.error('Get fantasy users error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load fantasy users',
+    })
+  }
+}
+
+export const deleteFantasyUser = async (req, res) => {
+  try {
+    const userId = Number(req.params.id)
+
+    if (!Number.isInteger(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid user ID',
+      })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        role: true,
+      },
+    })
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy user not found',
+      })
+    }
+
+    if (user.role !== 'FANTASY_USER') {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only delete fantasy users',
+      })
+    }
+
+    await prisma.user.delete({
+      where: { id: userId },
+    })
+
+    return res.json({
+      success: true,
+      message: 'Fantasy user deleted successfully',
+    })
+  } catch (error) {
+    console.error('Delete fantasy user error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to delete fantasy user',
+    })
+  }
+}

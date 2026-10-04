@@ -5,6 +5,8 @@ import {
   updateAdmin,
   updateAdminStatus,
   resetAdminPassword,
+  getFantasyUsers,
+  deleteFantasyUser,
 } from '../controllers/adminController.js'
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -46,4 +48,17 @@ router.patch(
   resetAdminPassword,
 )
 
+router.get(
+  '/fantasy-users',
+  authenticate,
+  authorize('SUPER_ADMIN', 'ADMIN'),
+  getFantasyUsers,
+)
+
+router.delete(
+  '/fantasy-users/:id',
+  authenticate,
+  authorize('SUPER_ADMIN'),
+  deleteFantasyUser,
+)
 export default router

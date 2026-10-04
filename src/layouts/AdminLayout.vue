@@ -51,12 +51,23 @@ const handleLogout = () => {
                     Dashboard
                 </RouterLink>
 
-                <RouterLink to="/admin/leagues"
-                    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white"
-                    active-class="bg-white/10 !text-white">
-                    <Trophy class="h-5 w-5" />
-                    Leagues
-                </RouterLink>
+                <RouterLink
+    to="/admin/leagues"
+    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white"
+    active-class="bg-white/10 !text-white"
+>
+    <Trophy class="h-5 w-5" />
+    Leagues
+</RouterLink>
+
+<RouterLink
+    to="/admin/fantasy-players"
+    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white"
+    active-class="bg-white/10 !text-white"
+>
+    <Users class="h-5 w-5" />
+    Fantasy Players
+</RouterLink>
 
                 <RouterLink to="/admin/players"
                     class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/60 transition hover:bg-white/5 hover:text-white"
