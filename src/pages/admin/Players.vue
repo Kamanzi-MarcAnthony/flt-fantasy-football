@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { MoreVertical, Users } from 'lucide-vue-next'
 import api from '../../services/api'
 
@@ -7,6 +8,7 @@ const players = ref([])
 const loading = ref(true)
 const error = ref(null)
 const openMenuId = ref(null)
+const router = useRouter()
 
 const fetchPlayers = async () => {
   loading.value = true
@@ -171,7 +173,13 @@ onMounted(fetchPlayers)
                 <div class="min-w-0">
 
                   <p class="truncate text-sm font-medium text-white">
-                    {{ player.name }}
+                    <button
+                      type="button"
+                      cursor="pointer"
+                      class="font-semibold transition hover:text-white/60"
+                      @click="router.push(`/admin/players/${player.id}`)">
+                      {{ player.name }}
+                    </button>
                   </p>
 
                   <p class="mt-0.5 text-xs text-white/40">

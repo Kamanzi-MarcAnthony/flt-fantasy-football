@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import PlayerProfile from '../pages/admin/PlayerProfile.vue'
 import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
@@ -65,6 +66,14 @@ const router = createRouter({
           meta: {
             requiresAuth: true,
             roles: ['SUPER_ADMIN', 'ADMIN'],
+          },
+        },
+
+        {
+          path: '/admin/players/:id',
+          component: PlayerProfile,
+          meta: {
+          roles: ['SUPER_ADMIN', 'ADMIN'],
           },
         },
       ],

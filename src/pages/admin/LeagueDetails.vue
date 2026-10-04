@@ -21,6 +21,7 @@ const loading = ref(true)
 const error = ref(null)
 const activeTab = ref('players')
 const showPlayerModal = ref(false)
+const playerSaving = ref(false)
 const addingPlayer = ref(false)
 
 const tabs = computed(() => [
@@ -37,6 +38,29 @@ const tabs = computed(() => [
     label: 'Leaderboards',
   },
 ])
+
+const openAddPlayer = () => {
+  showPlayerModal.value = true
+}
+
+const handlePlayerSubmit = async (playerData) => {
+  playerSaving.value = true
+
+  try {
+    await api.post(
+      `/leagues/${route.params.id}/players`,
+      playerData,
+    )
+
+    showPlayerModal.value = false
+
+    await fetchLeague()
+  } catch (err) {
+    console.error('Failed to add player:', err)
+  } finally {
+    playerSaving.value = false
+  }
+}
 
 const fetchLeague = async () => {
   loading.value = true
@@ -387,7 +411,6 @@ onMounted(() => {
   </span>
 </div>
 
-
           <!-- Rows -->
            <div class="divide-y divide-white/10">
             <div
@@ -422,9 +445,13 @@ onMounted(() => {
       <!-- Player name + position -->
 
       <div class="min-w-0">
-        <p class="truncate text-sm font-medium text-white">
-          {{ player.name }}
-        </p>
+        <button
+        type="button"
+        class="truncate text-left text-sm font-medium transition hover:text-white/60"
+        @click="router.push(`/admin/players/${player.id}`)"
+        >
+        {{ player.name }}
+        </button>
 
         <p class="mt-0.5 text-xs text-white/40">
           {{ player.position }}
@@ -597,6 +624,13 @@ onMounted(() => {
   :loading="addingPlayer"
   @close="showPlayerModal = false"
   @submit="addPlayer"
+/>
+
+<PlayerFormModal
+  :open="showPlayerModal"
+  :loading="playerSaving"
+  @close="showPlayerModal = false"
+  @submit="handlePlayerSubmit"
 />
 
   </div>

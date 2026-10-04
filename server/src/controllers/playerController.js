@@ -127,6 +127,83 @@ export const getPlayers = async (req, res) => {
   }
 }
 
+export const getPlayerById = async (req, res) => {
+  try {
+    const playerId = Number(req.params.id)
+
+    if (!Number.isInteger(playerId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid player ID',
+      })
+    }
+
+    const player = await prisma.player.findFirst({
+      where: {
+        id: playerId,
+        deletedAt: null,
+      },
+      include: {
+        league: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        events: {
+          select: {
+            type: true,
+          },
+        },
+      },
+    })
+
+    if (!player) {
+      return res.status(404).json({
+        success: false,
+        message: 'Player not found',
+      })
+    }
+
+    const hasStats = player.events.length > 0
+
+    const goals = player.events.filter(
+      (event) => event.type === 'GOAL',
+    ).length
+
+    const assists = player.events.filter(
+      (event) => event.type === 'ASSIST',
+    ).length
+
+    const cleanSheets = player.events.filter(
+      (event) => event.type === 'CLEAN_SHEET',
+    ).length
+
+    const { events, ...playerData } = player
+
+    return res.json({
+      success: true,
+      data: {
+        player: {
+          ...playerData,
+          stats: {
+            goals: hasStats ? goals : null,
+            assists: hasStats ? assists : null,
+            cleanSheets: hasStats ? cleanSheets : null,
+          },
+        },
+      },
+    })
+  } catch (error) {
+    console.error('Get player error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to fetch player',
+    })
+  }
+}
+
 
 export const updatePlayer = async (req, res) => {
   try {
@@ -147,7 +224,16 @@ export const updatePlayer = async (req, res) => {
       price,
     } = req.body || {}
 
-    if (!name || !position || ovr === undefined || price === undefined) {
+    if (
+      typeof name !== 'string' ||
+      !name.trim() ||
+      typeof position !== 'string' ||
+      !position.trim() ||
+      ovr === undefined ||
+      ovr === null ||
+      price === undefined ||
+      price === null
+    ) {
       return res.status(400).json({
         success: false,
         message: 'Name, position, OVR and price are required',
@@ -177,7 +263,10 @@ export const updatePlayer = async (req, res) => {
       })
     }
 
-    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
+    if (
+      !Number.isFinite(parsedPrice) ||
+      parsedPrice <= 0
+    ) {
       return res.status(400).json({
         success: false,
         message: 'Price must be greater than 0',
