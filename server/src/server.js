@@ -1,7 +1,9 @@
 import 'dotenv/config'
 import app from './app.js'
 import prisma from './config/prisma.js'
+import adminRoutes from './routes/adminRoutes.js'
 
+app.use('/api/admin', adminRoutes)
 const PORT = process.env.PORT || 5000
 
 const startServer = async () => {

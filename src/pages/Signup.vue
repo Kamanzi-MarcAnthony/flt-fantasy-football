@@ -50,7 +50,7 @@ const handleSignup = async () => {
     )
 
     if (success) {
-        router.push('/fantasy')
+        router.push('/fantasy/join-league')
     }
 }
 </script>

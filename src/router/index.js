@@ -88,15 +88,15 @@ const router = createRouter({
           roles: ['SUPER_ADMIN', 'ADMIN'],
           },
         },
+        {
+  path: 'fantasy-players',
+  name: 'admin-fantasy-players',
+  component: () => import('../pages/admin/FantasyPlayers.vue'),
+}
       ],
     },
 
     //FANTASY ONBOARDING 
-    {
-  path: '/fantasy/onboarding',
-  name: 'FantasyOnboarding',
-  component: () => import('../pages/fantasy/Onboarding.vue'),
-},
 
 {
   path: '/fantasy/join-league',
@@ -137,11 +137,11 @@ const router = createRouter({
       component: () => import('../pages/fantasy/JoinLeague.vue'),
     },
 
-    {
-      path: 'leaderboard',
-      name: 'fantasy-leaderboard',
-      component: () => import('../pages/fantasy/LeaderBoard.vue'),
-    },
+    // {
+    //   path: 'leaderboard',
+    //   name: 'fantasy-leaderboard',
+    //   component: () => import('../pages/fantasy/LeaderBoard.vue'),
+    // },
 
     {
       path: 'profile',

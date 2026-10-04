@@ -312,13 +312,24 @@ onMounted(loadPlayers)
               >
                 <button
                   type="button"
-                  class="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-lg transition group-hover:border-white/40 sm:h-24 sm:w-24"
+                  class="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-lg transition group-hover:border-white/40 sm:h-24 sm:w-24 p-2"
                   @click="removePlayer(index)"
                 >
-                  <span class="text-2xl font-bold text-white/70">
-                    {{ player.name.charAt(0) }}
-                  </span>
+                  <div class="h-full w-[95%] overflow-hidden rounded-lg border-2 border-white/20 bg-white/10">
+                    <img
+                        v-if="player.photoUrl"
+                        :src="player.photoUrl"
+                        :alt="player.name"
+                        class="h-full w-full object-cover"
+                    />
 
+    <span
+      v-else
+      class="flex h-full w-full items-center justify-center text-lg font-bold text-white/50"
+    >
+      {{ player.name.charAt(0) }}
+    </span>
+  </div>
                   <span
                     class="absolute right-1 top-1 hidden rounded-full bg-black/70 p-1 group-hover:block"
                   >
