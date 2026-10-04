@@ -5,6 +5,7 @@ import userRoutes from './routes/userRoutes.js'
 import leagueRoutes from './routes/leagueRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import playerRoutes from './routes/playerRoutes.js'
+import matchRoutes from './routes/matchRoutes.js'
 
 const app = express()
 
@@ -15,8 +16,6 @@ app.use(
 )
 
 app.use(express.json())
-app.use('/api/players', playerRoutes)
-
 
 app.get('/api/health', (req, res) => {
   res.json({
@@ -29,5 +28,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/leagues', leagueRoutes)
 app.use('/api/admins', adminRoutes)
+app.use('/api/players', playerRoutes)
+app.use('/api', matchRoutes)
 
 export default app
