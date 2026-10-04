@@ -4,6 +4,7 @@ import authRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import leagueRoutes from './routes/leagueRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+import playerRoutes from './routes/playerRoutes.js'
 
 const app = express()
 
@@ -12,6 +13,8 @@ app.use(
     origin: ['http://localhost:5173', 'https://flt-fantasy-football.vercel.app'],
   }),
 )
+
+app.use('/api/players', playerRoutes)
 
 app.use(express.json())
 
