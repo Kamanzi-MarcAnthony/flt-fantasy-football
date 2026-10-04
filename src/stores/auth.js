@@ -49,6 +49,43 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+  async register(name, email, password, confirmPassword) {
+  this.loading = true
+  this.error = null
+
+  try {
+    const response = await api.post('/auth/register', {
+      name,
+      email,
+      password,
+      confirmPassword,
+    })
+
+    const {
+      token,
+      refreshToken,
+      user,
+    } = response.data.data
+
+    this.user = user
+    this.token = token
+    this.refreshToken = refreshToken
+    this.isAuthenticated = true
+
+    this.saveAuth()
+
+    return true
+  } catch (error) {
+    this.error =
+      error.response?.data?.message ||
+      'Unable to create your account. Please try again.'
+
+    return false
+  } finally {
+    this.loading = false
+  }
+},
+
     saveAuth() {
       localStorage.setItem(
         STORAGE_KEY,

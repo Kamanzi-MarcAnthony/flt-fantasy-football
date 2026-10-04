@@ -52,6 +52,11 @@ export type User = Prisma.UserModel
  */
 export type League = Prisma.LeagueModel
 /**
+ * Model FantasyLeagueMember
+ * 
+ */
+export type FantasyLeagueMember = Prisma.FantasyLeagueMemberModel
+/**
  * Model Player
  * 
  */

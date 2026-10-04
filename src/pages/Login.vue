@@ -15,14 +15,11 @@ const email = ref('')
 const password = ref('')
 
 const handleLogin = async () => {
-    const success = await authStore.login(
-        email.value,
-        password.value
-    )
+    const success = await authStore.login(email.value, password.value)
 
     if (success) {
-        if (authStore.user.role === 'player') {
-            router.push('/fantasy')
+        if (authStore.user.role === 'FANTASY_USER') {
+            router.push('/fantasy/join-league')
         } else {
             router.push('/admin')
         }
@@ -34,13 +31,13 @@ const handleLogin = async () => {
     <div class="h-screen min-w-screen h-screen bg-cover bg-center bg-no-repeat bg-blend-multiply flex items-center justify-center px-4"
         :style="{ backgroundImage: `url(${pitch})` }">
         <div
-            class="w-full max-w-md bg-white/10 backdrop-blur-xl rounded-3xl gap-2 p-8 shadow-sm flex flex-col justify-center outline outline-blue-500/75">
+            class="w-full max-w-md bg-[#01005679] backdrop-blur-xl rounded-3xl gap-2 p-8 shadow-sm flex flex-col justify-center outline outline-white/20">
             <div class="mb-8 p-2 text-center">
                 <h1 class="text-3xl font-sans text-white">
                     FLT Fantasy Football
                 </h1>
                 <p class="mt-2 text-sm text-white font-medium pt-2">
-                    Sign in to your admin account
+                    Sign in to your account
                 </p>
             </div>
             <form @submit.prevent="handleLogin" class="space-y-5 flex flex-col  justify-between gap-4 ">
@@ -93,7 +90,7 @@ const handleLogin = async () => {
                 </div>
 
                 <button type="submit" :disabled="authStore.loading"
-                    class="w-full rounded-lg bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-800">
+                    class="w-full h-12 rounded-lg bg-[#00EEFF] px-4 py-3 text-sm font-bold text-[#010056] transition ">
                     {{ authStore.loading ? 'Logging in...' : 'Login' }}
                 </button>
 

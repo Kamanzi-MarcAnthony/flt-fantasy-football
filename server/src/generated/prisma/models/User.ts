@@ -250,6 +250,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   leaguesCreated?: Prisma.LeagueListRelationFilter
   fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+  fantasyMemberships?: Prisma.FantasyLeagueMemberListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -264,6 +265,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   leaguesCreated?: Prisma.LeagueOrderByRelationAggregateInput
   fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -281,6 +283,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   leaguesCreated?: Prisma.LeagueListRelationFilter
   fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+  fantasyMemberships?: Prisma.FantasyLeagueMemberListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -326,6 +329,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
   fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -340,6 +344,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
   fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -353,6 +358,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
   fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -367,6 +373,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
   fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -495,6 +502,20 @@ export type UserUpdateOneRequiredWithoutLeaguesCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeaguesCreatedInput, Prisma.UserUpdateWithoutLeaguesCreatedInput>, Prisma.UserUncheckedUpdateWithoutLeaguesCreatedInput>
 }
 
+export type UserCreateNestedOneWithoutFantasyMembershipsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFantasyMembershipsInput, Prisma.UserUncheckedCreateWithoutFantasyMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFantasyMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFantasyMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFantasyMembershipsInput, Prisma.UserUncheckedCreateWithoutFantasyMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFantasyMembershipsInput
+  upsert?: Prisma.UserUpsertWithoutFantasyMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFantasyMembershipsInput, Prisma.UserUpdateWithoutFantasyMembershipsInput>, Prisma.UserUncheckedUpdateWithoutFantasyMembershipsInput>
+}
+
 export type UserCreateNestedOneWithoutFantasyTeamsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFantasyTeamsInput, Prisma.UserUncheckedCreateWithoutFantasyTeamsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFantasyTeamsInput
@@ -519,6 +540,7 @@ export type UserCreateWithoutLeaguesCreatedInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaguesCreatedInput = {
@@ -532,6 +554,7 @@ export type UserUncheckedCreateWithoutLeaguesCreatedInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaguesCreatedInput = {
@@ -560,6 +583,7 @@ export type UserUpdateWithoutLeaguesCreatedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaguesCreatedInput = {
@@ -573,6 +597,77 @@ export type UserUncheckedUpdateWithoutLeaguesCreatedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFantasyMembershipsInput = {
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  refreshTokenHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
+  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFantasyMembershipsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  refreshTokenHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFantasyMembershipsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFantasyMembershipsInput, Prisma.UserUncheckedCreateWithoutFantasyMembershipsInput>
+}
+
+export type UserUpsertWithoutFantasyMembershipsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFantasyMembershipsInput, Prisma.UserUncheckedUpdateWithoutFantasyMembershipsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFantasyMembershipsInput, Prisma.UserUncheckedCreateWithoutFantasyMembershipsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFantasyMembershipsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFantasyMembershipsInput, Prisma.UserUncheckedUpdateWithoutFantasyMembershipsInput>
+}
+
+export type UserUpdateWithoutFantasyMembershipsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFantasyMembershipsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFantasyTeamsInput = {
@@ -585,6 +680,7 @@ export type UserCreateWithoutFantasyTeamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFantasyTeamsInput = {
@@ -598,6 +694,7 @@ export type UserUncheckedCreateWithoutFantasyTeamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFantasyTeamsInput = {
@@ -626,6 +723,7 @@ export type UserUpdateWithoutFantasyTeamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
@@ -639,6 +737,7 @@ export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
+  fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -649,11 +748,13 @@ export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
 export type UserCountOutputType = {
   leaguesCreated: number
   fantasyTeams: number
+  fantasyMemberships: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leaguesCreated?: boolean | UserCountOutputTypeCountLeaguesCreatedArgs
   fantasyTeams?: boolean | UserCountOutputTypeCountFantasyTeamsArgs
+  fantasyMemberships?: boolean | UserCountOutputTypeCountFantasyMembershipsArgs
 }
 
 /**
@@ -680,6 +781,13 @@ export type UserCountOutputTypeCountFantasyTeamsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.FantasyTeamWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFantasyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FantasyLeagueMemberWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -693,6 +801,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   leaguesCreated?: boolean | Prisma.User$leaguesCreatedArgs<ExtArgs>
   fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+  fantasyMemberships?: boolean | Prisma.User$fantasyMembershipsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -736,6 +845,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leaguesCreated?: boolean | Prisma.User$leaguesCreatedArgs<ExtArgs>
   fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+  fantasyMemberships?: boolean | Prisma.User$fantasyMembershipsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -746,6 +856,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     leaguesCreated: Prisma.$LeaguePayload<ExtArgs>[]
     fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
+    fantasyMemberships: Prisma.$FantasyLeagueMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1153,6 +1264,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   leaguesCreated<T extends Prisma.User$leaguesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaguesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fantasyTeams<T extends Prisma.User$fantasyTeamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fantasyTeamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  fantasyMemberships<T extends Prisma.User$fantasyMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fantasyMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyLeagueMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1629,6 +1741,30 @@ export type User$fantasyTeamsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.FantasyTeamScalarFieldEnum | Prisma.FantasyTeamScalarFieldEnum[]
+}
+
+/**
+ * User.fantasyMemberships
+ */
+export type User$fantasyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FantasyLeagueMember
+   */
+  select?: Prisma.FantasyLeagueMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FantasyLeagueMember
+   */
+  omit?: Prisma.FantasyLeagueMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FantasyLeagueMemberInclude<ExtArgs> | null
+  where?: Prisma.FantasyLeagueMemberWhereInput
+  orderBy?: Prisma.FantasyLeagueMemberOrderByWithRelationInput | Prisma.FantasyLeagueMemberOrderByWithRelationInput[]
+  cursor?: Prisma.FantasyLeagueMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FantasyLeagueMemberScalarFieldEnum | Prisma.FantasyLeagueMemberScalarFieldEnum[]
 }
 
 /**

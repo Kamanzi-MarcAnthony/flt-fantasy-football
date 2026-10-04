@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   League: 'League',
+  FantasyLeagueMember: 'FantasyLeagueMember',
   Player: 'Player',
   FantasyTeam: 'FantasyTeam',
   FantasyTeamPlayer: 'FantasyTeamPlayer',
@@ -107,6 +108,16 @@ export const LeagueScalarFieldEnum = {
 export type LeagueScalarFieldEnum = (typeof LeagueScalarFieldEnum)[keyof typeof LeagueScalarFieldEnum]
 
 
+export const FantasyLeagueMemberScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  leagueId: 'leagueId',
+  joinedAt: 'joinedAt'
+} as const
+
+export type FantasyLeagueMemberScalarFieldEnum = (typeof FantasyLeagueMemberScalarFieldEnum)[keyof typeof FantasyLeagueMemberScalarFieldEnum]
+
+
 export const PlayerScalarFieldEnum = {
   id: 'id',
   leagueId: 'leagueId',
@@ -128,7 +139,7 @@ export const FantasyTeamScalarFieldEnum = {
   userId: 'userId',
   leagueId: 'leagueId',
   name: 'name',
-  budget: 'budget',
+  bank: 'bank',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

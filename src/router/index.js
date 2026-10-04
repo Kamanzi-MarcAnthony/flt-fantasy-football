@@ -8,12 +8,24 @@ const router = createRouter({
   routes: [
     // AUTH
     {
+      path: '/',
+      name: 'Landing',
+      component: () => import('../pages/Landing.vue'),
+    },
+
+    {
       path: '/login',
       name: 'login',
       component: () => import('../pages/Login.vue'),
       meta: {
         guestOnly: true,
       },
+    },
+
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: () => import('../pages/Signup.vue'),
     },
 
     // ADMIN PORTAL
@@ -79,53 +91,75 @@ const router = createRouter({
       ],
     },
 
-    // FANTASY USER PORTAL
+    //FANTASY ONBOARDING 
     {
-      path: '/fantasy',
-      component: () => import('../layouts/FantasyLayout.vue'),
-      meta: {
-        requiresAuth: true,
-        roles: ['PLAYER'],
-      },
+  path: '/fantasy/onboarding',
+  name: 'FantasyOnboarding',
+  component: () => import('../pages/fantasy/Onboarding.vue'),
+},
 
-      children: [
-        {
-          path: '',
-          name: 'fantasy-home',
-          component: () => import('../pages/fantasy/Home.vue'),
-        },
+{
+  path: '/fantasy/join-league',
+  name: 'FantasyJoinLeague',
+  component: () => import('../pages/fantasy/JoinLeague.vue'),
+},
 
-        {
-          path: 'team',
-          name: 'fantasy-team',
-          component: () => import('../pages/fantasy/MyTeam.vue'),
-        },
+    // FANTASY USER PORTAL
+{
+  path: '/fantasy',
+  component: () => import('../layouts/FantasyLayout.vue'),
+  meta: {
+    requiresAuth: true,
+    roles: ['FANTASY_USER'],
+  },
 
-        {
-          path: 'players',
-          name: 'fantasy-players',
-          component: () => import('../pages/fantasy/Players.vue'),
-        },
-
-        {
-          path: 'leagues',
-          name: 'fantasy-leagues',
-          component: () => import('../pages/fantasy/Leagues.vue'),
-        },
-
-        {
-          path: 'leaderboard',
-          name: 'fantasy-leaderboard',
-          component: () => import('../pages/fantasy/Leaderboard.vue'),
-        },
-
-        {
-          path: 'profile',
-          name: 'fantasy-profile',
-          component: () => import('../pages/fantasy/Profile.vue'),
-        },
-      ],
+  children: [
+    {
+      path: '',
+      redirect: '/fantasy/team',
     },
+
+    {
+      path: 'team',
+      name: 'fantasy-team',
+      component: () => import('../pages/fantasy/CreateTeam.vue'),
+    },
+
+    {
+      path: 'players',
+      name: 'fantasy-players',
+      component: () => import('../components/fantasy/PlayerSelectionModal.vue'),
+    },
+
+    {
+      path: 'leagues',
+      name: 'fantasy-leagues',
+      component: () => import('../pages/fantasy/JoinLeague.vue'),
+    },
+
+    {
+      path: 'leaderboard',
+      name: 'fantasy-leaderboard',
+      component: () => import('../pages/fantasy/LeaderBoard.vue'),
+    },
+
+    {
+      path: 'profile',
+      name: 'fantasy-profile',
+      component: () => import('../pages/fantasy/Profile.vue'),
+    },
+  ],
+},
+
+{
+  path: '/fantasy/team/create',
+  name: 'FantasyCreateTeam',
+  component: () => import('../pages/fantasy/CreateTeam.vue'),
+  meta: {
+    requiresAuth: true,
+    roles: ['FANTASY_USER'],
+  },
+},
 
     // OLD URL REDIRECTS
     {
@@ -152,41 +186,28 @@ const router = createRouter({
 
 // AUTHENTICATION GUARD
 router.beforeEach((to) => {
-  const authStore = useAuthStore()
+    const authStore = useAuthStore()
 
-  // Not logged in → login
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    return '/login'
-  }
+    const requiresAuth = to.meta.requiresAuth
+    const isFantasyRoute = to.path.startsWith('/fantasy')
+    const isAdminRoute = to.path.startsWith('/admin')
 
-  // Logged-in user trying to access login
-  if (to.meta.guestOnly && authStore.isAuthenticated) {
-    if (authStore.user?.role === 'PLAYER') {
-      return '/fantasy'
+    if (requiresAuth && !authStore.isAuthenticated) {
+        return '/login'
     }
 
-    if (authStore.user?.role === 'SUPER_ADMIN' || authStore.user?.role === 'ADMIN') {
-      return '/admin'
+    if (isFantasyRoute && authStore.user?.role !== 'FANTASY_USER') {
+        return '/login'
     }
 
-    // Invalid stored auth
-    authStore.logout()
-    return '/login'
-  }
-
-  // Check role
-  if (to.meta.roles && !to.meta.roles.includes(authStore.user?.role)) {
-    if (authStore.user?.role === 'PLAYER') {
-      return '/fantasy'
+    if (
+        isAdminRoute &&
+        !['ADMIN', 'SUPER_ADMIN'].includes(authStore.user?.role)
+    ) {
+        return '/login'
     }
 
-    if (authStore.user?.role === 'SUPER_ADMIN' || authStore.user?.role === 'ADMIN') {
-      return '/admin'
-    }
-
-    authStore.logout()
-    return '/login'
-  }
+    return true
 })
 
 export default router

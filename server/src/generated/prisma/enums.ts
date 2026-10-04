@@ -12,6 +12,7 @@
 export const UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
+  FANTASY_USER: 'FANTASY_USER',
   PLAYER: 'PLAYER'
 } as const
 
