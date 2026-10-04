@@ -14,9 +14,9 @@ app.use(
   }),
 )
 
+app.use(express.json())
 app.use('/api/players', playerRoutes)
 
-app.use(express.json())
 
 app.get('/api/health', (req, res) => {
   res.json({

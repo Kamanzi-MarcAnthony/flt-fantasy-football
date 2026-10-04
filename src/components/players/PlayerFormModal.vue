@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { ImagePlus, X, Loader2 } from 'lucide-vue-next'
 import { uploadPlayerPhoto } from '../../services/cloudinary'
 
@@ -8,9 +8,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
   loading: {
     type: Boolean,
     default: false,
+  },
+
+  player: {
+    type: Object,
+    default: null,
   },
 })
 
@@ -35,7 +41,89 @@ const positions = [
   { value: 'ST', label: 'Striker' },
 ]
 
-const isBusy = computed(() => props.loading || uploading.value)
+const isEditMode = computed(() => !!props.player)
+
+const isBusy = computed(() => {
+  return props.loading || uploading.value
+})
+
+const modalTitle = computed(() => {
+  return isEditMode.value ? 'Edit Player' : 'Add Player'
+})
+
+const modalDescription = computed(() => {
+  return isEditMode.value
+    ? 'Update this player’s details'
+    : 'Add a player to this league'
+})
+
+const submitLabel = computed(() => {
+  if (uploading.value) return 'Uploading...'
+
+  if (props.loading) {
+    return isEditMode.value ? 'Saving...' : 'Adding...'
+  }
+
+  return isEditMode.value ? 'Save Changes' : 'Add Player'
+})
+
+const revokePreview = () => {
+  if (previewUrl.value?.startsWith('blob:')) {
+    URL.revokeObjectURL(previewUrl.value)
+  }
+}
+
+const resetForm = () => {
+  revokePreview()
+
+  form.value = {
+    name: '',
+    position: 'ST',
+    ovr: '',
+    price: '',
+  }
+
+  selectedFile.value = null
+  previewUrl.value = ''
+  error.value = ''
+}
+
+const populateForm = (player) => {
+  revokePreview()
+
+  selectedFile.value = null
+  error.value = ''
+
+  if (player) {
+    form.value = {
+      name: player.name || '',
+      position: player.position || 'ST',
+      ovr: player.ovr ?? '',
+      price: player.price ?? '',
+    }
+
+    previewUrl.value = player.photoUrl || ''
+  } else {
+    form.value = {
+      name: '',
+      position: 'ST',
+      ovr: '',
+      price: '',
+    }
+
+    previewUrl.value = ''
+  }
+}
+
+watch(
+  () => [props.open, props.player],
+  ([open, player]) => {
+    if (!open) return
+
+    populateForm(player)
+  },
+  { immediate: true },
+)
 
 const handleFileChange = (event) => {
   const file = event.target.files?.[0]
@@ -60,21 +148,19 @@ const handleFileChange = (event) => {
     return
   }
 
+  revokePreview()
+
   selectedFile.value = file
-
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
-  }
-
   previewUrl.value = URL.createObjectURL(file)
+
+  // Allows selecting the same file again later.
+  event.target.value = ''
 }
 
 const removePhoto = () => {
   selectedFile.value = null
 
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
-  }
+  revokePreview()
 
   previewUrl.value = ''
 }
@@ -100,13 +186,15 @@ const handleSubmit = async () => {
   try {
     uploading.value = true
 
-    let photoUrl = null
+    let photoUrl = props.player?.photoUrl || null
 
+    // Only upload when the admin selected a new photo.
     if (selectedFile.value) {
       photoUrl = await uploadPlayerPhoto(selectedFile.value)
     }
 
     emit('submit', {
+      id: props.player?.id,
       name: form.value.name.trim(),
       photoUrl,
       position: form.value.position,
@@ -115,22 +203,12 @@ const handleSubmit = async () => {
     })
   } catch (err) {
     console.error(err)
-    error.value = 'Unable to upload player photo. Please try again.'
+
+    error.value =
+      'Unable to upload player photo. Please try again.'
   } finally {
     uploading.value = false
   }
-}
-
-const resetForm = () => {
-  form.value = {
-    name: '',
-    position: 'ST',
-    ovr: '',
-    price: '',
-  }
-
-  removePhoto()
-  error.value = ''
 }
 
 const handleClose = () => {
@@ -139,6 +217,10 @@ const handleClose = () => {
   resetForm()
   emit('close')
 }
+
+onBeforeUnmount(() => {
+  revokePreview()
+})
 </script>
 
 <template>
@@ -150,14 +232,16 @@ const handleClose = () => {
       class="w-full max-w-lg overflow-hidden rounded-3xl border border-white/10 bg-[#111c1d] shadow-2xl"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between border-b border-white/10 px-6 py-5">
+      <div
+        class="flex items-center justify-between border-b border-white/10 px-6 py-5"
+      >
         <div>
           <h2 class="text-lg font-semibold text-white">
-            Add Player
+            {{ modalTitle }}
           </h2>
 
           <p class="mt-1 text-sm text-white/40">
-            Add a player to this league
+            {{ modalDescription }}
           </p>
         </div>
 
@@ -190,7 +274,7 @@ const handleClose = () => {
               <img
                 v-if="previewUrl"
                 :src="previewUrl"
-                alt="Player preview"
+                :alt="form.name || 'Player preview'"
                 class="h-full w-full object-cover"
               />
 
@@ -209,6 +293,7 @@ const handleClose = () => {
                 v-if="previewUrl"
                 type="button"
                 class="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black"
+                :disabled="isBusy"
                 @click="removePhoto"
               >
                 <X class="h-4 w-4" />
@@ -222,12 +307,13 @@ const handleClose = () => {
               >
                 <ImagePlus class="mr-2 h-4 w-4" />
 
-                Choose Photo
+                {{ previewUrl ? 'Change Photo' : 'Choose Photo' }}
 
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
                   class="hidden"
+                  :disabled="isBusy"
                   @change="handleFileChange"
                 />
               </label>
@@ -335,7 +421,7 @@ const handleClose = () => {
               class="mr-2 h-4 w-4 animate-spin"
             />
 
-            {{ uploading ? 'Uploading...' : loading ? 'Adding...' : 'Add Player' }}
+            {{ submitLabel }}
           </button>
         </div>
       </form>
