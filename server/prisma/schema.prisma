@@ -10,6 +10,7 @@ datasource db {
 enum UserRole {
   SUPER_ADMIN
   ADMIN
+  FANTASY_USER
   PLAYER
 }
 
@@ -51,6 +52,7 @@ model User {
 
   leaguesCreated League[]      @relation("LeagueCreator")
   fantasyTeams   FantasyTeam[]
+  fantasyMemberships FantasyLeagueMember[]
 }
 
 model League {
@@ -70,9 +72,23 @@ model League {
   players      Player[]
   matches      Match[]
   fantasyTeams FantasyTeam[]
+  fantasyMembers FantasyLeagueMember[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model FantasyLeagueMember {
+  id       Int @id @default(autoincrement())
+  userId   Int
+  leagueId Int
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  league League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([userId, leagueId])
 }
 
 model Player {
@@ -104,7 +120,8 @@ model FantasyTeam {
   league League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
 
   name   String
-  budget Decimal @db.Decimal(10, 2)
+  // Money currently available to the fantasy player
+  bank Decimal @db.Decimal(10, 2)
 
   players FantasyTeamPlayer[]
 

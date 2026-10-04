@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   League: 'League',
+  FantasyLeagueMember: 'FantasyLeagueMember',
   Player: 'Player',
   FantasyTeam: 'FantasyTeam',
   FantasyTeamPlayer: 'FantasyTeamPlayer',
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "league" | "player" | "fantasyTeam" | "fantasyTeamPlayer" | "match" | "matchEvent"
+    modelProps: "user" | "league" | "fantasyLeagueMember" | "player" | "fantasyTeam" | "fantasyTeamPlayer" | "match" | "matchEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -568,6 +569,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LeagueCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LeagueCountAggregateOutputType> | number
+        }
+      }
+    }
+    FantasyLeagueMember: {
+      payload: Prisma.$FantasyLeagueMemberPayload<ExtArgs>
+      fields: Prisma.FantasyLeagueMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FantasyLeagueMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FantasyLeagueMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.FantasyLeagueMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FantasyLeagueMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>
+        }
+        findMany: {
+          args: Prisma.FantasyLeagueMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>[]
+        }
+        create: {
+          args: Prisma.FantasyLeagueMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>
+        }
+        createMany: {
+          args: Prisma.FantasyLeagueMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FantasyLeagueMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.FantasyLeagueMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>
+        }
+        update: {
+          args: Prisma.FantasyLeagueMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.FantasyLeagueMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FantasyLeagueMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FantasyLeagueMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.FantasyLeagueMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyLeagueMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.FantasyLeagueMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFantasyLeagueMember>
+        }
+        groupBy: {
+          args: Prisma.FantasyLeagueMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyLeagueMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FantasyLeagueMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyLeagueMemberCountAggregateOutputType> | number
         }
       }
     }
@@ -1011,6 +1086,16 @@ export const LeagueScalarFieldEnum = {
 export type LeagueScalarFieldEnum = (typeof LeagueScalarFieldEnum)[keyof typeof LeagueScalarFieldEnum]
 
 
+export const FantasyLeagueMemberScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  leagueId: 'leagueId',
+  joinedAt: 'joinedAt'
+} as const
+
+export type FantasyLeagueMemberScalarFieldEnum = (typeof FantasyLeagueMemberScalarFieldEnum)[keyof typeof FantasyLeagueMemberScalarFieldEnum]
+
+
 export const PlayerScalarFieldEnum = {
   id: 'id',
   leagueId: 'leagueId',
@@ -1032,7 +1117,7 @@ export const FantasyTeamScalarFieldEnum = {
   userId: 'userId',
   leagueId: 'leagueId',
   name: 'name',
-  budget: 'budget',
+  bank: 'bank',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1374,6 +1459,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   league?: Prisma.LeagueOmit
+  fantasyLeagueMember?: Prisma.FantasyLeagueMemberOmit
   player?: Prisma.PlayerOmit
   fantasyTeam?: Prisma.FantasyTeamOmit
   fantasyTeamPlayer?: Prisma.FantasyTeamPlayerOmit

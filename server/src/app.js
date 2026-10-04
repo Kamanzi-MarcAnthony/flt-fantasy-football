@@ -6,6 +6,7 @@ import leagueRoutes from './routes/leagueRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import playerRoutes from './routes/playerRoutes.js'
 import matchRoutes from './routes/matchRoutes.js'
+import fantasyRoutes from './routes/fantasyRoutes.js'
 
 const app = express()
 
@@ -30,5 +31,6 @@ app.use('/api/leagues', leagueRoutes)
 app.use('/api/admins', adminRoutes)
 app.use('/api/players', playerRoutes)
 app.use('/api', matchRoutes)
+app.use('/api/fantasy', fantasyRoutes)
 
 export default app

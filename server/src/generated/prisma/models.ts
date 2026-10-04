@@ -10,6 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/League'
+export type * from './models/FantasyLeagueMember'
 export type * from './models/Player'
 export type * from './models/FantasyTeam'
 export type * from './models/FantasyTeamPlayer'
