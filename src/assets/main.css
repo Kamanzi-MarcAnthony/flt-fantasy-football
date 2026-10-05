@@ -1,12 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @import './base.css';
+
 @import 'tailwindcss';
 
-#app {
-  color: black;
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Archivo Black', sans-serif;
+  --font-serif-display: 'DM Serif Display', serif;
 }
 
-.archivo-black-regular {
-  font-family: 'Archivo Black', sans-serif;
-  font-weight: 400;
-  font-style: normal;
+html,
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+#app {
+  min-height: 100vh;
 }

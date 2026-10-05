@@ -165,14 +165,14 @@ onMounted(loadTeam)
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#061112] text-white">
+  <div class="min-h-screen bg-[#010056] text-white">
 
     <!-- ========================================================= -->
     <!-- HEADER -->
     <!-- ========================================================= -->
 
     <header
-      class="sticky top-0 z-40 border-b border-white/10 bg-[#061112]/95 px-4 py-4 backdrop-blur-xl"
+      class="sticky top-0  z-40 border-b border-white/10 bg-[#010056] px-4 py-4 backdrop-blur-xl"
     >
       <div class="flex items-center justify-between">
 
@@ -183,7 +183,7 @@ onMounted(loadTeam)
             Fantasy
           </p>
 
-          <h1 class="mt-0.5 text-lg font-bold">
+          <h1 class="mt-0.5 font-sans font-bold text-3xl">
             {{ team?.name || 'My Team' }}
           </h1>
         </div>
@@ -360,13 +360,13 @@ onMounted(loadTeam)
     <!-- MAIN -->
     <!-- ========================================================= -->
 
-    <main class="px-3 pb-8 pt-4 sm:px-5">
+    <main class="px-3 pb-8 pt-4 sm:px-5 flex flex-col gap-4  items-center ">
 
       <!-- ======================================================= -->
       <!-- FANTASY NAVIGATION -->
       <!-- ======================================================= -->
 
-      <div class="mb-5 grid grid-cols-4 gap-2">
+      <div class="mb-5 grid grid-cols-4 gap-2 md:w-2/3 w-full">
 
         <!-- My Team -->
         <button
@@ -469,7 +469,7 @@ onMounted(loadTeam)
 
       <div
         v-else-if="team"
-        class="space-y-4"
+        class="space-y-4 w-full md:w-2/3 "
       >
 
         <!-- ===================================================== -->
@@ -477,7 +477,7 @@ onMounted(loadTeam)
         <!-- ===================================================== -->
 
         <section
-          class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f721c]"
+          class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f721c] "
         >
 
           <!-- Pitch markings -->
@@ -557,16 +557,18 @@ onMounted(loadTeam)
 
                   <!-- Captain -->
                   <span
+                  id="captain"
                     v-if="isCaptain(player.id)"
-                    class="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-[10px] font-black text-[#0f721c] shadow-lg"
+                    class="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full  text-[10px]  text-violet-950 bg-[#00EEFF] shadow-lg"
                   >
                     C
                   </span>
 
                   <!-- Vice Captain -->
                   <span
+                  id="vice-captain"
                     v-else-if="isViceCaptain(player.id)"
-                    class="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-[9px] font-black text-[#0f721c] shadow-lg"
+                    class="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#00EEFF] text-violet-950 shadow-lg"
                   >
                     VC
                   </span>
@@ -600,24 +602,6 @@ onMounted(loadTeam)
 
         </section>
 
-        <!-- ===================================================== -->
-        <!-- SQUAD SUMMARY -->
-        <!-- ===================================================== -->
-
-        <div class="flex items-center justify-between px-1">
-
-          <div>
-            <p class="text-xs text-white/40">
-              Squad
-            </p>
-
-            <p class="mt-0.5 text-sm font-semibold">
-              {{ players.length }} / 9 players
-            </p>
-          </div>
-
-        </div>
-
       </div>
 
     </main>
@@ -634,5 +618,11 @@ onMounted(loadTeam)
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+#captain, #vice-captain{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font: black;
+    font-size: small;
 }
 </style>
