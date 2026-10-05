@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
+import api from '../services/api'
 import pitch from '../assets/images/bg-1.jpg'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -17,13 +18,38 @@ const password = ref('')
 const handleLogin = async () => {
     const success = await authStore.login(email.value, password.value)
 
-    if (success) {
-        if (authStore.user.role === 'FANTASY_USER') {
+    if (!success) return
+
+    if (authStore.user.role === 'FANTASY_USER') {
+        try {
+            const response = await api.get('/fantasy/status')
+            const status = response.data.data
+
+            if (status.hasJoinedLeague && status.memberships?.length) {
+                const leagueId = status.memberships[0].leagueId
+
+                router.push({
+                    path: '/fantasy/team',
+                    query: {
+                        leagueId,
+                    },
+                })
+            } else {
+                router.push('/fantasy/join-league')
+            }
+        } catch (error) {
+            console.error('Unable to check fantasy status:', error)
+
+            // If we can't determine their league status,
+            // send them to the league selection screen.
             router.push('/fantasy/join-league')
-        } else {
-            router.push('/admin')
         }
+
+        return
     }
+
+    // Admin users
+    router.push('/admin')
 }
 </script>
 

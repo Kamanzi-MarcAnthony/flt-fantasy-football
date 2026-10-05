@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { ArrowLeft, Plus, X } from 'lucide-vue-next'
+import { ArrowLeft, Plus, X, Users } from 'lucide-vue-next'
 import { useRouter, useRoute } from 'vue-router'
 import api from '../../services/api'
 import PlayerSelectionModal from '../../components/fantasy/PlayerSelectionModal.vue'
@@ -22,6 +22,8 @@ const error = ref('')
 
 const showPlayerModal = ref(false)
 const selectedSlot = ref(null)
+
+const showExistingTeamModal = ref(false)
 
 const selectedPlayers = computed(() => {
   return slots.value.filter(Boolean)
@@ -141,17 +143,41 @@ const createTeam = async () => {
 
     console.log('Team created:', response.data)
 
-    router.push('/fantasy/team')
+    router.push({
+      path: '/fantasy/team/captains',
+      query: {
+      leagueId,
+      },
+    })
   } catch (err) {
     console.error('Create team error:', err)
 
+    if (err.response?.status === 409) {
+        showExistingTeamModal.value = true
+        return
+    }
+
     error.value =
-      err.response?.data?.message ||
-      'Unable to create your fantasy team'
+        err.response?.data?.message ||
+        'Unable to create your fantasy team'
   } finally {
     creating.value = false
   }
 }
+
+    const goToExistingTeam = () => {
+    showExistingTeamModal.value = false
+
+    router.push({
+        path: '/fantasy/team/captains',
+        query: {
+            leagueId,
+        },
+    })
+}
+
+
+
 
 onMounted(loadPlayers)
 </script>
@@ -375,5 +401,65 @@ onMounted(loadPlayers)
   @select="handlePlayerSelected"
   @close="closePlayerModal"
 />
+
+<!-- Existing Team Modal -->
+<!-- Existing Team Modal -->
+<Transition name="fade">
+    <div
+        v-if="showExistingTeamModal"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+    >
+        <div
+            class="w-full max-w-sm rounded-3xl border border-white/10 bg-[#091617] p-6 shadow-2xl"
+        >
+            <div
+                class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/10"
+            >
+                <Users class="h-6 w-6 text-white" />
+            </div>
+
+            <div class="mt-5 text-center">
+                <h2 class="text-xl font-bold text-white">
+                    You already have a team
+                </h2>
+
+                <p class="mt-2 text-sm leading-6 text-white/50">
+                    You can only create one fantasy team for this league.
+                    You can manage your existing team instead.
+                </p>
+            </div>
+
+            <div class="mt-6 space-y-2">
+                <button
+                    type="button"
+                    class="w-full rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#061112] transition hover:bg-white/90"
+                    @click="goToExistingTeam"
+                >
+                    Go to My Team
+                </button>
+
+                <button
+                    type="button"
+                    class="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white/50 transition hover:bg-white/5 hover:text-white"
+                    @click="showExistingTeamModal = false"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</Transition>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

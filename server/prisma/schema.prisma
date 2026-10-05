@@ -107,6 +107,9 @@ model Player {
   teamPlayers FantasyTeamPlayer[]
   events      MatchEvent[]
 
+  captainOfTeams    FantasyTeam[] @relation("TeamCaptain")
+  viceCaptainOfTeams FantasyTeam[] @relation("TeamViceCaptain")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -122,6 +125,12 @@ model FantasyTeam {
   name   String
   // Money currently available to the fantasy player
   bank Decimal @db.Decimal(10, 2)
+
+  captainId    Int?
+  viceCaptainId Int?
+
+  captain     Player? @relation("TeamCaptain", fields: [captainId], references: [id])
+  viceCaptain Player? @relation("TeamViceCaptain", fields: [viceCaptainId], references: [id])
 
   players FantasyTeamPlayer[]
 
