@@ -13,10 +13,22 @@ export default defineConfig([
 
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
 
+  // Browser / frontend files
   {
+    files: ['src/**/*.{vue,js,mjs,jsx}'],
     languageOptions: {
       globals: {
         ...globals.browser,
+      },
+    },
+  },
+
+  // Node / backend files
+  {
+    files: ['server/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
       },
     },
   },
