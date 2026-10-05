@@ -1118,6 +1118,8 @@ export const FantasyTeamScalarFieldEnum = {
   leagueId: 'leagueId',
   name: 'name',
   bank: 'bank',
+  captainId: 'captainId',
+  viceCaptainId: 'viceCaptainId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

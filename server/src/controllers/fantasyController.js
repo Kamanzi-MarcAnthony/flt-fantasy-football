@@ -423,3 +423,201 @@ export const createFantasyTeam = async (req, res) => {
     })
   }
 }
+
+export const getMyTeam = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const leagueId = Number(req.query.leagueId)
+
+    if (!Number.isInteger(leagueId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const team = await prisma.fantasyTeam.findUnique({
+      where: {
+        userId_leagueId: {
+          userId,
+          leagueId,
+        },
+      },
+      include: {
+        players: {
+          orderBy: {
+          createdAt: 'asc',
+          },
+          include: {
+            player: {
+              select: {
+                id: true,
+                name: true,
+                photoUrl: true,
+                position: true,
+                ovr: true,
+                price: true,
+              },
+            },
+          },
+        },
+        captain: {
+          select: {
+            id: true,
+          },
+        },
+        viceCaptain: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
+
+    const squadCost = team.players.reduce(
+      (total, item) => total + Number(item.purchasePrice),
+      0,
+    )
+
+    const squadValue = team.players.reduce(
+      (total, item) => total + Number(item.player.price),
+      0,
+    )
+
+    return res.json({
+      success: true,
+      data: {
+        team: {
+          id: team.id,
+          name: team.name,
+          leagueId: team.leagueId,
+          bank: Number(team.bank),
+          squadCost,
+          squadValue,
+          captainId: team.captainId,
+          viceCaptainId: team.viceCaptainId,
+          players: team.players,
+        },
+      },
+    })
+  } catch (error) {
+    console.error('Get my team error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load fantasy team',
+    })
+  }
+}
+
+export const updateTeamCaptains = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const teamId = Number(req.params.teamId)
+
+    const { captainId, viceCaptainId } = req.body
+
+    if (!Number.isInteger(teamId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid team ID',
+      })
+    }
+
+    const parsedCaptainId = Number(captainId)
+    const parsedViceCaptainId = Number(viceCaptainId)
+
+    if (
+      !Number.isInteger(parsedCaptainId) ||
+      !Number.isInteger(parsedViceCaptainId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Captain and vice captain are required',
+      })
+    }
+
+    if (parsedCaptainId === parsedViceCaptainId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Captain and vice captain must be different players',
+      })
+    }
+
+    const team = await prisma.fantasyTeam.findFirst({
+      where: {
+        id: teamId,
+        userId,
+      },
+      include: {
+        players: {
+          select: {
+            playerId: true,
+          },
+        },
+      },
+    })
+
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
+
+    const playerIds = team.players.map((item) => item.playerId)
+
+    if (
+      !playerIds.includes(parsedCaptainId) ||
+      !playerIds.includes(parsedViceCaptainId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Captain and vice captain must be players in your team',
+      })
+    }
+
+    const updatedTeam = await prisma.fantasyTeam.update({
+      where: {
+        id: teamId,
+      },
+      data: {
+        captainId: parsedCaptainId,
+        viceCaptainId: parsedViceCaptainId,
+      },
+      select: {
+        id: true,
+        name: true,
+        leagueId: true,
+        bank: true,
+        captainId: true,
+        viceCaptainId: true,
+      },
+    })
+
+    return res.json({
+      success: true,
+      message: 'Captain and vice captain updated successfully',
+      data: {
+        team: {
+          ...updatedTeam,
+          bank: Number(updatedTeam.bank),
+        },
+      },
+    })
+  } catch (error) {
+    console.error('Update team captains error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to update captain and vice captain',
+    })
+  }
+}

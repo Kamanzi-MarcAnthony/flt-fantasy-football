@@ -104,6 +104,16 @@ const router = createRouter({
   component: () => import('../pages/fantasy/JoinLeague.vue'),
 },
 
+{
+  path: '/fantasy/team/captains',
+  name: 'FantasySelectCaptains',
+  component: () => import('../pages/fantasy/SelectCaptains.vue'),
+  meta: {
+    requiresAuth: true,
+    roles: ['FANTASY_USER'],
+  },
+},
+
     // FANTASY USER PORTAL
 {
   path: '/fantasy',
@@ -122,7 +132,7 @@ const router = createRouter({
     {
       path: 'team',
       name: 'fantasy-team',
-      component: () => import('../pages/fantasy/CreateTeam.vue'),
+      component: () => import('../pages/fantasy/MyTeam.vue'),
     },
 
     {

@@ -5,6 +5,8 @@ import {
   joinLeague,
   getFantasyPlayers,
   createFantasyTeam,
+  getMyTeam,
+  updateTeamCaptains
 } from '../controllers/fantasyController.js'
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -47,5 +49,18 @@ router.post(
   createFantasyTeam,
 )
 
+router.get(
+  '/teams/my-team',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getMyTeam,
+)
+
+router.patch(
+  '/teams/:teamId/captains',
+  authenticate,
+  authorize('FANTASY_USER'),
+  updateTeamCaptains,
+)
 
 export default router
