@@ -63,6 +63,10 @@ model Player {
   createdAt             DateTime                     @default(now())
   updatedAt             DateTime                     @updatedAt
   deletedAt             DateTime?
+
+  outgoingTransfers FantasyTransfer[] @relation("OutgoingTransfers")
+  incomingTransfers FantasyTransfer[] @relation("IncomingTransfers")
+
   fantasyGameweekScores FantasyPlayerGameweekScore[]
   captainOfTeams        FantasyTeam[]                @relation("TeamCaptain")
   viceCaptainOfTeams    FantasyTeam[]                @relation("TeamViceCaptain")
@@ -81,6 +85,7 @@ model FantasyTeam {
   bank                 Decimal                      @db.Decimal(10, 2)
   captainId            Int?
   viceCaptainId        Int?
+  transfers FantasyTransfer[]
   playerGameweekScores FantasyPlayerGameweekScore[]
   captain              Player?                      @relation("TeamCaptain", fields: [captainId], references: [id])
   league               League                       @relation(fields: [leagueId], references: [id], onDelete: Cascade)
@@ -175,6 +180,22 @@ model FantasyPlayerGameweekScore {
   team       FantasyTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, playerId, gameweekId])
+}
+
+model FantasyTransfer {
+  id                 Int      @id @default(autoincrement())
+  teamId             Int
+  outgoingPlayerId   Int
+  incomingPlayerId   Int
+  outgoingPrice      Decimal  @db.Decimal(10, 2)
+  incomingPrice      Decimal  @db.Decimal(10, 2)
+  createdAt          DateTime @default(now())
+
+  team             FantasyTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  outgoingPlayer   Player      @relation("OutgoingTransfers", fields: [outgoingPlayerId], references: [id])
+  incomingPlayer   Player      @relation("IncomingTransfers", fields: [incomingPlayerId], references: [id])
+
+  @@index([teamId, createdAt])
 }
 
 enum UserRole {
