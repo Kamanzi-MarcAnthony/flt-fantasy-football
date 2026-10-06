@@ -31,12 +31,12 @@ export const login = async (req, res) => {
       },
     })
 
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password',
-      })
-    }
+if (!user || !user.isActive) {
+  return res.status(401).json({
+    success: false,
+    message: 'Invalid email or password',
+  })
+}
 
     const passwordMatches = await bcrypt.compare(
       password,

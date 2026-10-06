@@ -16,40 +16,96 @@ const email = ref('')
 const password = ref('')
 
 const handleLogin = async () => {
-    const success = await authStore.login(email.value, password.value)
+  const success = await authStore.login(email.value, password.value)
 
-    if (!success) return
+  if (!success) return
 
-    if (authStore.user.role === 'FANTASY_USER') {
-        try {
-            const response = await api.get('/fantasy/status')
-            const status = response.data.data
+ if (authStore.user.role === 'FANTASY_USER') {
+  try {
+    const response = await api.get('/fantasy/status')
+    const status = response.data.data
 
-            if (status.hasJoinedLeague && status.memberships?.length) {
-                const leagueId = status.memberships[0].leagueId
+    console.log('Fantasy status:', status)
 
-                router.push({
-                    path: '/fantasy/team',
-                    query: {
-                        leagueId,
-                    },
-                })
-            } else {
-                router.push('/fantasy/join-league')
-            }
-        } catch (error) {
-            console.error('Unable to check fantasy status:', error)
+    // 1. User already has a fantasy team
+    if (status.hasTeam && status.teams?.length > 0) {
+      const teamLeagueId = Number(status.teams[0].leagueId)
 
-            // If we can't determine their league status,
-            // send them to the league selection screen.
-            router.push('/fantasy/join-league')
-        }
+      console.log('Team league ID:', teamLeagueId)
 
+      if (!Number.isInteger(teamLeagueId) || teamLeagueId <= 0) {
+        console.error(
+          'Invalid team league ID:',
+          status.teams[0],
+        )
+
+        router.push('/fantasy/join-league')
         return
+      }
+
+      router.push({
+        path: '/fantasy/team',
+        query: {
+          leagueId: String(teamLeagueId),
+        },
+      })
+
+      return
     }
 
-    // Admin users
-    router.push('/admin')
+    // 2. User joined a league but has no team
+    if (
+      status.hasJoinedLeague &&
+      status.memberships?.length > 0
+    ) {
+      const membershipLeagueId = Number(
+        status.memberships[0].leagueId,
+      )
+
+      console.log(
+        'Membership league ID:',
+        membershipLeagueId,
+      )
+
+      if (
+        !Number.isInteger(membershipLeagueId) ||
+        membershipLeagueId <= 0
+      ) {
+        console.error(
+          'Invalid membership league ID:',
+          status.memberships[0],
+        )
+
+        router.push('/fantasy/join-league')
+        return
+      }
+
+      router.push({
+        path: '/fantasy/team/create',
+        query: {
+          leagueId: String(membershipLeagueId),
+        },
+      })
+
+      return
+    }
+
+    // 3. User hasn't joined a league
+    router.push('/fantasy/join-league')
+  } catch (error) {
+    console.error(
+      'Unable to check fantasy status:',
+      error,
+    )
+
+    router.push('/fantasy/join-league')
+  }
+
+  return
+}
+
+  // Admin users
+  router.push('/admin')
 }
 </script>
 
