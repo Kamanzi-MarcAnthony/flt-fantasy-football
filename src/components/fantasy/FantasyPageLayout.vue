@@ -394,7 +394,7 @@ onMounted(loadTeam)
     </Transition>
 
     <!-- Page content -->
-    <main class="mx-auto flex flex-col justify-center items-center w-full px-4 py-6 sm:px-6">
+    <main class="mx-auto flex flex-col justify-center items-center px-1 py-6">
       <div v-if="loading" class="flex min-h-100 items-center justify-center">
         <p class="text-white/50">
           Loading your team...

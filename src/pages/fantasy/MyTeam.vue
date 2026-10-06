@@ -19,7 +19,7 @@ const players = computed(() => {
 
 <template>
   <div
-  class="md:w-2/3 w-full">
+  class="md:w-2/3">
      <FantasyPitch
     :players="players"
     :captain-id="team?.captainId"
