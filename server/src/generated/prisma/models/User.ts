@@ -40,10 +40,10 @@ export type UserMinAggregateOutputType = {
   email: string | null
   password: string | null
   role: $Enums.UserRole | null
-  isActive: boolean | null
-  refreshTokenHash: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  refreshTokenHash: string | null
+  isActive: boolean | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -52,10 +52,10 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   password: string | null
   role: $Enums.UserRole | null
-  isActive: boolean | null
-  refreshTokenHash: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  refreshTokenHash: string | null
+  isActive: boolean | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -64,10 +64,10 @@ export type UserCountAggregateOutputType = {
   email: number
   password: number
   role: number
-  isActive: number
-  refreshTokenHash: number
   createdAt: number
   updatedAt: number
+  refreshTokenHash: number
+  isActive: number
   _all: number
 }
 
@@ -86,10 +86,10 @@ export type UserMinAggregateInputType = {
   email?: true
   password?: true
   role?: true
-  isActive?: true
-  refreshTokenHash?: true
   createdAt?: true
   updatedAt?: true
+  refreshTokenHash?: true
+  isActive?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -98,10 +98,10 @@ export type UserMaxAggregateInputType = {
   email?: true
   password?: true
   role?: true
-  isActive?: true
-  refreshTokenHash?: true
   createdAt?: true
   updatedAt?: true
+  refreshTokenHash?: true
+  isActive?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -110,10 +110,10 @@ export type UserCountAggregateInputType = {
   email?: true
   password?: true
   role?: true
-  isActive?: true
-  refreshTokenHash?: true
   createdAt?: true
   updatedAt?: true
+  refreshTokenHash?: true
+  isActive?: true
   _all?: true
 }
 
@@ -209,10 +209,10 @@ export type UserGroupByOutputType = {
   email: string
   password: string
   role: $Enums.UserRole
-  isActive: boolean
-  refreshTokenHash: string | null
   createdAt: Date
   updatedAt: Date
+  refreshTokenHash: string | null
+  isActive: boolean
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -244,13 +244,13 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  isActive?: Prisma.BoolFilter<"User"> | boolean
-  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  leaguesCreated?: Prisma.LeagueListRelationFilter
-  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
+  isActive?: Prisma.BoolFilter<"User"> | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberListRelationFilter
+  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+  leaguesCreated?: Prisma.LeagueListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -259,13 +259,13 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
-  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  leaguesCreated?: Prisma.LeagueOrderByRelationAggregateInput
-  fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
+  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   fantasyMemberships?: Prisma.FantasyLeagueMemberOrderByRelationAggregateInput
+  fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
+  leaguesCreated?: Prisma.LeagueOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -277,13 +277,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  isActive?: Prisma.BoolFilter<"User"> | boolean
-  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  leaguesCreated?: Prisma.LeagueListRelationFilter
-  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
+  isActive?: Prisma.BoolFilter<"User"> | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberListRelationFilter
+  fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+  leaguesCreated?: Prisma.LeagueListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -292,10 +292,10 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
-  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -312,10 +312,10 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-  isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  refreshTokenHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  refreshTokenHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
 export type UserCreateInput = {
@@ -323,13 +323,13 @@ export type UserCreateInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
-  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberCreateNestedManyWithoutUserInput
+  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -338,13 +338,13 @@ export type UserUncheckedCreateInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
-  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedCreateNestedManyWithoutUserInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -352,13 +352,13 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUpdateManyWithoutUserNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -367,13 +367,13 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
-  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedUpdateManyWithoutUserNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -382,10 +382,10 @@ export type UserCreateManyInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refreshTokenHash?: string | null
+  isActive?: boolean
 }
 
 export type UserUpdateManyMutationInput = {
@@ -393,10 +393,10 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -405,10 +405,10 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -417,10 +417,10 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
-  refreshTokenHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -433,10 +433,10 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
-  refreshTokenHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -445,10 +445,10 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
-  refreshTokenHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -468,16 +468,16 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -535,12 +535,12 @@ export type UserCreateWithoutLeaguesCreatedInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberCreateNestedManyWithoutUserInput
+  fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaguesCreatedInput = {
@@ -549,12 +549,12 @@ export type UserUncheckedCreateWithoutLeaguesCreatedInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedCreateNestedManyWithoutUserInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaguesCreatedInput = {
@@ -578,12 +578,12 @@ export type UserUpdateWithoutLeaguesCreatedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUpdateManyWithoutUserNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaguesCreatedInput = {
@@ -592,12 +592,12 @@ export type UserUncheckedUpdateWithoutLeaguesCreatedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedUpdateManyWithoutUserNestedInput
+  fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFantasyMembershipsInput = {
@@ -605,12 +605,12 @@ export type UserCreateWithoutFantasyMembershipsInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutFantasyMembershipsInput = {
@@ -619,12 +619,12 @@ export type UserUncheckedCreateWithoutFantasyMembershipsInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutFantasyMembershipsInput = {
@@ -648,12 +648,12 @@ export type UserUpdateWithoutFantasyMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFantasyMembershipsInput = {
@@ -662,12 +662,12 @@ export type UserUncheckedUpdateWithoutFantasyMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutFantasyTeamsInput = {
@@ -675,12 +675,12 @@ export type UserCreateWithoutFantasyTeamsInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberCreateNestedManyWithoutUserInput
+  leaguesCreated?: Prisma.LeagueCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutFantasyTeamsInput = {
@@ -689,12 +689,12 @@ export type UserUncheckedCreateWithoutFantasyTeamsInput = {
   email: string
   password: string
   role?: $Enums.UserRole
-  isActive?: boolean
-  refreshTokenHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
+  refreshTokenHash?: string | null
+  isActive?: boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedCreateNestedManyWithoutUserInput
+  leaguesCreated?: Prisma.LeagueUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutFantasyTeamsInput = {
@@ -718,12 +718,12 @@ export type UserUpdateWithoutFantasyTeamsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUpdateManyWithoutUserNestedInput
+  leaguesCreated?: Prisma.LeagueUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
@@ -732,12 +732,12 @@ export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fantasyMemberships?: Prisma.FantasyLeagueMemberUncheckedUpdateManyWithoutUserNestedInput
+  leaguesCreated?: Prisma.LeagueUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 
@@ -746,15 +746,15 @@ export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
  */
 
 export type UserCountOutputType = {
-  leaguesCreated: number
-  fantasyTeams: number
   fantasyMemberships: number
+  fantasyTeams: number
+  leaguesCreated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  leaguesCreated?: boolean | UserCountOutputTypeCountLeaguesCreatedArgs
-  fantasyTeams?: boolean | UserCountOutputTypeCountFantasyTeamsArgs
   fantasyMemberships?: boolean | UserCountOutputTypeCountFantasyMembershipsArgs
+  fantasyTeams?: boolean | UserCountOutputTypeCountFantasyTeamsArgs
+  leaguesCreated?: boolean | UserCountOutputTypeCountLeaguesCreatedArgs
 }
 
 /**
@@ -770,8 +770,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountLeaguesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LeagueWhereInput
+export type UserCountOutputTypeCountFantasyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FantasyLeagueMemberWhereInput
 }
 
 /**
@@ -784,8 +784,8 @@ export type UserCountOutputTypeCountFantasyTeamsArgs<ExtArgs extends runtime.Typ
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountFantasyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FantasyLeagueMemberWhereInput
+export type UserCountOutputTypeCountLeaguesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeagueWhereInput
 }
 
 
@@ -795,13 +795,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   password?: boolean
   role?: boolean
-  isActive?: boolean
-  refreshTokenHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  leaguesCreated?: boolean | Prisma.User$leaguesCreatedArgs<ExtArgs>
-  fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+  refreshTokenHash?: boolean
+  isActive?: boolean
   fantasyMemberships?: boolean | Prisma.User$fantasyMembershipsArgs<ExtArgs>
+  fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+  leaguesCreated?: boolean | Prisma.User$leaguesCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -811,10 +811,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   password?: boolean
   role?: boolean
-  isActive?: boolean
-  refreshTokenHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  refreshTokenHash?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -823,10 +823,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   password?: boolean
   role?: boolean
-  isActive?: boolean
-  refreshTokenHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  refreshTokenHash?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -835,17 +835,17 @@ export type UserSelectScalar = {
   email?: boolean
   password?: boolean
   role?: boolean
-  isActive?: boolean
-  refreshTokenHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  refreshTokenHash?: boolean
+  isActive?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "isActive" | "refreshTokenHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "createdAt" | "updatedAt" | "refreshTokenHash" | "isActive", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  leaguesCreated?: boolean | Prisma.User$leaguesCreatedArgs<ExtArgs>
-  fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
   fantasyMemberships?: boolean | Prisma.User$fantasyMembershipsArgs<ExtArgs>
+  fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+  leaguesCreated?: boolean | Prisma.User$leaguesCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -854,9 +854,9 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    leaguesCreated: Prisma.$LeaguePayload<ExtArgs>[]
-    fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
     fantasyMemberships: Prisma.$FantasyLeagueMemberPayload<ExtArgs>[]
+    fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
+    leaguesCreated: Prisma.$LeaguePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -864,10 +864,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string
     password: string
     role: $Enums.UserRole
-    isActive: boolean
-    refreshTokenHash: string | null
     createdAt: Date
     updatedAt: Date
+    refreshTokenHash: string | null
+    isActive: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1262,9 +1262,9 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  leaguesCreated<T extends Prisma.User$leaguesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaguesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  fantasyTeams<T extends Prisma.User$fantasyTeamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fantasyTeamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fantasyMemberships<T extends Prisma.User$fantasyMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fantasyMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyLeagueMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  fantasyTeams<T extends Prisma.User$fantasyTeamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fantasyTeamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leaguesCreated<T extends Prisma.User$leaguesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaguesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1299,10 +1299,10 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
-  readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
-  readonly refreshTokenHash: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly refreshTokenHash: Prisma.FieldRef<"User", 'String'>
+  readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
 }
     
 
@@ -1696,27 +1696,27 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.leaguesCreated
+ * User.fantasyMemberships
  */
-export type User$leaguesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$fantasyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the League
+   * Select specific fields to fetch from the FantasyLeagueMember
    */
-  select?: Prisma.LeagueSelect<ExtArgs> | null
+  select?: Prisma.FantasyLeagueMemberSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the League
+   * Omit specific fields from the FantasyLeagueMember
    */
-  omit?: Prisma.LeagueOmit<ExtArgs> | null
+  omit?: Prisma.FantasyLeagueMemberOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.LeagueInclude<ExtArgs> | null
-  where?: Prisma.LeagueWhereInput
-  orderBy?: Prisma.LeagueOrderByWithRelationInput | Prisma.LeagueOrderByWithRelationInput[]
-  cursor?: Prisma.LeagueWhereUniqueInput
+  include?: Prisma.FantasyLeagueMemberInclude<ExtArgs> | null
+  where?: Prisma.FantasyLeagueMemberWhereInput
+  orderBy?: Prisma.FantasyLeagueMemberOrderByWithRelationInput | Prisma.FantasyLeagueMemberOrderByWithRelationInput[]
+  cursor?: Prisma.FantasyLeagueMemberWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.LeagueScalarFieldEnum | Prisma.LeagueScalarFieldEnum[]
+  distinct?: Prisma.FantasyLeagueMemberScalarFieldEnum | Prisma.FantasyLeagueMemberScalarFieldEnum[]
 }
 
 /**
@@ -1744,27 +1744,27 @@ export type User$fantasyTeamsArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * User.fantasyMemberships
+ * User.leaguesCreated
  */
-export type User$fantasyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$leaguesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the FantasyLeagueMember
+   * Select specific fields to fetch from the League
    */
-  select?: Prisma.FantasyLeagueMemberSelect<ExtArgs> | null
+  select?: Prisma.LeagueSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the FantasyLeagueMember
+   * Omit specific fields from the League
    */
-  omit?: Prisma.FantasyLeagueMemberOmit<ExtArgs> | null
+  omit?: Prisma.LeagueOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FantasyLeagueMemberInclude<ExtArgs> | null
-  where?: Prisma.FantasyLeagueMemberWhereInput
-  orderBy?: Prisma.FantasyLeagueMemberOrderByWithRelationInput | Prisma.FantasyLeagueMemberOrderByWithRelationInput[]
-  cursor?: Prisma.FantasyLeagueMemberWhereUniqueInput
+  include?: Prisma.LeagueInclude<ExtArgs> | null
+  where?: Prisma.LeagueWhereInput
+  orderBy?: Prisma.LeagueOrderByWithRelationInput | Prisma.LeagueOrderByWithRelationInput[]
+  cursor?: Prisma.LeagueWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.FantasyLeagueMemberScalarFieldEnum | Prisma.FantasyLeagueMemberScalarFieldEnum[]
+  distinct?: Prisma.LeagueScalarFieldEnum | Prisma.LeagueScalarFieldEnum[]
 }
 
 /**

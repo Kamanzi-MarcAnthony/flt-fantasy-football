@@ -81,3 +81,18 @@ export type Match = Prisma.MatchModel
  * 
  */
 export type MatchEvent = Prisma.MatchEventModel
+/**
+ * Model Gameweek
+ * 
+ */
+export type Gameweek = Prisma.GameweekModel
+/**
+ * Model FantasyTeamGameweekScore
+ * 
+ */
+export type FantasyTeamGameweekScore = Prisma.FantasyTeamGameweekScoreModel
+/**
+ * Model FantasyPlayerGameweekScore
+ * 
+ */
+export type FantasyPlayerGameweekScore = Prisma.FantasyPlayerGameweekScoreModel

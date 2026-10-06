@@ -6,9 +6,11 @@ import {
   getFantasyPlayers,
   createFantasyTeam,
   getMyTeam,
+  getFantasyPoints,
   updateTeamCaptains,
   updateFantasyTeam,
   deleteFantasyAccount,
+  getFantasyLeaderboard
 } from '../controllers/fantasyController.js'
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -20,6 +22,7 @@ router.get(
   authenticate,
   authorize('FANTASY_USER'),
   getFantasyStatus,
+  
 )
 
 router.get(
@@ -27,7 +30,6 @@ router.get(
   authenticate,
   authorize('FANTASY_USER'),
   getAvailableLeagues,
-  getFantasyStatus
 )
 
 router.post(
@@ -58,6 +60,13 @@ router.get(
   getMyTeam,
 )
 
+router.get(
+  '/points',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getFantasyPoints,
+)
+
 router.patch(
   '/teams/:teamId/captains',
   authenticate,
@@ -77,5 +86,12 @@ router.delete(
   authenticate,
   authorize('FANTASY_USER'),
   deleteFantasyAccount,
+)
+
+router.get(
+  '/leaderboard',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getFantasyLeaderboard,
 )
 export default router

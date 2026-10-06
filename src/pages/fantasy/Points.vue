@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import FantasyPitch from '../../components/fantasy/FantasyPitch.vue'
+import api from '../../services/api'
 
 const props = defineProps({
   team: {
@@ -10,90 +11,278 @@ const props = defineProps({
   },
 })
 
-// Temporary points for UI testing.
-// We'll replace this with real gameweek points from the backend later.
+const loading = ref(false)
+const error = ref('')
+
+const gameweeks = ref([])
+const currentGameweekIndex = ref(-1)
+const pointsData = ref(null)
+
+const selectedGameweek = computed(() => {
+  if (currentGameweekIndex.value < 0) return null
+
+  return gameweeks.value[currentGameweekIndex.value] || null
+})
+
+// const isCurrentGameweek = computed(() => {
+//   if (!selectedGameweek.value || !gameweeks.value.length) {
+//     return false
+//   }
+
+//   return (
+//     currentGameweekIndex.value ===
+//     gameweeks.value.length - 1
+//   )
+// })
+
+const canGoPrevious = computed(() => {
+  return currentGameweekIndex.value > 0
+})
+
+const canGoNext = computed(() => {
+  return (
+    currentGameweekIndex.value >= 0 &&
+    currentGameweekIndex.value < gameweeks.value.length - 1
+  )
+})
+
 const playerPoints = computed(() => {
   const points = {}
 
-  props.team.players.forEach((item, index) => {
-    points[item.player.id] = [6, 3, 8, 2, 5, 7, 4, 9, 3][index] || 0
+  // Start every player in the current squad at 0.
+  props.team.players.forEach((item) => {
+    points[item.player.id] = 0
   })
+
+  // Replace 0 with actual points returned by the API.
+  if (pointsData.value?.players) {
+    pointsData.value.players.forEach((player) => {
+      points[player.id] = player.points
+    })
+  }
 
   return points
 })
 
 const totalPoints = computed(() => {
-  return Object.values(playerPoints.value).reduce(
-    (total, points) => total + points,
-    0,
-  )
+  return pointsData.value?.totalPoints ?? 0
 })
+
+const highestPoints = computed(() => {
+  return pointsData.value?.highestGameweekPoints || 0
+})
+
+const loadPoints = async (gameweekId = null) => {
+  if (!props.team?.leagueId) {
+    return
+  }
+
+  loading.value = true
+  error.value = ''
+
+  try {
+    const params = {
+      leagueId: props.team.leagueId,
+    }
+
+    if (gameweekId) {
+      params.gameweekId = gameweekId
+    }
+
+    const response = await api.get('/fantasy/points', {
+      params,
+    })
+
+    const data = response.data.data
+
+    pointsData.value = data
+
+    // Store all available gameweeks.
+    gameweeks.value = data.gameweeks || []
+
+    // Find the gameweek returned by the backend.
+    if (data.gameweek) {
+      const index = gameweeks.value.findIndex(
+        (gameweek) => gameweek.id === data.gameweek.id,
+      )
+
+      currentGameweekIndex.value = index
+    } else {
+      currentGameweekIndex.value = -1
+    }
+  } catch (err) {
+    console.error('Failed to load fantasy points:', err)
+
+    error.value =
+      err.response?.data?.message ||
+      'Unable to load fantasy points'
+  } finally {
+    loading.value = false
+  }
+}
+
+const previousGameweek = () => {
+  if (!canGoPrevious.value || loading.value) {
+    return
+  }
+
+  const previousIndex = currentGameweekIndex.value - 1
+  const gameweek = gameweeks.value[previousIndex]
+
+  if (gameweek) {
+    loadPoints(gameweek.id)
+  }
+}
+
+const nextGameweek = () => {
+  if (!canGoNext.value || loading.value) {
+    return
+  }
+
+  const nextIndex = currentGameweekIndex.value + 1
+  const gameweek = gameweeks.value[nextIndex]
+
+  if (gameweek) {
+    loadPoints(gameweek.id)
+  }
+}
+
+watch(
+  () => props.team?.leagueId,
+  (leagueId) => {
+    if (leagueId) {
+      loadPoints()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 </script>
 
 <template>
   <div class="md:w-2/3 w-full flex flex-col gap-4">
-
-    <!-- Points Card -->
-<!-- Points Summary -->
-<section
-  class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#24002d] px-3 py-3"
->
-  <div class="grid grid-cols-3 items-center">
-
-    <!-- Highest Points -->
-    <div class="text-center">
-      <p class="text-[10px] font-medium uppercase tracking-wide text-white/40">
-        Highest
-      </p>
-
-      <p class="mt-1 text-sm font-bold text-white">
-        135
-      </p>
-
-      <p class="mt-0.5 text-[9px] text-white/40">
-        Points
-      </p>
-    </div>
-
-    <!-- Total Points -->
-    <div
-      class="relative -my-1 flex min-h-[78px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#00e5ff] via-[#29b6f6] to-[#7557ff] shadow-lg shadow-cyan-500/10"
+    <!-- Points Summary -->
+    <section
+      class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#24002d] px-3 py-3"
     >
-      <p class="text-[10px] font-medium text-[#010056]/70">
-        Total Points
-      </p>
+      <!-- Gameweek Navigation -->
+      <div class="mb-3 flex items-center justify-between">
+        <button
+          type="button"
+          class="flex h-8 w-8 items-center justify-center rounded-full text-xl transition"
+          :class="
+            canGoPrevious && !loading
+              ? 'hover:bg-white/10'
+              : 'cursor-not-allowed opacity-30'
+          "
+          :disabled="!canGoPrevious || loading"
+          @click="previousGameweek"
+        >
+          ‹
+        </button>
 
-      <p class="mt-0.5 text-3xl font-black leading-none text-[#010056]">
-        {{ totalPoints }}
-      </p>
-    </div>
+        <p class="text-sm font-semibold text-white">
+          <template v-if="selectedGameweek">
+            Gameweek {{ selectedGameweek.number }}
+          </template>
 
-    <!-- Transfers -->
-    <div class="text-center">
-      <p class="text-[10px] font-medium uppercase tracking-wide text-white/40">
-        Transfers
-      </p>
+          <template v-else>
+            No Gameweek
+          </template>
+        </p>
 
-      <p class="mt-1 text-sm font-bold text-white">
-        0
-      </p>
+        <button
+          type="button"
+          class="flex h-8 w-8 items-center justify-center rounded-full text-xl transition"
+          :class="
+            canGoNext && !loading
+              ? 'hover:bg-white/10'
+              : 'cursor-not-allowed opacity-30'
+          "
+          :disabled="!canGoNext || loading"
+          @click="nextGameweek"
+        >
+          ›
+        </button>
+      </div>
 
-      <p class="mt-0.5 text-[9px] text-white/40">
-        This Gameweek
-      </p>
-    </div>
+      <!-- Stats -->
+      <div class="grid grid-cols-3 items-center">
+        <!-- Highest -->
+        <div class="text-center">
+          <p class="text-xs text-white/50">
+            Highest
+          </p>
 
-  </div>
-</section>
+          <p class="mt-1 text-xl font-bold text-white">
+            {{ loading ? '—' : highestPoints }}
+          </p>
+
+          <p class="text-xs text-white/50">
+            Points
+          </p>
+        </div>
+
+        <!-- Total -->
+        <div
+          class="relative flex flex-col items-center justify-center"
+        >
+          <p class="text-xs text-white/50">
+            Total Points
+          </p>
+
+          <p class="mt-1 text-3xl font-bold text-white">
+            {{ loading ? '—' : totalPoints }}
+          </p>
+        </div>
+
+        <!-- Transfers -->
+        <div class="text-center">
+          <p class="text-xs text-white/50">
+            Transfers
+          </p>
+
+          <p class="mt-1 text-xl font-bold text-white">
+            0
+          </p>
+
+          <p class="text-xs text-white/50">
+            This Gameweek
+          </p>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <p
+        v-if="error"
+        class="mt-3 text-center text-xs text-red-400"
+      >
+        {{ error }}
+      </p>
+    </section>
 
     <!-- Pitch -->
-    <FantasyPitch
-      :players="team.players.map((item) => item.player)"
-      :captain-id="team.captainId"
-      :vice-captain-id="team.viceCaptainId"
-      stat-type="points"
-      :player-points="playerPoints"
-    />
+    <div class="relative">
+      <FantasyPitch
+        :players="team.players.map((item) => item.player)"
+        :captain-id="team.captainId"
+        :vice-captain-id="team.viceCaptainId"
+        stat-type="points"
+        :player-points="playerPoints"
+      />
 
+      <!-- Loading overlay -->
+      <div
+        v-if="loading"
+        class="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/20"
+      >
+        <div
+          class="rounded-lg bg-[#24002d] px-4 py-2 text-sm text-white shadow-lg"
+        >
+          Loading points...
+        </div>
+      </div>
+    </div>
   </div>
 </template>

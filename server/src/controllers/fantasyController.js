@@ -517,6 +517,271 @@ export const getMyTeam = async (req, res) => {
   }
 }
 
+export const getFantasyPoints = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const leagueId = Number(req.query.leagueId)
+
+    const requestedGameweekId = req.query.gameweekId
+      ? Number(req.query.gameweekId)
+      : null
+
+    // -----------------------------------
+    // Validate league ID
+    // -----------------------------------
+
+    if (!Number.isInteger(leagueId) || leagueId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    // -----------------------------------
+    // Validate gameweek ID if provided
+    // -----------------------------------
+
+    if (
+      requestedGameweekId !== null &&
+      (!Number.isInteger(requestedGameweekId) || requestedGameweekId <= 0)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid gameweek ID',
+      })
+    }
+
+    // -----------------------------------
+    // Check league membership
+    // -----------------------------------
+
+    const membership = await prisma.fantasyLeagueMember.findUnique({
+      where: {
+        userId_leagueId: {
+          userId,
+          leagueId,
+        },
+      },
+    })
+
+    if (!membership) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not a member of this league',
+      })
+    }
+
+    // -----------------------------------
+    // Get user's fantasy team
+    // -----------------------------------
+
+    const team = await prisma.fantasyTeam.findUnique({
+      where: {
+        userId_leagueId: {
+          userId,
+          leagueId,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        leagueId: true,
+        captainId: true,
+        viceCaptainId: true,
+      },
+    })
+
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
+
+    // -----------------------------------
+    // Get all gameweeks for this league
+    // -----------------------------------
+
+    const gameweeks = await prisma.gameweek.findMany({
+      where: {
+        leagueId,
+      },
+      orderBy: {
+        number: 'asc',
+      },
+      select: {
+        id: true,
+        number: true,
+        startDate: true,
+        endDate: true,
+      },
+    })
+
+    // -----------------------------------
+    // No gameweeks yet
+    // -----------------------------------
+
+    if (gameweeks.length === 0) {
+      return res.json({
+        success: true,
+        data: {
+          team,
+          gameweeks: [],
+          gameweek: null,
+          players: [],
+          totalPoints: 0,
+        },
+      })
+    }
+
+    // -----------------------------------
+    // Determine selected gameweek
+    //
+    // If gameweekId was provided:
+    //   use that gameweek.
+    //
+    // Otherwise:
+    //   use the latest gameweek.
+    // -----------------------------------
+
+    let selectedGameweek
+
+    if (requestedGameweekId !== null) {
+      selectedGameweek = gameweeks.find(
+        (item) => item.id === requestedGameweekId,
+      )
+
+      if (!selectedGameweek) {
+        return res.status(404).json({
+          success: false,
+          message: 'Gameweek not found',
+        })
+      }
+    } else {
+      selectedGameweek = gameweeks[gameweeks.length - 1]
+    }
+
+    // -----------------------------------
+    // Get player's fantasy points
+    // -----------------------------------
+
+    const playerScores = await prisma.fantasyPlayerGameweekScore.findMany({
+      where: {
+        teamId: team.id,
+        gameweekId: selectedGameweek.id,
+      },
+      select: {
+        playerId: true,
+        points: true,
+
+        player: {
+          select: {
+            id: true,
+            name: true,
+            photoUrl: true,
+            position: true,
+            ovr: true,
+            price: true,
+          },
+        },
+      },
+      orderBy: {
+        player: {
+          name: 'asc',
+        },
+      },
+    })
+
+    // -----------------------------------
+    // Get total team points
+    // -----------------------------------
+
+    const teamScore = await prisma.fantasyTeamGameweekScore.findUnique({
+      where: {
+        teamId_gameweekId: {
+          teamId: team.id,
+          gameweekId: selectedGameweek.id,
+        },
+      },
+      select: {
+        points: true,
+      },
+    })
+
+    const highestGameweekScore =
+  await prisma.fantasyTeamGameweekScore.findFirst({
+    where: {
+      teamId: team.id,
+    },
+    orderBy: {
+      points: 'desc',
+    },
+    select: {
+      points: true,
+      gameweek: {
+        select: {
+          id: true,
+          number: true,
+        },
+      },
+    },
+  })
+
+    // -----------------------------------
+    // Format player points
+    // -----------------------------------
+
+    const players = playerScores.map((item) => ({
+      id: item.player.id,
+      name: item.player.name,
+      photoUrl: item.player.photoUrl,
+      position: item.player.position,
+      ovr: item.player.ovr,
+      price: Number(item.player.price),
+
+      // Already includes captain multiplier
+      points: item.points,
+
+      isCaptain: item.player.id === team.captainId,
+      isViceCaptain: item.player.id === team.viceCaptainId,
+    }))
+
+    // -----------------------------------
+    // Response
+    // -----------------------------------
+
+    return res.json({
+      success: true,
+      data: {
+        team,
+
+        // Used by the frontend to navigate
+        // between gameweeks.
+        gameweeks,
+
+        // Currently selected gameweek.
+        gameweek: selectedGameweek,
+
+        players,
+
+        // This value already includes the
+        // captain multiplier.
+        totalPoints: teamScore?.points ?? 0,
+        highestGameweekPoints: highestGameweekScore?.points ?? 0,
+        highestGameweek: highestGameweekScore?.gameweek ?? null,
+      },
+    })
+    
+  } catch (error) {
+    console.error('Get fantasy points error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load fantasy points',
+    })
+  }
+}
+
 export const updateTeamCaptains = async (req, res) => {
   try {
     const userId = req.user.id
@@ -733,6 +998,288 @@ export const deleteFantasyAccount = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Unable to delete account',
+    })
+  }
+}
+
+export const getFantasyLeaderboard = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const leagueId = Number(req.query.leagueId)
+    const type = req.query.type === 'overall' ? 'overall' : 'gameweek'
+
+    if (!Number.isInteger(leagueId) || leagueId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    // Make sure the fantasy user belongs to this league.
+    const membership = await prisma.fantasyLeagueMember.findUnique({
+      where: {
+        userId_leagueId: {
+          userId,
+          leagueId,
+        },
+      },
+    })
+
+    if (!membership) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not a member of this league',
+      })
+    }
+
+    /*
+     * Get the latest gameweek.
+     *
+     * For now, the latest gameweek is the current gameweek.
+     * When we implement matchday/gameweek management, this
+     * will be created automatically when a new gameweek starts.
+     */
+    let currentGameweek = await prisma.gameweek.findFirst({
+      where: {
+        leagueId,
+      },
+      orderBy: {
+        number: 'desc',
+      },
+    })
+
+    /*
+     * If the league has never had a gameweek, create Gameweek 1.
+     */
+    if (!currentGameweek) {
+      currentGameweek = await prisma.gameweek.create({
+        data: {
+          leagueId,
+          number: 1,
+          startDate: new Date(),
+        },
+      })
+    }
+
+    const previousGameweek = await prisma.gameweek.findFirst({
+      where: {
+        leagueId,
+        number: currentGameweek.number - 1,
+      },
+    })
+
+    /*
+     * Get every fantasy team in the league.
+     *
+     * This is important:
+     * teams with no score record still appear with 0 points.
+     */
+    const teams = await prisma.fantasyTeam.findMany({
+      where: {
+        leagueId,
+      },
+      select: {
+        id: true,
+        name: true,
+        userId: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        gameweekScores: {
+          where: {
+            gameweekId: {
+              in: [
+                currentGameweek.id,
+                ...(previousGameweek
+                  ? [previousGameweek.id]
+                  : []),
+              ],
+            },
+          },
+          select: {
+            gameweekId: true,
+            points: true,
+          },
+        },
+      },
+    })
+
+    /*
+     * Build the leaderboard.
+     */
+    const rows = teams.map((team) => {
+      const currentScore =
+        team.gameweekScores.find(
+          (score) => score.gameweekId === currentGameweek.id,
+        )?.points || 0
+
+      const previousScore = previousGameweek
+        ? team.gameweekScores.find(
+            (score) =>
+              score.gameweekId === previousGameweek.id,
+          )?.points || 0
+        : 0
+
+      return {
+        teamId: team.id,
+        userId: team.userId,
+        name: team.user.name,
+        gameweekPoints: currentScore,
+        previousGameweekPoints: previousScore,
+        isCurrentUser: team.userId === userId,
+      }
+    })
+
+    /*
+     * GAMEWEEK
+     *
+     * Rank teams using only this gameweek's points.
+     */
+    if (type === 'gameweek') {
+      rows.sort((a, b) => {
+        if (b.gameweekPoints !== a.gameweekPoints) {
+          return b.gameweekPoints - a.gameweekPoints
+        }
+
+        return a.name.localeCompare(b.name)
+      })
+    }
+
+    /*
+     * OVERALL
+     *
+     * Add every gameweek's points.
+     */
+    if (type === 'overall') {
+      const allScores = await prisma.fantasyTeamGameweekScore.findMany({
+        where: {
+          team: {
+            leagueId,
+          },
+        },
+        select: {
+          teamId: true,
+          points: true,
+        },
+      })
+
+      const totals = new Map()
+
+      allScores.forEach((score) => {
+        totals.set(
+          score.teamId,
+          (totals.get(score.teamId) || 0) + score.points,
+        )
+      })
+
+      rows.forEach((row) => {
+        row.overallPoints = totals.get(row.teamId) || 0
+      })
+
+      rows.sort((a, b) => {
+        if (b.overallPoints !== a.overallPoints) {
+          return b.overallPoints - a.overallPoints
+        }
+
+        return a.name.localeCompare(b.name)
+      })
+    }
+
+    /*
+     * Get previous ranking for movement.
+     *
+     * For Gameweek:
+     * compare with the previous gameweek.
+     *
+     * For Overall:
+     * compare current overall ranking against the
+     * overall ranking before the current gameweek.
+     */
+    let previousRanks = new Map()
+
+    if (previousGameweek) {
+      const previousScores = await prisma.fantasyTeamGameweekScore.findMany({
+        where: {
+          gameweekId: previousGameweek.id,
+          team: {
+            leagueId,
+          },
+        },
+        select: {
+          teamId: true,
+          points: true,
+        },
+      })
+
+      const previousRankRows = teams.map((team) => {
+        const score =
+          previousScores.find(
+            (item) => item.teamId === team.id,
+          )?.points || 0
+
+        return {
+          teamId: team.id,
+          points: score,
+        }
+      })
+
+      previousRankRows.sort((a, b) => {
+        return b.points - a.points
+      })
+
+      previousRankRows.forEach((row, index) => {
+        previousRanks.set(row.teamId, index + 1)
+      })
+    }
+
+    const leaderboard = rows.map((row, index) => {
+      const rank = index + 1
+      const previousRank = previousRanks.get(row.teamId)
+
+      let movement = 'same'
+
+      if (previousRank) {
+        if (rank < previousRank) {
+          movement = 'up'
+        } else if (rank > previousRank) {
+          movement = 'down'
+        }
+      }
+
+      return {
+        rank,
+        teamId: row.teamId,
+        userId: row.userId,
+        name: row.name,
+        points:
+          type === 'overall'
+            ? row.overallPoints
+            : row.gameweekPoints,
+        movement,
+        isCurrentUser: row.isCurrentUser,
+      }
+    })
+
+    return res.json({
+      success: true,
+      data: {
+        type,
+        gameweek: {
+          id: currentGameweek.id,
+          number: currentGameweek.number,
+        },
+        leaderboard,
+      },
+    })
+  } catch (error) {
+    console.error('Get fantasy leaderboard error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load leaderboard',
     })
   }
 }

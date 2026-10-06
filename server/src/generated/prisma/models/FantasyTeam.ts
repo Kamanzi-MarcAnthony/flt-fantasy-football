@@ -49,11 +49,11 @@ export type FantasyTeamMinAggregateOutputType = {
   userId: number | null
   leagueId: number | null
   name: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
   bank: runtime.Decimal | null
   captainId: number | null
   viceCaptainId: number | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type FantasyTeamMaxAggregateOutputType = {
@@ -61,11 +61,11 @@ export type FantasyTeamMaxAggregateOutputType = {
   userId: number | null
   leagueId: number | null
   name: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
   bank: runtime.Decimal | null
   captainId: number | null
   viceCaptainId: number | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type FantasyTeamCountAggregateOutputType = {
@@ -73,11 +73,11 @@ export type FantasyTeamCountAggregateOutputType = {
   userId: number
   leagueId: number
   name: number
+  createdAt: number
+  updatedAt: number
   bank: number
   captainId: number
   viceCaptainId: number
-  createdAt: number
-  updatedAt: number
   _all: number
 }
 
@@ -105,11 +105,11 @@ export type FantasyTeamMinAggregateInputType = {
   userId?: true
   leagueId?: true
   name?: true
+  createdAt?: true
+  updatedAt?: true
   bank?: true
   captainId?: true
   viceCaptainId?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type FantasyTeamMaxAggregateInputType = {
@@ -117,11 +117,11 @@ export type FantasyTeamMaxAggregateInputType = {
   userId?: true
   leagueId?: true
   name?: true
+  createdAt?: true
+  updatedAt?: true
   bank?: true
   captainId?: true
   viceCaptainId?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type FantasyTeamCountAggregateInputType = {
@@ -129,11 +129,11 @@ export type FantasyTeamCountAggregateInputType = {
   userId?: true
   leagueId?: true
   name?: true
+  createdAt?: true
+  updatedAt?: true
   bank?: true
   captainId?: true
   viceCaptainId?: true
-  createdAt?: true
-  updatedAt?: true
   _all?: true
 }
 
@@ -228,11 +228,11 @@ export type FantasyTeamGroupByOutputType = {
   userId: number
   leagueId: number
   name: string
+  createdAt: Date
+  updatedAt: Date
   bank: runtime.Decimal
   captainId: number | null
   viceCaptainId: number | null
-  createdAt: Date
-  updatedAt: Date
   _count: FantasyTeamCountAggregateOutputType | null
   _avg: FantasyTeamAvgAggregateOutputType | null
   _sum: FantasyTeamSumAggregateOutputType | null
@@ -263,15 +263,17 @@ export type FantasyTeamWhereInput = {
   userId?: Prisma.IntFilter<"FantasyTeam"> | number
   leagueId?: Prisma.IntFilter<"FantasyTeam"> | number
   name?: Prisma.StringFilter<"FantasyTeam"> | string
+  createdAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
   bank?: Prisma.DecimalFilter<"FantasyTeam"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.IntNullableFilter<"FantasyTeam"> | number | null
   viceCaptainId?: Prisma.IntNullableFilter<"FantasyTeam"> | number | null
-  createdAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreListRelationFilter
   captain?: Prisma.XOR<Prisma.PlayerNullableScalarRelationFilter, Prisma.PlayerWhereInput> | null
+  league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   viceCaptain?: Prisma.XOR<Prisma.PlayerNullableScalarRelationFilter, Prisma.PlayerWhereInput> | null
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreListRelationFilter
   players?: Prisma.FantasyTeamPlayerListRelationFilter
 }
 
@@ -280,15 +282,17 @@ export type FantasyTeamOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   bank?: Prisma.SortOrder
   captainId?: Prisma.SortOrderInput | Prisma.SortOrder
   viceCaptainId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  league?: Prisma.LeagueOrderByWithRelationInput
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreOrderByRelationAggregateInput
   captain?: Prisma.PlayerOrderByWithRelationInput
+  league?: Prisma.LeagueOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
   viceCaptain?: Prisma.PlayerOrderByWithRelationInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreOrderByRelationAggregateInput
   players?: Prisma.FantasyTeamPlayerOrderByRelationAggregateInput
 }
 
@@ -301,15 +305,17 @@ export type FantasyTeamWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"FantasyTeam"> | number
   leagueId?: Prisma.IntFilter<"FantasyTeam"> | number
   name?: Prisma.StringFilter<"FantasyTeam"> | string
+  createdAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
   bank?: Prisma.DecimalFilter<"FantasyTeam"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.IntNullableFilter<"FantasyTeam"> | number | null
   viceCaptainId?: Prisma.IntNullableFilter<"FantasyTeam"> | number | null
-  createdAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreListRelationFilter
   captain?: Prisma.XOR<Prisma.PlayerNullableScalarRelationFilter, Prisma.PlayerWhereInput> | null
+  league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   viceCaptain?: Prisma.XOR<Prisma.PlayerNullableScalarRelationFilter, Prisma.PlayerWhereInput> | null
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreListRelationFilter
   players?: Prisma.FantasyTeamPlayerListRelationFilter
 }, "id" | "userId_leagueId">
 
@@ -318,11 +324,11 @@ export type FantasyTeamOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   bank?: Prisma.SortOrder
   captainId?: Prisma.SortOrderInput | Prisma.SortOrder
   viceCaptainId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   _count?: Prisma.FantasyTeamCountOrderByAggregateInput
   _avg?: Prisma.FantasyTeamAvgOrderByAggregateInput
   _max?: Prisma.FantasyTeamMaxOrderByAggregateInput
@@ -338,22 +344,24 @@ export type FantasyTeamScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"FantasyTeam"> | number
   leagueId?: Prisma.IntWithAggregatesFilter<"FantasyTeam"> | number
   name?: Prisma.StringWithAggregatesFilter<"FantasyTeam"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"FantasyTeam"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FantasyTeam"> | Date | string
   bank?: Prisma.DecimalWithAggregatesFilter<"FantasyTeam"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.IntNullableWithAggregatesFilter<"FantasyTeam"> | number | null
   viceCaptainId?: Prisma.IntNullableWithAggregatesFilter<"FantasyTeam"> | number | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"FantasyTeam"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FantasyTeam"> | Date | string
 }
 
 export type FantasyTeamCreateInput = {
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
-  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
   captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
   viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
 }
 
@@ -362,23 +370,27 @@ export type FantasyTeamUncheckedCreateInput = {
   userId: number
   leagueId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
 }
 
 export type FantasyTeamUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
-  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
   captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
   viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
 }
 
@@ -387,11 +399,13 @@ export type FantasyTeamUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
 }
 
@@ -400,18 +414,18 @@ export type FantasyTeamCreateManyInput = {
   userId: number
   leagueId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type FantasyTeamUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type FantasyTeamUncheckedUpdateManyInput = {
@@ -419,11 +433,11 @@ export type FantasyTeamUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FantasyTeamListRelationFilter = {
@@ -446,11 +460,11 @@ export type FantasyTeamCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   bank?: Prisma.SortOrder
   captainId?: Prisma.SortOrder
   viceCaptainId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type FantasyTeamAvgOrderByAggregateInput = {
@@ -467,11 +481,11 @@ export type FantasyTeamMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   bank?: Prisma.SortOrder
   captainId?: Prisma.SortOrder
   viceCaptainId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type FantasyTeamMinOrderByAggregateInput = {
@@ -479,11 +493,11 @@ export type FantasyTeamMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   bank?: Prisma.SortOrder
   captainId?: Prisma.SortOrder
   viceCaptainId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type FantasyTeamSumOrderByAggregateInput = {
@@ -690,14 +704,44 @@ export type FantasyTeamUpdateOneRequiredWithoutPlayersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FantasyTeamUpdateToOneWithWhereWithoutPlayersInput, Prisma.FantasyTeamUpdateWithoutPlayersInput>, Prisma.FantasyTeamUncheckedUpdateWithoutPlayersInput>
 }
 
+export type FantasyTeamCreateNestedOneWithoutGameweekScoresInput = {
+  create?: Prisma.XOR<Prisma.FantasyTeamCreateWithoutGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutGameweekScoresInput>
+  connectOrCreate?: Prisma.FantasyTeamCreateOrConnectWithoutGameweekScoresInput
+  connect?: Prisma.FantasyTeamWhereUniqueInput
+}
+
+export type FantasyTeamUpdateOneRequiredWithoutGameweekScoresNestedInput = {
+  create?: Prisma.XOR<Prisma.FantasyTeamCreateWithoutGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutGameweekScoresInput>
+  connectOrCreate?: Prisma.FantasyTeamCreateOrConnectWithoutGameweekScoresInput
+  upsert?: Prisma.FantasyTeamUpsertWithoutGameweekScoresInput
+  connect?: Prisma.FantasyTeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FantasyTeamUpdateToOneWithWhereWithoutGameweekScoresInput, Prisma.FantasyTeamUpdateWithoutGameweekScoresInput>, Prisma.FantasyTeamUncheckedUpdateWithoutGameweekScoresInput>
+}
+
+export type FantasyTeamCreateNestedOneWithoutPlayerGameweekScoresInput = {
+  create?: Prisma.XOR<Prisma.FantasyTeamCreateWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutPlayerGameweekScoresInput>
+  connectOrCreate?: Prisma.FantasyTeamCreateOrConnectWithoutPlayerGameweekScoresInput
+  connect?: Prisma.FantasyTeamWhereUniqueInput
+}
+
+export type FantasyTeamUpdateOneRequiredWithoutPlayerGameweekScoresNestedInput = {
+  create?: Prisma.XOR<Prisma.FantasyTeamCreateWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutPlayerGameweekScoresInput>
+  connectOrCreate?: Prisma.FantasyTeamCreateOrConnectWithoutPlayerGameweekScoresInput
+  upsert?: Prisma.FantasyTeamUpsertWithoutPlayerGameweekScoresInput
+  connect?: Prisma.FantasyTeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FantasyTeamUpdateToOneWithWhereWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUpdateWithoutPlayerGameweekScoresInput>, Prisma.FantasyTeamUncheckedUpdateWithoutPlayerGameweekScoresInput>
+}
+
 export type FantasyTeamCreateWithoutUserInput = {
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
   captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
   viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
 }
 
@@ -705,11 +749,13 @@ export type FantasyTeamUncheckedCreateWithoutUserInput = {
   id?: number
   leagueId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
 }
 
@@ -747,21 +793,23 @@ export type FantasyTeamScalarWhereInput = {
   userId?: Prisma.IntFilter<"FantasyTeam"> | number
   leagueId?: Prisma.IntFilter<"FantasyTeam"> | number
   name?: Prisma.StringFilter<"FantasyTeam"> | string
+  createdAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
   bank?: Prisma.DecimalFilter<"FantasyTeam"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.IntNullableFilter<"FantasyTeam"> | number | null
   viceCaptainId?: Prisma.IntNullableFilter<"FantasyTeam"> | number | null
-  createdAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"FantasyTeam"> | Date | string
 }
 
 export type FantasyTeamCreateWithoutLeagueInput = {
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
   captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
   viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
 }
 
@@ -769,11 +817,13 @@ export type FantasyTeamUncheckedCreateWithoutLeagueInput = {
   id?: number
   userId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
 }
 
@@ -805,12 +855,14 @@ export type FantasyTeamUpdateManyWithWhereWithoutLeagueInput = {
 
 export type FantasyTeamCreateWithoutCaptainInput = {
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
   league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
   viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
 }
 
@@ -819,10 +871,12 @@ export type FantasyTeamUncheckedCreateWithoutCaptainInput = {
   userId: number
   leagueId: number
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
-  viceCaptainId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  viceCaptainId?: number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
 }
 
@@ -838,12 +892,14 @@ export type FantasyTeamCreateManyCaptainInputEnvelope = {
 
 export type FantasyTeamCreateWithoutViceCaptainInput = {
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
-  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
   captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
 }
 
@@ -852,10 +908,12 @@ export type FantasyTeamUncheckedCreateWithoutViceCaptainInput = {
   userId: number
   leagueId: number
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
-  captainId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
   players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
 }
 
@@ -903,13 +961,15 @@ export type FantasyTeamUpdateManyWithWhereWithoutViceCaptainInput = {
 
 export type FantasyTeamCreateWithoutPlayersInput = {
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
-  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
   captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
   viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
 }
 
 export type FantasyTeamUncheckedCreateWithoutPlayersInput = {
@@ -917,11 +977,13 @@ export type FantasyTeamUncheckedCreateWithoutPlayersInput = {
   userId: number
   leagueId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
 }
 
 export type FantasyTeamCreateOrConnectWithoutPlayersInput = {
@@ -942,13 +1004,15 @@ export type FantasyTeamUpdateToOneWithWhereWithoutPlayersInput = {
 
 export type FantasyTeamUpdateWithoutPlayersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
-  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
   captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
   viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateWithoutPlayersInput = {
@@ -956,32 +1020,176 @@ export type FantasyTeamUncheckedUpdateWithoutPlayersInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+}
+
+export type FantasyTeamCreateWithoutGameweekScoresInput = {
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreCreateNestedManyWithoutTeamInput
+  captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
+  viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
+}
+
+export type FantasyTeamUncheckedCreateWithoutGameweekScoresInput = {
+  id?: number
+  userId: number
+  leagueId: number
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: number | null
+  viceCaptainId?: number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
+}
+
+export type FantasyTeamCreateOrConnectWithoutGameweekScoresInput = {
+  where: Prisma.FantasyTeamWhereUniqueInput
+  create: Prisma.XOR<Prisma.FantasyTeamCreateWithoutGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutGameweekScoresInput>
+}
+
+export type FantasyTeamUpsertWithoutGameweekScoresInput = {
+  update: Prisma.XOR<Prisma.FantasyTeamUpdateWithoutGameweekScoresInput, Prisma.FantasyTeamUncheckedUpdateWithoutGameweekScoresInput>
+  create: Prisma.XOR<Prisma.FantasyTeamCreateWithoutGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutGameweekScoresInput>
+  where?: Prisma.FantasyTeamWhereInput
+}
+
+export type FantasyTeamUpdateToOneWithWhereWithoutGameweekScoresInput = {
+  where?: Prisma.FantasyTeamWhereInput
+  data: Prisma.XOR<Prisma.FantasyTeamUpdateWithoutGameweekScoresInput, Prisma.FantasyTeamUncheckedUpdateWithoutGameweekScoresInput>
+}
+
+export type FantasyTeamUpdateWithoutGameweekScoresInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
+  captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
+}
+
+export type FantasyTeamUncheckedUpdateWithoutGameweekScoresInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  leagueId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
+}
+
+export type FantasyTeamCreateWithoutPlayerGameweekScoresInput = {
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  captain?: Prisma.PlayerCreateNestedOneWithoutCaptainOfTeamsInput
+  league: Prisma.LeagueCreateNestedOneWithoutFantasyTeamsInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
+  viceCaptain?: Prisma.PlayerCreateNestedOneWithoutViceCaptainOfTeamsInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreCreateNestedManyWithoutTeamInput
+  players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutTeamInput
+}
+
+export type FantasyTeamUncheckedCreateWithoutPlayerGameweekScoresInput = {
+  id?: number
+  userId: number
+  leagueId: number
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: number | null
+  viceCaptainId?: number | null
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedCreateNestedManyWithoutTeamInput
+  players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutTeamInput
+}
+
+export type FantasyTeamCreateOrConnectWithoutPlayerGameweekScoresInput = {
+  where: Prisma.FantasyTeamWhereUniqueInput
+  create: Prisma.XOR<Prisma.FantasyTeamCreateWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutPlayerGameweekScoresInput>
+}
+
+export type FantasyTeamUpsertWithoutPlayerGameweekScoresInput = {
+  update: Prisma.XOR<Prisma.FantasyTeamUpdateWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUncheckedUpdateWithoutPlayerGameweekScoresInput>
+  create: Prisma.XOR<Prisma.FantasyTeamCreateWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUncheckedCreateWithoutPlayerGameweekScoresInput>
+  where?: Prisma.FantasyTeamWhereInput
+}
+
+export type FantasyTeamUpdateToOneWithWhereWithoutPlayerGameweekScoresInput = {
+  where?: Prisma.FantasyTeamWhereInput
+  data: Prisma.XOR<Prisma.FantasyTeamUpdateWithoutPlayerGameweekScoresInput, Prisma.FantasyTeamUncheckedUpdateWithoutPlayerGameweekScoresInput>
+}
+
+export type FantasyTeamUpdateWithoutPlayerGameweekScoresInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
+  players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
+}
+
+export type FantasyTeamUncheckedUpdateWithoutPlayerGameweekScoresInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  leagueId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
 }
 
 export type FantasyTeamCreateManyUserInput = {
   id?: number
   leagueId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type FantasyTeamUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
   captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
   viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
 }
 
@@ -989,11 +1197,13 @@ export type FantasyTeamUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
 }
 
@@ -1001,32 +1211,34 @@ export type FantasyTeamUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FantasyTeamCreateManyLeagueInput = {
   id?: number
   userId: number
   name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   bank: runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: number | null
   viceCaptainId?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type FantasyTeamUpdateWithoutLeagueInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
   captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
   viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
 }
 
@@ -1034,11 +1246,13 @@ export type FantasyTeamUncheckedUpdateWithoutLeagueInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
 }
 
@@ -1046,11 +1260,11 @@ export type FantasyTeamUncheckedUpdateManyWithoutLeagueInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FantasyTeamCreateManyCaptainInput = {
@@ -1058,10 +1272,10 @@ export type FantasyTeamCreateManyCaptainInput = {
   userId: number
   leagueId: number
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
-  viceCaptainId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  viceCaptainId?: number | null
 }
 
 export type FantasyTeamCreateManyViceCaptainInput = {
@@ -1069,20 +1283,22 @@ export type FantasyTeamCreateManyViceCaptainInput = {
   userId: number
   leagueId: number
   name: string
-  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
-  captainId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bank: runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: number | null
 }
 
 export type FantasyTeamUpdateWithoutCaptainInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
   league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
   viceCaptain?: Prisma.PlayerUpdateOneWithoutViceCaptainOfTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
 }
 
@@ -1091,10 +1307,12 @@ export type FantasyTeamUncheckedUpdateWithoutCaptainInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
 }
 
@@ -1103,20 +1321,22 @@ export type FantasyTeamUncheckedUpdateManyWithoutCaptainInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  viceCaptainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type FantasyTeamUpdateWithoutViceCaptainInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
-  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUpdateManyWithoutTeamNestedInput
   captain?: Prisma.PlayerUpdateOneWithoutCaptainOfTeamsNestedInput
+  league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUpdateManyWithoutTeamNestedInput
 }
 
@@ -1125,10 +1345,12 @@ export type FantasyTeamUncheckedUpdateWithoutViceCaptainInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  playerGameweekScores?: Prisma.FantasyPlayerGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
+  gameweekScores?: Prisma.FantasyTeamGameweekScoreUncheckedUpdateManyWithoutTeamNestedInput
   players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput
 }
 
@@ -1137,10 +1359,10 @@ export type FantasyTeamUncheckedUpdateManyWithoutViceCaptainInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  captainId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -1149,10 +1371,14 @@ export type FantasyTeamUncheckedUpdateManyWithoutViceCaptainInput = {
  */
 
 export type FantasyTeamCountOutputType = {
+  playerGameweekScores: number
+  gameweekScores: number
   players: number
 }
 
 export type FantasyTeamCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  playerGameweekScores?: boolean | FantasyTeamCountOutputTypeCountPlayerGameweekScoresArgs
+  gameweekScores?: boolean | FantasyTeamCountOutputTypeCountGameweekScoresArgs
   players?: boolean | FantasyTeamCountOutputTypeCountPlayersArgs
 }
 
@@ -1169,6 +1395,20 @@ export type FantasyTeamCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
 /**
  * FantasyTeamCountOutputType without action
  */
+export type FantasyTeamCountOutputTypeCountPlayerGameweekScoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FantasyPlayerGameweekScoreWhereInput
+}
+
+/**
+ * FantasyTeamCountOutputType without action
+ */
+export type FantasyTeamCountOutputTypeCountGameweekScoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FantasyTeamGameweekScoreWhereInput
+}
+
+/**
+ * FantasyTeamCountOutputType without action
+ */
 export type FantasyTeamCountOutputTypeCountPlayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FantasyTeamPlayerWhereInput
 }
@@ -1179,15 +1419,17 @@ export type FantasyTeamSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   userId?: boolean
   leagueId?: boolean
   name?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   bank?: boolean
   captainId?: boolean
   viceCaptainId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  playerGameweekScores?: boolean | Prisma.FantasyTeam$playerGameweekScoresArgs<ExtArgs>
   captain?: boolean | Prisma.FantasyTeam$captainArgs<ExtArgs>
+  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   viceCaptain?: boolean | Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>
+  gameweekScores?: boolean | Prisma.FantasyTeam$gameweekScoresArgs<ExtArgs>
   players?: boolean | Prisma.FantasyTeam$playersArgs<ExtArgs>
   _count?: boolean | Prisma.FantasyTeamCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyTeam"]>
@@ -1197,14 +1439,14 @@ export type FantasyTeamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   userId?: boolean
   leagueId?: boolean
   name?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   bank?: boolean
   captainId?: boolean
   viceCaptainId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
   captain?: boolean | Prisma.FantasyTeam$captainArgs<ExtArgs>
+  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   viceCaptain?: boolean | Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyTeam"]>
 
@@ -1213,14 +1455,14 @@ export type FantasyTeamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   userId?: boolean
   leagueId?: boolean
   name?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   bank?: boolean
   captainId?: boolean
   viceCaptainId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
   captain?: boolean | Prisma.FantasyTeam$captainArgs<ExtArgs>
+  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   viceCaptain?: boolean | Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyTeam"]>
 
@@ -1229,42 +1471,46 @@ export type FantasyTeamSelectScalar = {
   userId?: boolean
   leagueId?: boolean
   name?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   bank?: boolean
   captainId?: boolean
   viceCaptainId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
 }
 
-export type FantasyTeamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "leagueId" | "name" | "bank" | "captainId" | "viceCaptainId" | "createdAt" | "updatedAt", ExtArgs["result"]["fantasyTeam"]>
+export type FantasyTeamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "leagueId" | "name" | "createdAt" | "updatedAt" | "bank" | "captainId" | "viceCaptainId", ExtArgs["result"]["fantasyTeam"]>
 export type FantasyTeamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  playerGameweekScores?: boolean | Prisma.FantasyTeam$playerGameweekScoresArgs<ExtArgs>
   captain?: boolean | Prisma.FantasyTeam$captainArgs<ExtArgs>
+  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   viceCaptain?: boolean | Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>
+  gameweekScores?: boolean | Prisma.FantasyTeam$gameweekScoresArgs<ExtArgs>
   players?: boolean | Prisma.FantasyTeam$playersArgs<ExtArgs>
   _count?: boolean | Prisma.FantasyTeamCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FantasyTeamIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
   captain?: boolean | Prisma.FantasyTeam$captainArgs<ExtArgs>
+  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   viceCaptain?: boolean | Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>
 }
 export type FantasyTeamIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
   captain?: boolean | Prisma.FantasyTeam$captainArgs<ExtArgs>
+  league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   viceCaptain?: boolean | Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>
 }
 
 export type $FantasyTeamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FantasyTeam"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    league: Prisma.$LeaguePayload<ExtArgs>
+    playerGameweekScores: Prisma.$FantasyPlayerGameweekScorePayload<ExtArgs>[]
     captain: Prisma.$PlayerPayload<ExtArgs> | null
+    league: Prisma.$LeaguePayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
     viceCaptain: Prisma.$PlayerPayload<ExtArgs> | null
+    gameweekScores: Prisma.$FantasyTeamGameweekScorePayload<ExtArgs>[]
     players: Prisma.$FantasyTeamPlayerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1272,11 +1518,11 @@ export type $FantasyTeamPayload<ExtArgs extends runtime.Types.Extensions.Interna
     userId: number
     leagueId: number
     name: string
+    createdAt: Date
+    updatedAt: Date
     bank: runtime.Decimal
     captainId: number | null
     viceCaptainId: number | null
-    createdAt: Date
-    updatedAt: Date
   }, ExtArgs["result"]["fantasyTeam"]>
   composites: {}
 }
@@ -1671,10 +1917,12 @@ readonly fields: FantasyTeamFieldRefs;
  */
 export interface Prisma__FantasyTeamClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  league<T extends Prisma.LeagueDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeagueDefaultArgs<ExtArgs>>): Prisma.Prisma__LeagueClient<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  playerGameweekScores<T extends Prisma.FantasyTeam$playerGameweekScoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeam$playerGameweekScoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyPlayerGameweekScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   captain<T extends Prisma.FantasyTeam$captainArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeam$captainArgs<ExtArgs>>): Prisma.Prisma__PlayerClient<runtime.Types.Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  league<T extends Prisma.LeagueDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeagueDefaultArgs<ExtArgs>>): Prisma.Prisma__LeagueClient<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   viceCaptain<T extends Prisma.FantasyTeam$viceCaptainArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeam$viceCaptainArgs<ExtArgs>>): Prisma.Prisma__PlayerClient<runtime.Types.Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  gameweekScores<T extends Prisma.FantasyTeam$gameweekScoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeam$gameweekScoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamGameweekScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   players<T extends Prisma.FantasyTeam$playersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeam$playersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPlayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1709,11 +1957,11 @@ export interface FantasyTeamFieldRefs {
   readonly userId: Prisma.FieldRef<"FantasyTeam", 'Int'>
   readonly leagueId: Prisma.FieldRef<"FantasyTeam", 'Int'>
   readonly name: Prisma.FieldRef<"FantasyTeam", 'String'>
+  readonly createdAt: Prisma.FieldRef<"FantasyTeam", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"FantasyTeam", 'DateTime'>
   readonly bank: Prisma.FieldRef<"FantasyTeam", 'Decimal'>
   readonly captainId: Prisma.FieldRef<"FantasyTeam", 'Int'>
   readonly viceCaptainId: Prisma.FieldRef<"FantasyTeam", 'Int'>
-  readonly createdAt: Prisma.FieldRef<"FantasyTeam", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"FantasyTeam", 'DateTime'>
 }
     
 
@@ -2115,6 +2363,30 @@ export type FantasyTeamDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
+ * FantasyTeam.playerGameweekScores
+ */
+export type FantasyTeam$playerGameweekScoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FantasyPlayerGameweekScore
+   */
+  select?: Prisma.FantasyPlayerGameweekScoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FantasyPlayerGameweekScore
+   */
+  omit?: Prisma.FantasyPlayerGameweekScoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FantasyPlayerGameweekScoreInclude<ExtArgs> | null
+  where?: Prisma.FantasyPlayerGameweekScoreWhereInput
+  orderBy?: Prisma.FantasyPlayerGameweekScoreOrderByWithRelationInput | Prisma.FantasyPlayerGameweekScoreOrderByWithRelationInput[]
+  cursor?: Prisma.FantasyPlayerGameweekScoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FantasyPlayerGameweekScoreScalarFieldEnum | Prisma.FantasyPlayerGameweekScoreScalarFieldEnum[]
+}
+
+/**
  * FantasyTeam.captain
  */
 export type FantasyTeam$captainArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2150,6 +2422,30 @@ export type FantasyTeam$viceCaptainArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.PlayerInclude<ExtArgs> | null
   where?: Prisma.PlayerWhereInput
+}
+
+/**
+ * FantasyTeam.gameweekScores
+ */
+export type FantasyTeam$gameweekScoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FantasyTeamGameweekScore
+   */
+  select?: Prisma.FantasyTeamGameweekScoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FantasyTeamGameweekScore
+   */
+  omit?: Prisma.FantasyTeamGameweekScoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FantasyTeamGameweekScoreInclude<ExtArgs> | null
+  where?: Prisma.FantasyTeamGameweekScoreWhereInput
+  orderBy?: Prisma.FantasyTeamGameweekScoreOrderByWithRelationInput | Prisma.FantasyTeamGameweekScoreOrderByWithRelationInput[]
+  cursor?: Prisma.FantasyTeamGameweekScoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FantasyTeamGameweekScoreScalarFieldEnum | Prisma.FantasyTeamGameweekScoreScalarFieldEnum[]
 }
 
 /**

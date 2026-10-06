@@ -27,7 +27,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['player-click'])
+const emit = defineEmits(['player-click'])
 
 const getPlayerPoints = (player) => {
   return Number(props.playerPoints[player.id] || 0)
@@ -35,13 +35,7 @@ const getPlayerPoints = (player) => {
 
 const getDisplayedStat = (player) => {
   if (props.statType === 'points') {
-    const points = getPlayerPoints(player)
-
-    if (props.captainId === player.id) {
-      return points * 2
-    }
-
-    return points
+    return getPlayerPoints(player)
   }
 
   return player.ovr
@@ -100,7 +94,7 @@ const getDisplayedStat = (player) => {
         <button
           type="button"
           class="flex flex-col items-center"
-          @click="$emit('player-click', player)"
+          @click="emit('player-click', player)"
         >
 
           <!-- ================================================= -->

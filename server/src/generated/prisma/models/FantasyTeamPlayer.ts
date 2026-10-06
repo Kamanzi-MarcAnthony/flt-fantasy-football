@@ -228,8 +228,8 @@ export type FantasyTeamPlayerWhereInput = {
   playerId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   purchasePrice?: Prisma.DecimalFilter<"FantasyTeamPlayer"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"FantasyTeamPlayer"> | Date | string
-  team?: Prisma.XOR<Prisma.FantasyTeamScalarRelationFilter, Prisma.FantasyTeamWhereInput>
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
+  team?: Prisma.XOR<Prisma.FantasyTeamScalarRelationFilter, Prisma.FantasyTeamWhereInput>
 }
 
 export type FantasyTeamPlayerOrderByWithRelationInput = {
@@ -238,8 +238,8 @@ export type FantasyTeamPlayerOrderByWithRelationInput = {
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  team?: Prisma.FantasyTeamOrderByWithRelationInput
   player?: Prisma.PlayerOrderByWithRelationInput
+  team?: Prisma.FantasyTeamOrderByWithRelationInput
 }
 
 export type FantasyTeamPlayerWhereUniqueInput = Prisma.AtLeast<{
@@ -252,8 +252,8 @@ export type FantasyTeamPlayerWhereUniqueInput = Prisma.AtLeast<{
   playerId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   purchasePrice?: Prisma.DecimalFilter<"FantasyTeamPlayer"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"FantasyTeamPlayer"> | Date | string
-  team?: Prisma.XOR<Prisma.FantasyTeamScalarRelationFilter, Prisma.FantasyTeamWhereInput>
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
+  team?: Prisma.XOR<Prisma.FantasyTeamScalarRelationFilter, Prisma.FantasyTeamWhereInput>
 }, "id" | "teamId_playerId">
 
 export type FantasyTeamPlayerOrderByWithAggregationInput = {
@@ -283,8 +283,8 @@ export type FantasyTeamPlayerScalarWhereWithAggregatesInput = {
 export type FantasyTeamPlayerCreateInput = {
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
-  team: Prisma.FantasyTeamCreateNestedOneWithoutPlayersInput
   player: Prisma.PlayerCreateNestedOneWithoutTeamPlayersInput
+  team: Prisma.FantasyTeamCreateNestedOneWithoutPlayersInput
 }
 
 export type FantasyTeamPlayerUncheckedCreateInput = {
@@ -298,8 +298,8 @@ export type FantasyTeamPlayerUncheckedCreateInput = {
 export type FantasyTeamPlayerUpdateInput = {
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.FantasyTeamUpdateOneRequiredWithoutPlayersNestedInput
   player?: Prisma.PlayerUpdateOneRequiredWithoutTeamPlayersNestedInput
+  team?: Prisma.FantasyTeamUpdateOneRequiredWithoutPlayersNestedInput
 }
 
 export type FantasyTeamPlayerUncheckedUpdateInput = {
@@ -619,8 +619,8 @@ export type FantasyTeamPlayerSelect<ExtArgs extends runtime.Types.Extensions.Int
   playerId?: boolean
   purchasePrice?: boolean
   createdAt?: boolean
-  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyTeamPlayer"]>
 
 export type FantasyTeamPlayerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -629,8 +629,8 @@ export type FantasyTeamPlayerSelectCreateManyAndReturn<ExtArgs extends runtime.T
   playerId?: boolean
   purchasePrice?: boolean
   createdAt?: boolean
-  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyTeamPlayer"]>
 
 export type FantasyTeamPlayerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -639,8 +639,8 @@ export type FantasyTeamPlayerSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   playerId?: boolean
   purchasePrice?: boolean
   createdAt?: boolean
-  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyTeamPlayer"]>
 
 export type FantasyTeamPlayerSelectScalar = {
@@ -653,23 +653,23 @@ export type FantasyTeamPlayerSelectScalar = {
 
 export type FantasyTeamPlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teamId" | "playerId" | "purchasePrice" | "createdAt", ExtArgs["result"]["fantasyTeamPlayer"]>
 export type FantasyTeamPlayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
 }
 export type FantasyTeamPlayerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
 }
 export type FantasyTeamPlayerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
 }
 
 export type $FantasyTeamPlayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FantasyTeamPlayer"
   objects: {
-    team: Prisma.$FantasyTeamPayload<ExtArgs>
     player: Prisma.$PlayerPayload<ExtArgs>
+    team: Prisma.$FantasyTeamPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1071,8 +1071,8 @@ readonly fields: FantasyTeamPlayerFieldRefs;
  */
 export interface Prisma__FantasyTeamPlayerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  team<T extends Prisma.FantasyTeamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeamDefaultArgs<ExtArgs>>): Prisma.Prisma__FantasyTeamClient<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   player<T extends Prisma.PlayerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlayerDefaultArgs<ExtArgs>>): Prisma.Prisma__PlayerClient<runtime.Types.Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  team<T extends Prisma.FantasyTeamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FantasyTeamDefaultArgs<ExtArgs>>): Prisma.Prisma__FantasyTeamClient<runtime.Types.Result.GetResult<Prisma.$FantasyTeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -58,7 +58,10 @@ export const ModelName = {
   FantasyTeam: 'FantasyTeam',
   FantasyTeamPlayer: 'FantasyTeamPlayer',
   Match: 'Match',
-  MatchEvent: 'MatchEvent'
+  MatchEvent: 'MatchEvent',
+  Gameweek: 'Gameweek',
+  FantasyTeamGameweekScore: 'FantasyTeamGameweekScore',
+  FantasyPlayerGameweekScore: 'FantasyPlayerGameweekScore'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,10 +86,10 @@ export const UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
-  isActive: 'isActive',
-  refreshTokenHash: 'refreshTokenHash',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  refreshTokenHash: 'refreshTokenHash',
+  isActive: 'isActive'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -96,13 +99,13 @@ export const LeagueScalarFieldEnum = {
   id: 'id',
   name: 'name',
   location: 'location',
-  matchDay: 'matchDay',
-  matchTime: 'matchTime',
-  transferDeadlineMinutes: 'transferDeadlineMinutes',
-  maxTransfers: 'maxTransfers',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  matchDay: 'matchDay',
+  matchTime: 'matchTime',
+  maxTransfers: 'maxTransfers',
+  transferDeadlineMinutes: 'transferDeadlineMinutes'
 } as const
 
 export type LeagueScalarFieldEnum = (typeof LeagueScalarFieldEnum)[keyof typeof LeagueScalarFieldEnum]
@@ -126,9 +129,9 @@ export const PlayerScalarFieldEnum = {
   position: 'position',
   ovr: 'ovr',
   price: 'price',
-  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
@@ -139,11 +142,11 @@ export const FantasyTeamScalarFieldEnum = {
   userId: 'userId',
   leagueId: 'leagueId',
   name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   bank: 'bank',
   captainId: 'captainId',
-  viceCaptainId: 'viceCaptainId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  viceCaptainId: 'viceCaptainId'
 } as const
 
 export type FantasyTeamScalarFieldEnum = (typeof FantasyTeamScalarFieldEnum)[keyof typeof FantasyTeamScalarFieldEnum]
@@ -163,6 +166,7 @@ export type FantasyTeamPlayerScalarFieldEnum = (typeof FantasyTeamPlayerScalarFi
 export const MatchScalarFieldEnum = {
   id: 'id',
   leagueId: 'leagueId',
+  gameweekId: 'gameweekId',
   matchDate: 'matchDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -180,6 +184,44 @@ export const MatchEventScalarFieldEnum = {
 } as const
 
 export type MatchEventScalarFieldEnum = (typeof MatchEventScalarFieldEnum)[keyof typeof MatchEventScalarFieldEnum]
+
+
+export const GameweekScalarFieldEnum = {
+  id: 'id',
+  leagueId: 'leagueId',
+  number: 'number',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GameweekScalarFieldEnum = (typeof GameweekScalarFieldEnum)[keyof typeof GameweekScalarFieldEnum]
+
+
+export const FantasyTeamGameweekScoreScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  gameweekId: 'gameweekId',
+  points: 'points',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FantasyTeamGameweekScoreScalarFieldEnum = (typeof FantasyTeamGameweekScoreScalarFieldEnum)[keyof typeof FantasyTeamGameweekScoreScalarFieldEnum]
+
+
+export const FantasyPlayerGameweekScoreScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  playerId: 'playerId',
+  gameweekId: 'gameweekId',
+  points: 'points',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FantasyPlayerGameweekScoreScalarFieldEnum = (typeof FantasyPlayerGameweekScoreScalarFieldEnum)[keyof typeof FantasyPlayerGameweekScoreScalarFieldEnum]
 
 
 export const SortOrder = {

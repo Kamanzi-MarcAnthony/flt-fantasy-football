@@ -362,3 +362,109 @@ export const getLeagueStats = async (req, res) => {
     })
   }
 }
+
+export const getLeagueLeaderboard = async (req, res) => {
+  try {
+    const leagueId = Number(req.params.id)
+
+    if (!Number.isInteger(leagueId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const league = await prisma.league.findUnique({
+      where: {
+        id: leagueId,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!league) {
+      return res.status(404).json({
+        success: false,
+        message: 'League not found',
+      })
+    }
+
+    const leaderboard = await prisma.fantasyTeamGameweekScore.groupBy({
+      by: ['teamId'],
+      where: {
+        team: {
+          leagueId,
+        },
+      },
+      _sum: {
+        points: true,
+      },
+      orderBy: {
+        _sum: {
+          points: 'desc',
+        },
+      },
+    })
+
+    if (leaderboard.length === 0) {
+      return res.json({
+        success: true,
+        data: {
+          leaderboard: [],
+        },
+      })
+    }
+
+    const teamIds = leaderboard.map((item) => item.teamId)
+
+    const teams = await prisma.fantasyTeam.findMany({
+      where: {
+        id: {
+          in: teamIds,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    })
+
+    const teamMap = new Map(
+      teams.map((team) => [team.id, team]),
+    )
+
+    const formattedLeaderboard = leaderboard.map((item, index) => {
+      const team = teamMap.get(item.teamId)
+
+      return {
+        rank: index + 1,
+        teamId: item.teamId,
+        teamName: team?.name || 'Unknown Team',
+        userId: team?.user.id,
+        userName: team?.user.name || 'Unknown Player',
+        points: item._sum.points || 0,
+      }
+    })
+
+    return res.json({
+      success: true,
+      data: {
+        leaderboard: formattedLeaderboard,
+      },
+    })
+  } catch (error) {
+    console.error('Get league leaderboard error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load league leaderboard',
+    })
+  }
+}
