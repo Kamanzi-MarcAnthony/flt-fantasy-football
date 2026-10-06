@@ -27,7 +27,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['player-click'])
+const emit = defineEmits(['player-click'])
 
 const getPlayerPoints = (player) => {
   return Number(props.playerPoints[player.id] || 0)
@@ -35,13 +35,7 @@ const getPlayerPoints = (player) => {
 
 const getDisplayedStat = (player) => {
   if (props.statType === 'points') {
-    const points = getPlayerPoints(player)
-
-    if (props.captainId === player.id) {
-      return points * 2
-    }
-
-    return points
+    return getPlayerPoints(player)
   }
 
   return player.ovr
@@ -60,7 +54,7 @@ const getDisplayedStat = (player) => {
 
       <!-- Outer box -->
       <div
-        class="absolute inset-5 rounded-xl border border-white/20"
+        class="absolute inset-2 rounded-xl border border-white/20"
       ></div>
 
       <!-- Halfway line -->
@@ -75,12 +69,12 @@ const getDisplayedStat = (player) => {
 
       <!-- Top penalty arc -->
       <div
-        class="absolute left-1/2 top-5 h-12 w-32 -translate-x-1/2 rounded-b-full border-x border-b border-white/15"
+        class="absolute left-1/2 top-2 h-12 w-32 -translate-x-1/2 rounded-b-full border-x border-b border-white/15"
       ></div>
 
       <!-- Bottom penalty arc -->
       <div
-        class="absolute bottom-5 left-1/2 h-12 w-32 -translate-x-1/2 rounded-t-full border-x border-t border-white/15"
+        class="absolute bottom-2 left-1/2 h-12 w-32 -translate-x-1/2 rounded-t-full border-x border-t border-white/15"
       ></div>
     </div>
 
@@ -89,7 +83,7 @@ const getDisplayedStat = (player) => {
     <!-- ========================================================= -->
 
     <div
-      class="relative grid min-h-155 grid-cols-3 grid-rows-3 gap-4 p-10 sm:p-14"
+      class="relative grid min-h-140 grid-cols-3 grid-rows-3 gap-4 p-4 sm:p-14"
     >
       <div
         v-for="(player, index) in players"
@@ -100,7 +94,7 @@ const getDisplayedStat = (player) => {
         <button
           type="button"
           class="flex flex-col items-center"
-          @click="$emit('player-click', player)"
+          @click="emit('player-click', player)"
         >
 
           <!-- ================================================= -->

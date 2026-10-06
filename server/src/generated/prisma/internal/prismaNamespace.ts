@@ -404,7 +404,10 @@ export const ModelName = {
   FantasyTeam: 'FantasyTeam',
   FantasyTeamPlayer: 'FantasyTeamPlayer',
   Match: 'Match',
-  MatchEvent: 'MatchEvent'
+  MatchEvent: 'MatchEvent',
+  Gameweek: 'Gameweek',
+  FantasyTeamGameweekScore: 'FantasyTeamGameweekScore',
+  FantasyPlayerGameweekScore: 'FantasyPlayerGameweekScore'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "league" | "fantasyLeagueMember" | "player" | "fantasyTeam" | "fantasyTeamPlayer" | "match" | "matchEvent"
+    modelProps: "user" | "league" | "fantasyLeagueMember" | "player" | "fantasyTeam" | "fantasyTeamPlayer" | "match" | "matchEvent" | "gameweek" | "fantasyTeamGameweekScore" | "fantasyPlayerGameweekScore"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1016,6 +1019,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Gameweek: {
+      payload: Prisma.$GameweekPayload<ExtArgs>
+      fields: Prisma.GameweekFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GameweekFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GameweekFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>
+        }
+        findFirst: {
+          args: Prisma.GameweekFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GameweekFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>
+        }
+        findMany: {
+          args: Prisma.GameweekFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>[]
+        }
+        create: {
+          args: Prisma.GameweekCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>
+        }
+        createMany: {
+          args: Prisma.GameweekCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GameweekCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>[]
+        }
+        delete: {
+          args: Prisma.GameweekDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>
+        }
+        update: {
+          args: Prisma.GameweekUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>
+        }
+        deleteMany: {
+          args: Prisma.GameweekDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GameweekUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GameweekUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>[]
+        }
+        upsert: {
+          args: Prisma.GameweekUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameweekPayload>
+        }
+        aggregate: {
+          args: Prisma.GameweekAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGameweek>
+        }
+        groupBy: {
+          args: Prisma.GameweekGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GameweekGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GameweekCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GameweekCountAggregateOutputType> | number
+        }
+      }
+    }
+    FantasyTeamGameweekScore: {
+      payload: Prisma.$FantasyTeamGameweekScorePayload<ExtArgs>
+      fields: Prisma.FantasyTeamGameweekScoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FantasyTeamGameweekScoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FantasyTeamGameweekScoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>
+        }
+        findFirst: {
+          args: Prisma.FantasyTeamGameweekScoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FantasyTeamGameweekScoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>
+        }
+        findMany: {
+          args: Prisma.FantasyTeamGameweekScoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>[]
+        }
+        create: {
+          args: Prisma.FantasyTeamGameweekScoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>
+        }
+        createMany: {
+          args: Prisma.FantasyTeamGameweekScoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FantasyTeamGameweekScoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>[]
+        }
+        delete: {
+          args: Prisma.FantasyTeamGameweekScoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>
+        }
+        update: {
+          args: Prisma.FantasyTeamGameweekScoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>
+        }
+        deleteMany: {
+          args: Prisma.FantasyTeamGameweekScoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FantasyTeamGameweekScoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FantasyTeamGameweekScoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>[]
+        }
+        upsert: {
+          args: Prisma.FantasyTeamGameweekScoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTeamGameweekScorePayload>
+        }
+        aggregate: {
+          args: Prisma.FantasyTeamGameweekScoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFantasyTeamGameweekScore>
+        }
+        groupBy: {
+          args: Prisma.FantasyTeamGameweekScoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyTeamGameweekScoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FantasyTeamGameweekScoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyTeamGameweekScoreCountAggregateOutputType> | number
+        }
+      }
+    }
+    FantasyPlayerGameweekScore: {
+      payload: Prisma.$FantasyPlayerGameweekScorePayload<ExtArgs>
+      fields: Prisma.FantasyPlayerGameweekScoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FantasyPlayerGameweekScoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FantasyPlayerGameweekScoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>
+        }
+        findFirst: {
+          args: Prisma.FantasyPlayerGameweekScoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FantasyPlayerGameweekScoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>
+        }
+        findMany: {
+          args: Prisma.FantasyPlayerGameweekScoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>[]
+        }
+        create: {
+          args: Prisma.FantasyPlayerGameweekScoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>
+        }
+        createMany: {
+          args: Prisma.FantasyPlayerGameweekScoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FantasyPlayerGameweekScoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>[]
+        }
+        delete: {
+          args: Prisma.FantasyPlayerGameweekScoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>
+        }
+        update: {
+          args: Prisma.FantasyPlayerGameweekScoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>
+        }
+        deleteMany: {
+          args: Prisma.FantasyPlayerGameweekScoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FantasyPlayerGameweekScoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FantasyPlayerGameweekScoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>[]
+        }
+        upsert: {
+          args: Prisma.FantasyPlayerGameweekScoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyPlayerGameweekScorePayload>
+        }
+        aggregate: {
+          args: Prisma.FantasyPlayerGameweekScoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFantasyPlayerGameweekScore>
+        }
+        groupBy: {
+          args: Prisma.FantasyPlayerGameweekScoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyPlayerGameweekScoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FantasyPlayerGameweekScoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyPlayerGameweekScoreCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1061,10 +1286,10 @@ export const UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
-  isActive: 'isActive',
-  refreshTokenHash: 'refreshTokenHash',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  refreshTokenHash: 'refreshTokenHash',
+  isActive: 'isActive'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1074,13 +1299,13 @@ export const LeagueScalarFieldEnum = {
   id: 'id',
   name: 'name',
   location: 'location',
-  matchDay: 'matchDay',
-  matchTime: 'matchTime',
-  transferDeadlineMinutes: 'transferDeadlineMinutes',
-  maxTransfers: 'maxTransfers',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  matchDay: 'matchDay',
+  matchTime: 'matchTime',
+  maxTransfers: 'maxTransfers',
+  transferDeadlineMinutes: 'transferDeadlineMinutes'
 } as const
 
 export type LeagueScalarFieldEnum = (typeof LeagueScalarFieldEnum)[keyof typeof LeagueScalarFieldEnum]
@@ -1104,9 +1329,9 @@ export const PlayerScalarFieldEnum = {
   position: 'position',
   ovr: 'ovr',
   price: 'price',
-  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
@@ -1117,11 +1342,11 @@ export const FantasyTeamScalarFieldEnum = {
   userId: 'userId',
   leagueId: 'leagueId',
   name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   bank: 'bank',
   captainId: 'captainId',
-  viceCaptainId: 'viceCaptainId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  viceCaptainId: 'viceCaptainId'
 } as const
 
 export type FantasyTeamScalarFieldEnum = (typeof FantasyTeamScalarFieldEnum)[keyof typeof FantasyTeamScalarFieldEnum]
@@ -1141,6 +1366,7 @@ export type FantasyTeamPlayerScalarFieldEnum = (typeof FantasyTeamPlayerScalarFi
 export const MatchScalarFieldEnum = {
   id: 'id',
   leagueId: 'leagueId',
+  gameweekId: 'gameweekId',
   matchDate: 'matchDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1158,6 +1384,44 @@ export const MatchEventScalarFieldEnum = {
 } as const
 
 export type MatchEventScalarFieldEnum = (typeof MatchEventScalarFieldEnum)[keyof typeof MatchEventScalarFieldEnum]
+
+
+export const GameweekScalarFieldEnum = {
+  id: 'id',
+  leagueId: 'leagueId',
+  number: 'number',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GameweekScalarFieldEnum = (typeof GameweekScalarFieldEnum)[keyof typeof GameweekScalarFieldEnum]
+
+
+export const FantasyTeamGameweekScoreScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  gameweekId: 'gameweekId',
+  points: 'points',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FantasyTeamGameweekScoreScalarFieldEnum = (typeof FantasyTeamGameweekScoreScalarFieldEnum)[keyof typeof FantasyTeamGameweekScoreScalarFieldEnum]
+
+
+export const FantasyPlayerGameweekScoreScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  playerId: 'playerId',
+  gameweekId: 'gameweekId',
+  points: 'points',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FantasyPlayerGameweekScoreScalarFieldEnum = (typeof FantasyPlayerGameweekScoreScalarFieldEnum)[keyof typeof FantasyPlayerGameweekScoreScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1233,13 +1497,6 @@ export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1250,6 +1507,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1467,6 +1731,9 @@ export type GlobalOmitConfig = {
   fantasyTeamPlayer?: Prisma.FantasyTeamPlayerOmit
   match?: Prisma.MatchOmit
   matchEvent?: Prisma.MatchEventOmit
+  gameweek?: Prisma.GameweekOmit
+  fantasyTeamGameweekScore?: Prisma.FantasyTeamGameweekScoreOmit
+  fantasyPlayerGameweekScore?: Prisma.FantasyPlayerGameweekScoreOmit
 }
 
 /* Types for Logging */

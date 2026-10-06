@@ -37,6 +37,13 @@ const loading = ref(true)
 const error = ref(null)
 
 // --------------------------------------------------
+// Leaderboard
+// --------------------------------------------------
+const leaderboard = ref([])
+const leaderboardLoading = ref(false)
+const leaderboardError = ref('')
+
+// --------------------------------------------------
 // Tabs
 // --------------------------------------------------
 
@@ -396,10 +403,37 @@ const fetchLeague = async () => {
 // Lifecycle
 // --------------------------------------------------
 
+
+const fetchLeagueLeaderboard = async () => {
+  leaderboardLoading.value = true
+  leaderboardError.value = ''
+
+  try {
+    const response = await api.get(
+      `/leagues/${route.params.id}/leaderboard`,
+    )
+
+    leaderboard.value = response.data.data.leaderboard || []
+  } catch (error) {
+    console.error('Failed to fetch league leaderboard:', error)
+
+    leaderboardError.value =
+      error.response?.data?.message ||
+      'Unable to load league leaderboard'
+  } finally {
+    leaderboardLoading.value = false
+  }
+}
+
+// --------------------------------------------------
+// Lifecycle
+// --------------------------------------------------
+
 onMounted(() => {
   fetchLeague()
   fetchMatchday()
   fetchLeagueStats()
+  fetchLeagueLeaderboard()
 })
 </script>
 
@@ -1065,28 +1099,110 @@ onMounted(() => {
 </section>
 
       <!-- Leaderboards -->
-      <section
-        v-else-if="activeTab === 'leaderboards'"
-        class="mt-6"
-      >
-        <div
-          class="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03] px-5 text-center"
-        >
-          <div
-            class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10"
+      <div v-else-if="activeTab === 'leaderboards'" class="space-y-6">
+  <!-- Loading -->
+  <div
+    v-if="leaderboardLoading"
+    class="flex items-center justify-center py-16"
+  >
+    <div class="text-sm text-gray-500">
+      Loading leaderboard...
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div
+    v-else-if="leaderboardError"
+    class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600"
+  >
+    {{ leaderboardError }}
+  </div>
+
+  <!-- Empty -->
+  <div
+    v-else-if="leaderboard.length === 0"
+    class="rounded-xl border border-gray-200 bg-white py-16 text-center"
+  >
+    <Trophy class="mx-auto mb-3 h-8 w-8 text-gray-400" />
+
+    <h3 class="text-sm font-semibold text-gray-900">
+      No fantasy points yet
+    </h3>
+
+    <p class="mt-1 text-sm text-gray-500">
+      The leaderboard will appear once fantasy players start earning points.
+    </p>
+  </div>
+
+  <!-- Leaderboard -->
+  <div
+    v-else
+    class="overflow-hidden rounded-xl border border-gray-200 bg-white"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="border-b border-gray-200 bg-gray-50">
+          <tr>
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Rank
+            </th>
+
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Fantasy Player
+            </th>
+
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Team
+            </th>
+
+            <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Points
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100">
+          <tr
+            v-for="player in leaderboard"
+            :key="player.teamId"
+            class="hover:bg-gray-50"
           >
-            <Trophy class="h-7 w-7 text-white/50" />
-          </div>
+            <!-- Rank -->
+            <td class="px-6 py-4">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-700">
+                {{ player.rank }}
+              </div>
+            </td>
 
-          <h2 class="mt-5 text-xl font-semibold">
-            Fantasy will start soon
-          </h2>
+            <!-- Fantasy Player -->
+            <td class="px-6 py-4">
+              <div class="font-medium text-gray-900">
+                {{ player.userName }}
+              </div>
+            </td>
 
-          <p class="mt-2 max-w-md text-sm leading-6 text-white/40">
-            Fantasy leaderboards will appear here once the fantasy competition begins.
-          </p>
-        </div>
-      </section>
+            <!-- Team -->
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-600">
+                {{ player.teamName }}
+              </div>
+            </td>
+
+            <!-- Points -->
+            <td class="px-6 py-4 text-right">
+              <span class="font-semibold text-gray-900">
+                {{ player.points }}
+              </span>
+              <span class="ml-1 text-sm text-gray-500">
+                pts
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
     </main>
 
     <!-- Delete League Modal -->

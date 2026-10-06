@@ -4,6 +4,7 @@ import {
   createLeague,
   getLeagues,
   getLeagueById,
+  getLeagueLeaderboard,
   updateLeague,
   deleteLeague,
   getLeagueStats,
@@ -29,6 +30,14 @@ router.get(
   authorize('SUPER_ADMIN', 'ADMIN'),
   getLeagueStats,
 )
+
+router.get(
+  '/:id/leaderboard',
+  authenticate,
+  authorize('SUPER_ADMIN', 'ADMIN'),
+  getLeagueLeaderboard,
+)
+
 
 router.get(
   '/:id',

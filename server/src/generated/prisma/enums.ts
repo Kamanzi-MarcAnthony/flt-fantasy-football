@@ -12,8 +12,8 @@
 export const UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
-  FANTASY_USER: 'FANTASY_USER',
-  PLAYER: 'PLAYER'
+  PLAYER: 'PLAYER',
+  FANTASY_USER: 'FANTASY_USER'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]

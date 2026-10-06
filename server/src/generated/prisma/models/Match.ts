@@ -29,16 +29,19 @@ export type AggregateMatch = {
 export type MatchAvgAggregateOutputType = {
   id: number | null
   leagueId: number | null
+  gameweekId: number | null
 }
 
 export type MatchSumAggregateOutputType = {
   id: number | null
   leagueId: number | null
+  gameweekId: number | null
 }
 
 export type MatchMinAggregateOutputType = {
   id: number | null
   leagueId: number | null
+  gameweekId: number | null
   matchDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -47,6 +50,7 @@ export type MatchMinAggregateOutputType = {
 export type MatchMaxAggregateOutputType = {
   id: number | null
   leagueId: number | null
+  gameweekId: number | null
   matchDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +59,7 @@ export type MatchMaxAggregateOutputType = {
 export type MatchCountAggregateOutputType = {
   id: number
   leagueId: number
+  gameweekId: number
   matchDate: number
   createdAt: number
   updatedAt: number
@@ -65,16 +70,19 @@ export type MatchCountAggregateOutputType = {
 export type MatchAvgAggregateInputType = {
   id?: true
   leagueId?: true
+  gameweekId?: true
 }
 
 export type MatchSumAggregateInputType = {
   id?: true
   leagueId?: true
+  gameweekId?: true
 }
 
 export type MatchMinAggregateInputType = {
   id?: true
   leagueId?: true
+  gameweekId?: true
   matchDate?: true
   createdAt?: true
   updatedAt?: true
@@ -83,6 +91,7 @@ export type MatchMinAggregateInputType = {
 export type MatchMaxAggregateInputType = {
   id?: true
   leagueId?: true
+  gameweekId?: true
   matchDate?: true
   createdAt?: true
   updatedAt?: true
@@ -91,6 +100,7 @@ export type MatchMaxAggregateInputType = {
 export type MatchCountAggregateInputType = {
   id?: true
   leagueId?: true
+  gameweekId?: true
   matchDate?: true
   createdAt?: true
   updatedAt?: true
@@ -186,6 +196,7 @@ export type MatchGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type MatchGroupByOutputType = {
   id: number
   leagueId: number
+  gameweekId: number | null
   matchDate: Date
   createdAt: Date
   updatedAt: Date
@@ -217,20 +228,24 @@ export type MatchWhereInput = {
   NOT?: Prisma.MatchWhereInput | Prisma.MatchWhereInput[]
   id?: Prisma.IntFilter<"Match"> | number
   leagueId?: Prisma.IntFilter<"Match"> | number
+  gameweekId?: Prisma.IntNullableFilter<"Match"> | number | null
   matchDate?: Prisma.DateTimeFilter<"Match"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  gameweek?: Prisma.XOR<Prisma.GameweekNullableScalarRelationFilter, Prisma.GameweekWhereInput> | null
   events?: Prisma.MatchEventListRelationFilter
 }
 
 export type MatchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrderInput | Prisma.SortOrder
   matchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   league?: Prisma.LeagueOrderByWithRelationInput
+  gameweek?: Prisma.GameweekOrderByWithRelationInput
   events?: Prisma.MatchEventOrderByRelationAggregateInput
 }
 
@@ -240,16 +255,19 @@ export type MatchWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.MatchWhereInput[]
   NOT?: Prisma.MatchWhereInput | Prisma.MatchWhereInput[]
   leagueId?: Prisma.IntFilter<"Match"> | number
+  gameweekId?: Prisma.IntNullableFilter<"Match"> | number | null
   matchDate?: Prisma.DateTimeFilter<"Match"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  gameweek?: Prisma.XOR<Prisma.GameweekNullableScalarRelationFilter, Prisma.GameweekWhereInput> | null
   events?: Prisma.MatchEventListRelationFilter
 }, "id">
 
 export type MatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrderInput | Prisma.SortOrder
   matchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -266,6 +284,7 @@ export type MatchScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MatchScalarWhereWithAggregatesInput | Prisma.MatchScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Match"> | number
   leagueId?: Prisma.IntWithAggregatesFilter<"Match"> | number
+  gameweekId?: Prisma.IntNullableWithAggregatesFilter<"Match"> | number | null
   matchDate?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Match"> | Date | string
@@ -276,12 +295,14 @@ export type MatchCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   league: Prisma.LeagueCreateNestedOneWithoutMatchesInput
+  gameweek?: Prisma.GameweekCreateNestedOneWithoutMatchesInput
   events?: Prisma.MatchEventCreateNestedManyWithoutMatchInput
 }
 
 export type MatchUncheckedCreateInput = {
   id?: number
   leagueId: number
+  gameweekId?: number | null
   matchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -293,12 +314,14 @@ export type MatchUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   league?: Prisma.LeagueUpdateOneRequiredWithoutMatchesNestedInput
+  gameweek?: Prisma.GameweekUpdateOneWithoutMatchesNestedInput
   events?: Prisma.MatchEventUpdateManyWithoutMatchNestedInput
 }
 
 export type MatchUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
+  gameweekId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -308,6 +331,7 @@ export type MatchUncheckedUpdateInput = {
 export type MatchCreateManyInput = {
   id?: number
   leagueId: number
+  gameweekId?: number | null
   matchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -322,6 +346,7 @@ export type MatchUpdateManyMutationInput = {
 export type MatchUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
+  gameweekId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -340,6 +365,7 @@ export type MatchOrderByRelationAggregateInput = {
 export type MatchCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -348,11 +374,13 @@ export type MatchCountOrderByAggregateInput = {
 export type MatchAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrder
 }
 
 export type MatchMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -361,6 +389,7 @@ export type MatchMaxOrderByAggregateInput = {
 export type MatchMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrder
   matchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -369,6 +398,7 @@ export type MatchMinOrderByAggregateInput = {
 export type MatchSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
+  gameweekId?: Prisma.SortOrder
 }
 
 export type MatchScalarRelationFilter = {
@@ -432,15 +462,59 @@ export type MatchUpdateOneRequiredWithoutEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MatchUpdateToOneWithWhereWithoutEventsInput, Prisma.MatchUpdateWithoutEventsInput>, Prisma.MatchUncheckedUpdateWithoutEventsInput>
 }
 
+export type MatchCreateNestedManyWithoutGameweekInput = {
+  create?: Prisma.XOR<Prisma.MatchCreateWithoutGameweekInput, Prisma.MatchUncheckedCreateWithoutGameweekInput> | Prisma.MatchCreateWithoutGameweekInput[] | Prisma.MatchUncheckedCreateWithoutGameweekInput[]
+  connectOrCreate?: Prisma.MatchCreateOrConnectWithoutGameweekInput | Prisma.MatchCreateOrConnectWithoutGameweekInput[]
+  createMany?: Prisma.MatchCreateManyGameweekInputEnvelope
+  connect?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+}
+
+export type MatchUncheckedCreateNestedManyWithoutGameweekInput = {
+  create?: Prisma.XOR<Prisma.MatchCreateWithoutGameweekInput, Prisma.MatchUncheckedCreateWithoutGameweekInput> | Prisma.MatchCreateWithoutGameweekInput[] | Prisma.MatchUncheckedCreateWithoutGameweekInput[]
+  connectOrCreate?: Prisma.MatchCreateOrConnectWithoutGameweekInput | Prisma.MatchCreateOrConnectWithoutGameweekInput[]
+  createMany?: Prisma.MatchCreateManyGameweekInputEnvelope
+  connect?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+}
+
+export type MatchUpdateManyWithoutGameweekNestedInput = {
+  create?: Prisma.XOR<Prisma.MatchCreateWithoutGameweekInput, Prisma.MatchUncheckedCreateWithoutGameweekInput> | Prisma.MatchCreateWithoutGameweekInput[] | Prisma.MatchUncheckedCreateWithoutGameweekInput[]
+  connectOrCreate?: Prisma.MatchCreateOrConnectWithoutGameweekInput | Prisma.MatchCreateOrConnectWithoutGameweekInput[]
+  upsert?: Prisma.MatchUpsertWithWhereUniqueWithoutGameweekInput | Prisma.MatchUpsertWithWhereUniqueWithoutGameweekInput[]
+  createMany?: Prisma.MatchCreateManyGameweekInputEnvelope
+  set?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  disconnect?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  delete?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  connect?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  update?: Prisma.MatchUpdateWithWhereUniqueWithoutGameweekInput | Prisma.MatchUpdateWithWhereUniqueWithoutGameweekInput[]
+  updateMany?: Prisma.MatchUpdateManyWithWhereWithoutGameweekInput | Prisma.MatchUpdateManyWithWhereWithoutGameweekInput[]
+  deleteMany?: Prisma.MatchScalarWhereInput | Prisma.MatchScalarWhereInput[]
+}
+
+export type MatchUncheckedUpdateManyWithoutGameweekNestedInput = {
+  create?: Prisma.XOR<Prisma.MatchCreateWithoutGameweekInput, Prisma.MatchUncheckedCreateWithoutGameweekInput> | Prisma.MatchCreateWithoutGameweekInput[] | Prisma.MatchUncheckedCreateWithoutGameweekInput[]
+  connectOrCreate?: Prisma.MatchCreateOrConnectWithoutGameweekInput | Prisma.MatchCreateOrConnectWithoutGameweekInput[]
+  upsert?: Prisma.MatchUpsertWithWhereUniqueWithoutGameweekInput | Prisma.MatchUpsertWithWhereUniqueWithoutGameweekInput[]
+  createMany?: Prisma.MatchCreateManyGameweekInputEnvelope
+  set?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  disconnect?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  delete?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  connect?: Prisma.MatchWhereUniqueInput | Prisma.MatchWhereUniqueInput[]
+  update?: Prisma.MatchUpdateWithWhereUniqueWithoutGameweekInput | Prisma.MatchUpdateWithWhereUniqueWithoutGameweekInput[]
+  updateMany?: Prisma.MatchUpdateManyWithWhereWithoutGameweekInput | Prisma.MatchUpdateManyWithWhereWithoutGameweekInput[]
+  deleteMany?: Prisma.MatchScalarWhereInput | Prisma.MatchScalarWhereInput[]
+}
+
 export type MatchCreateWithoutLeagueInput = {
   matchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  gameweek?: Prisma.GameweekCreateNestedOneWithoutMatchesInput
   events?: Prisma.MatchEventCreateNestedManyWithoutMatchInput
 }
 
 export type MatchUncheckedCreateWithoutLeagueInput = {
   id?: number
+  gameweekId?: number | null
   matchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -479,6 +553,7 @@ export type MatchScalarWhereInput = {
   NOT?: Prisma.MatchScalarWhereInput | Prisma.MatchScalarWhereInput[]
   id?: Prisma.IntFilter<"Match"> | number
   leagueId?: Prisma.IntFilter<"Match"> | number
+  gameweekId?: Prisma.IntNullableFilter<"Match"> | number | null
   matchDate?: Prisma.DateTimeFilter<"Match"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Match"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Match"> | Date | string
@@ -489,11 +564,13 @@ export type MatchCreateWithoutEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   league: Prisma.LeagueCreateNestedOneWithoutMatchesInput
+  gameweek?: Prisma.GameweekCreateNestedOneWithoutMatchesInput
 }
 
 export type MatchUncheckedCreateWithoutEventsInput = {
   id?: number
   leagueId: number
+  gameweekId?: number | null
   matchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -520,18 +597,64 @@ export type MatchUpdateWithoutEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   league?: Prisma.LeagueUpdateOneRequiredWithoutMatchesNestedInput
+  gameweek?: Prisma.GameweekUpdateOneWithoutMatchesNestedInput
 }
 
 export type MatchUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   leagueId?: Prisma.IntFieldUpdateOperationsInput | number
+  gameweekId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type MatchCreateWithoutGameweekInput = {
+  matchDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  league: Prisma.LeagueCreateNestedOneWithoutMatchesInput
+  events?: Prisma.MatchEventCreateNestedManyWithoutMatchInput
+}
+
+export type MatchUncheckedCreateWithoutGameweekInput = {
+  id?: number
+  leagueId: number
+  matchDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.MatchEventUncheckedCreateNestedManyWithoutMatchInput
+}
+
+export type MatchCreateOrConnectWithoutGameweekInput = {
+  where: Prisma.MatchWhereUniqueInput
+  create: Prisma.XOR<Prisma.MatchCreateWithoutGameweekInput, Prisma.MatchUncheckedCreateWithoutGameweekInput>
+}
+
+export type MatchCreateManyGameweekInputEnvelope = {
+  data: Prisma.MatchCreateManyGameweekInput | Prisma.MatchCreateManyGameweekInput[]
+  skipDuplicates?: boolean
+}
+
+export type MatchUpsertWithWhereUniqueWithoutGameweekInput = {
+  where: Prisma.MatchWhereUniqueInput
+  update: Prisma.XOR<Prisma.MatchUpdateWithoutGameweekInput, Prisma.MatchUncheckedUpdateWithoutGameweekInput>
+  create: Prisma.XOR<Prisma.MatchCreateWithoutGameweekInput, Prisma.MatchUncheckedCreateWithoutGameweekInput>
+}
+
+export type MatchUpdateWithWhereUniqueWithoutGameweekInput = {
+  where: Prisma.MatchWhereUniqueInput
+  data: Prisma.XOR<Prisma.MatchUpdateWithoutGameweekInput, Prisma.MatchUncheckedUpdateWithoutGameweekInput>
+}
+
+export type MatchUpdateManyWithWhereWithoutGameweekInput = {
+  where: Prisma.MatchScalarWhereInput
+  data: Prisma.XOR<Prisma.MatchUpdateManyMutationInput, Prisma.MatchUncheckedUpdateManyWithoutGameweekInput>
+}
+
 export type MatchCreateManyLeagueInput = {
   id?: number
+  gameweekId?: number | null
   matchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -541,11 +664,13 @@ export type MatchUpdateWithoutLeagueInput = {
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gameweek?: Prisma.GameweekUpdateOneWithoutMatchesNestedInput
   events?: Prisma.MatchEventUpdateManyWithoutMatchNestedInput
 }
 
 export type MatchUncheckedUpdateWithoutLeagueInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  gameweekId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -554,6 +679,40 @@ export type MatchUncheckedUpdateWithoutLeagueInput = {
 
 export type MatchUncheckedUpdateManyWithoutLeagueInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  gameweekId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MatchCreateManyGameweekInput = {
+  id?: number
+  leagueId: number
+  matchDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type MatchUpdateWithoutGameweekInput = {
+  matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  league?: Prisma.LeagueUpdateOneRequiredWithoutMatchesNestedInput
+  events?: Prisma.MatchEventUpdateManyWithoutMatchNestedInput
+}
+
+export type MatchUncheckedUpdateWithoutGameweekInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  leagueId?: Prisma.IntFieldUpdateOperationsInput | number
+  matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.MatchEventUncheckedUpdateManyWithoutMatchNestedInput
+}
+
+export type MatchUncheckedUpdateManyWithoutGameweekInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  leagueId?: Prisma.IntFieldUpdateOperationsInput | number
   matchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -593,10 +752,12 @@ export type MatchCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Ex
 export type MatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leagueId?: boolean
+  gameweekId?: boolean
   matchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  gameweek?: boolean | Prisma.Match$gameweekArgs<ExtArgs>
   events?: boolean | Prisma.Match$eventsArgs<ExtArgs>
   _count?: boolean | Prisma.MatchCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["match"]>
@@ -604,51 +765,61 @@ export type MatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type MatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leagueId?: boolean
+  gameweekId?: boolean
   matchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  gameweek?: boolean | Prisma.Match$gameweekArgs<ExtArgs>
 }, ExtArgs["result"]["match"]>
 
 export type MatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leagueId?: boolean
+  gameweekId?: boolean
   matchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  gameweek?: boolean | Prisma.Match$gameweekArgs<ExtArgs>
 }, ExtArgs["result"]["match"]>
 
 export type MatchSelectScalar = {
   id?: boolean
   leagueId?: boolean
+  gameweekId?: boolean
   matchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leagueId" | "matchDate" | "createdAt" | "updatedAt", ExtArgs["result"]["match"]>
+export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leagueId" | "gameweekId" | "matchDate" | "createdAt" | "updatedAt", ExtArgs["result"]["match"]>
 export type MatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  gameweek?: boolean | Prisma.Match$gameweekArgs<ExtArgs>
   events?: boolean | Prisma.Match$eventsArgs<ExtArgs>
   _count?: boolean | Prisma.MatchCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  gameweek?: boolean | Prisma.Match$gameweekArgs<ExtArgs>
 }
 export type MatchIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  gameweek?: boolean | Prisma.Match$gameweekArgs<ExtArgs>
 }
 
 export type $MatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Match"
   objects: {
     league: Prisma.$LeaguePayload<ExtArgs>
+    gameweek: Prisma.$GameweekPayload<ExtArgs> | null
     events: Prisma.$MatchEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     leagueId: number
+    gameweekId: number | null
     matchDate: Date
     createdAt: Date
     updatedAt: Date
@@ -1047,6 +1218,7 @@ readonly fields: MatchFieldRefs;
 export interface Prisma__MatchClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   league<T extends Prisma.LeagueDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeagueDefaultArgs<ExtArgs>>): Prisma.Prisma__LeagueClient<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  gameweek<T extends Prisma.Match$gameweekArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Match$gameweekArgs<ExtArgs>>): Prisma.Prisma__GameweekClient<runtime.Types.Result.GetResult<Prisma.$GameweekPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   events<T extends Prisma.Match$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Match$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1079,6 +1251,7 @@ export interface Prisma__MatchClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface MatchFieldRefs {
   readonly id: Prisma.FieldRef<"Match", 'Int'>
   readonly leagueId: Prisma.FieldRef<"Match", 'Int'>
+  readonly gameweekId: Prisma.FieldRef<"Match", 'Int'>
   readonly matchDate: Prisma.FieldRef<"Match", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Match", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Match", 'DateTime'>
@@ -1480,6 +1653,25 @@ export type MatchDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Matches to delete.
    */
   limit?: number
+}
+
+/**
+ * Match.gameweek
+ */
+export type Match$gameweekArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Gameweek
+   */
+  select?: Prisma.GameweekSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Gameweek
+   */
+  omit?: Prisma.GameweekOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GameweekInclude<ExtArgs> | null
+  where?: Prisma.GameweekWhereInput
 }
 
 /**

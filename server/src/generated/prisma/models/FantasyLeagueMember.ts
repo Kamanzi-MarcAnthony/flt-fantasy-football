@@ -216,8 +216,8 @@ export type FantasyLeagueMemberWhereInput = {
   userId?: Prisma.IntFilter<"FantasyLeagueMember"> | number
   leagueId?: Prisma.IntFilter<"FantasyLeagueMember"> | number
   joinedAt?: Prisma.DateTimeFilter<"FantasyLeagueMember"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type FantasyLeagueMemberOrderByWithRelationInput = {
@@ -225,8 +225,8 @@ export type FantasyLeagueMemberOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   leagueId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   league?: Prisma.LeagueOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type FantasyLeagueMemberWhereUniqueInput = Prisma.AtLeast<{
@@ -238,8 +238,8 @@ export type FantasyLeagueMemberWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"FantasyLeagueMember"> | number
   leagueId?: Prisma.IntFilter<"FantasyLeagueMember"> | number
   joinedAt?: Prisma.DateTimeFilter<"FantasyLeagueMember"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   league?: Prisma.XOR<Prisma.LeagueScalarRelationFilter, Prisma.LeagueWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId_leagueId">
 
 export type FantasyLeagueMemberOrderByWithAggregationInput = {
@@ -266,8 +266,8 @@ export type FantasyLeagueMemberScalarWhereWithAggregatesInput = {
 
 export type FantasyLeagueMemberCreateInput = {
   joinedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFantasyMembershipsInput
   league: Prisma.LeagueCreateNestedOneWithoutFantasyMembersInput
+  user: Prisma.UserCreateNestedOneWithoutFantasyMembershipsInput
 }
 
 export type FantasyLeagueMemberUncheckedCreateInput = {
@@ -279,8 +279,8 @@ export type FantasyLeagueMemberUncheckedCreateInput = {
 
 export type FantasyLeagueMemberUpdateInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFantasyMembershipsNestedInput
   league?: Prisma.LeagueUpdateOneRequiredWithoutFantasyMembersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFantasyMembershipsNestedInput
 }
 
 export type FantasyLeagueMemberUncheckedUpdateInput = {
@@ -577,8 +577,8 @@ export type FantasyLeagueMemberSelect<ExtArgs extends runtime.Types.Extensions.I
   userId?: boolean
   leagueId?: boolean
   joinedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyLeagueMember"]>
 
 export type FantasyLeagueMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -586,8 +586,8 @@ export type FantasyLeagueMemberSelectCreateManyAndReturn<ExtArgs extends runtime
   userId?: boolean
   leagueId?: boolean
   joinedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyLeagueMember"]>
 
 export type FantasyLeagueMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -595,8 +595,8 @@ export type FantasyLeagueMemberSelectUpdateManyAndReturn<ExtArgs extends runtime
   userId?: boolean
   leagueId?: boolean
   joinedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fantasyLeagueMember"]>
 
 export type FantasyLeagueMemberSelectScalar = {
@@ -608,23 +608,23 @@ export type FantasyLeagueMemberSelectScalar = {
 
 export type FantasyLeagueMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "leagueId" | "joinedAt", ExtArgs["result"]["fantasyLeagueMember"]>
 export type FantasyLeagueMemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type FantasyLeagueMemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type FantasyLeagueMemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   league?: boolean | Prisma.LeagueDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $FantasyLeagueMemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FantasyLeagueMember"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     league: Prisma.$LeaguePayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1025,8 +1025,8 @@ readonly fields: FantasyLeagueMemberFieldRefs;
  */
 export interface Prisma__FantasyLeagueMemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   league<T extends Prisma.LeagueDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeagueDefaultArgs<ExtArgs>>): Prisma.Prisma__LeagueClient<runtime.Types.Result.GetResult<Prisma.$LeaguePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

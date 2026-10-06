@@ -1,7 +1,17 @@
 import prisma from '../config/prisma.js'
+
 import {
   getMatchdayStatus,
 } from '../utils/matchday.js'
+
+import {
+  getOrCreateGameweek,
+} from '../utils/gameweek.js'
+
+import {
+  recalculateGameweekScores,
+} from '../services/fantasyScoringService.js'
+
 
 const getLeague = async (leagueId) => {
   return prisma.league.findUnique({
@@ -11,11 +21,13 @@ const getLeague = async (leagueId) => {
   })
 }
 
+
 const getMatchWithEvents = async (matchId) => {
   return prisma.match.findUnique({
     where: {
       id: matchId,
     },
+
     include: {
       events: {
         include: {
@@ -28,6 +40,7 @@ const getMatchWithEvents = async (matchId) => {
             },
           },
         },
+
         orderBy: {
           createdAt: 'asc',
         },
@@ -35,6 +48,37 @@ const getMatchWithEvents = async (matchId) => {
     },
   })
 }
+
+
+/**
+ * Make sure a match has a gameweek.
+ *
+ * This also handles older Match records that were created
+ * before gameweekId was added.
+ */
+const ensureMatchGameweek = async (match) => {
+  if (match.gameweekId) {
+    return match.gameweekId
+  }
+
+  const gameweek = await getOrCreateGameweek(
+    match.leagueId,
+    match.matchDate,
+  )
+
+  await prisma.match.update({
+    where: {
+      id: match.id,
+    },
+
+    data: {
+      gameweekId: gameweek.id,
+    },
+  })
+
+  return gameweek.id
+}
+
 
 /**
  * Get the current matchday state for a league.
@@ -78,17 +122,20 @@ export const getMatchday = async (req, res) => {
 
     let match = null
 
-    /*
+    /**
      * Only create a Match record once the matchday becomes active.
      *
      * This means we don't create empty future Match records.
      */
     if (status === 'ACTIVE') {
+      const matchDateJs = matchDate.toJSDate()
+
       match = await prisma.match.findFirst({
         where: {
           leagueId,
-          matchDate: matchDate.toJSDate(),
+          matchDate: matchDateJs,
         },
+
         include: {
           events: {
             include: {
@@ -101,6 +148,7 @@ export const getMatchday = async (req, res) => {
                 },
               },
             },
+
             orderBy: {
               createdAt: 'asc',
             },
@@ -108,12 +156,25 @@ export const getMatchday = async (req, res) => {
         },
       })
 
+      /**
+       * Create the Gameweek first.
+       *
+       * Gameweek number is calculated automatically:
+       * 1, 2, 3, 4...
+       */
+      const gameweek = await getOrCreateGameweek(
+        leagueId,
+        matchDateJs,
+      )
+
       if (!match) {
         match = await prisma.match.create({
           data: {
             leagueId,
-            matchDate: matchDate.toJSDate(),
+            gameweekId: gameweek.id,
+            matchDate: matchDateJs,
           },
+
           include: {
             events: {
               include: {
@@ -126,6 +187,40 @@ export const getMatchday = async (req, res) => {
                   },
                 },
               },
+
+              orderBy: {
+                createdAt: 'asc',
+              },
+            },
+          },
+        })
+      } else if (!match.gameweekId) {
+        /**
+         * Backfill the gameweek for older matches
+         * that were created before gameweek support.
+         */
+        match = await prisma.match.update({
+          where: {
+            id: match.id,
+          },
+
+          data: {
+            gameweekId: gameweek.id,
+          },
+
+          include: {
+            events: {
+              include: {
+                player: {
+                  select: {
+                    id: true,
+                    name: true,
+                    position: true,
+                    photoUrl: true,
+                  },
+                },
+              },
+
               orderBy: {
                 createdAt: 'asc',
               },
@@ -137,6 +232,7 @@ export const getMatchday = async (req, res) => {
 
     return res.json({
       success: true,
+
       data: {
         status,
         now: now.toISO(),
@@ -154,6 +250,11 @@ export const getMatchday = async (req, res) => {
     })
   }
 }
+
+
+/**
+ * Record a goal and optional assist.
+ */
 export const recordGoal = async (req, res) => {
   try {
     const matchId = Number(req.params.matchId)
@@ -178,6 +279,7 @@ export const recordGoal = async (req, res) => {
     }
 
     const parsedScorerId = Number(scorerId)
+
     const parsedAssistId =
       assistId !== null &&
       assistId !== undefined &&
@@ -189,6 +291,7 @@ export const recordGoal = async (req, res) => {
       where: {
         id: matchId,
       },
+
       include: {
         league: true,
       },
@@ -209,7 +312,7 @@ export const recordGoal = async (req, res) => {
       match.league.matchTime,
     )
 
-    /*
+    /**
      * Make sure this Match belongs to the currently active
      * calendar matchday.
      */
@@ -291,11 +394,27 @@ export const recordGoal = async (req, res) => {
       data: events,
     })
 
+    /**
+     * Make sure the match belongs to a Gameweek.
+     *
+     * This also repairs older matches where gameweekId
+     * is currently null.
+     */
+    const gameweekId = await ensureMatchGameweek(match)
+
+    /**
+     * Recalculate fantasy scores immediately after
+     * recording the goal/assist.
+     */
+    await recalculateGameweekScores(gameweekId)
+
     const updatedMatch = await getMatchWithEvents(matchId)
 
     return res.status(201).json({
       success: true,
+
       message: 'Goal recorded successfully',
+
       data: {
         match: updatedMatch,
       },
@@ -310,6 +429,10 @@ export const recordGoal = async (req, res) => {
   }
 }
 
+
+/**
+ * Award clean sheets to players.
+ */
 export const awardCleanSheets = async (req, res) => {
   try {
     const matchId = Number(req.params.matchId)
@@ -351,6 +474,7 @@ export const awardCleanSheets = async (req, res) => {
       where: {
         id: matchId,
       },
+
       include: {
         league: true,
       },
@@ -386,9 +510,11 @@ export const awardCleanSheets = async (req, res) => {
         id: {
           in: parsedPlayerIds,
         },
+
         leagueId: match.leagueId,
         deletedAt: null,
       },
+
       select: {
         id: true,
         name: true,
@@ -402,17 +528,20 @@ export const awardCleanSheets = async (req, res) => {
       })
     }
 
-    /*
+    /**
      * Prevent awarding the same clean sheet twice.
      */
     const existingEvents = await prisma.matchEvent.findMany({
       where: {
         matchId,
+
         playerId: {
           in: parsedPlayerIds,
         },
+
         type: 'CLEAN_SHEET',
       },
+
       select: {
         playerId: true,
       },
@@ -434,16 +563,26 @@ export const awardCleanSheets = async (req, res) => {
           type: 'CLEAN_SHEET',
         })),
       })
+
+      /**
+       * Make sure the match belongs to a Gameweek
+       * and recalculate fantasy scores.
+       */
+      const gameweekId = await ensureMatchGameweek(match)
+
+      await recalculateGameweekScores(gameweekId)
     }
 
     const updatedMatch = await getMatchWithEvents(matchId)
 
     return res.status(201).json({
       success: true,
+
       message:
         newPlayerIds.length === 0
           ? 'Clean sheets were already awarded'
           : 'Clean sheets awarded successfully',
+
       data: {
         match: updatedMatch,
       },
@@ -458,6 +597,10 @@ export const awardCleanSheets = async (req, res) => {
   }
 }
 
+
+/**
+ * Get all events for a match.
+ */
 export const getMatchEvents = async (req, res) => {
   try {
     const matchId = Number(req.params.matchId)
@@ -473,6 +616,7 @@ export const getMatchEvents = async (req, res) => {
       where: {
         id: matchId,
       },
+
       include: {
         events: {
           include: {
@@ -485,6 +629,7 @@ export const getMatchEvents = async (req, res) => {
               },
             },
           },
+
           orderBy: {
             createdAt: 'asc',
           },
@@ -501,6 +646,7 @@ export const getMatchEvents = async (req, res) => {
 
     return res.json({
       success: true,
+
       data: {
         match,
         events: match.events,
@@ -515,4 +661,3 @@ export const getMatchEvents = async (req, res) => {
     })
   }
 }
-
