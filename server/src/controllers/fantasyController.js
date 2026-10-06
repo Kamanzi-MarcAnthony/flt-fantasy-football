@@ -3,6 +3,7 @@ import {
   STARTING_BANK,
   FANTASY_TEAM_SIZE,
 } from '../constants/fantasy.js'
+import { getMatchdayStatus } from '../utils/matchday.js'
 
 export const getAvailableLeagues = async (req, res) => {
   try {
@@ -140,6 +141,76 @@ export const joinLeague = async (req, res) => {
   }
 }
 
+export const getFantasyTransferStatus = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const leagueId = Number(req.query.leagueId)
+
+    if (!Number.isInteger(leagueId) || leagueId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
+
+    const membership = await prisma.fantasyLeagueMember.findUnique({
+      where: {
+        userId_leagueId: {
+          userId,
+          leagueId,
+        },
+      },
+      include: {
+        league: true,
+      },
+    })
+
+    if (!membership) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not a member of this league',
+      })
+    }
+
+    const league = membership.league
+
+    if (!league.matchDay || !league.matchTime) {
+      return res.status(400).json({
+        success: false,
+        message: 'League match day and match time are not configured',
+      })
+    }
+
+    const {
+      status,
+      now,
+      matchDate,
+      closeDate,
+    } = getMatchdayStatus(
+      league.matchDay,
+      league.matchTime,
+    )
+
+    return res.json({
+      success: true,
+      data: {
+        transferStatus: status === 'ACTIVE' ? 'CLOSED' : 'OPEN',
+        matchdayStatus: status,
+        now: now.toISO(),
+        matchDate: matchDate.toISO(),
+        closeDate: closeDate.toISO(),
+      },
+    })
+  } catch (error) {
+    console.error('Get fantasy transfer status error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load transfer status',
+    })
+  }
+}
+
 export const getFantasyStatus = async (req, res) => {
   try {
     const userId = req.user.id
@@ -194,11 +265,11 @@ export const getFantasyPlayers = async (req, res) => {
     if (!Number.isInteger(leagueId)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid league ID',
+        message: 'Valid leagueId is required',
       })
     }
 
-    // Make sure the fantasy user has joined this league
+    // Make sure the fantasy user belongs to this league
     const membership = await prisma.fantasyLeagueMember.findUnique({
       where: {
         userId_leagueId: {
@@ -211,7 +282,7 @@ export const getFantasyPlayers = async (req, res) => {
     if (!membership) {
       return res.status(403).json({
         success: false,
-        message: 'You have not joined this league',
+        message: 'You are not a member of this league',
       })
     }
 
@@ -232,13 +303,93 @@ export const getFantasyPlayers = async (req, res) => {
         position: true,
         ovr: true,
         price: true,
+
+        events: {
+          select: {
+            type: true,
+            matchId: true,
+          },
+        },
       },
+    })
+
+    const formattedPlayers = players.map((player) => {
+      // Group events by match so the goal bonus is calculated
+      // per match rather than across the player's entire career.
+      const matches = {}
+
+      player.events.forEach((event) => {
+        if (!matches[event.matchId]) {
+          matches[event.matchId] = {
+            goals: 0,
+            assists: 0,
+            cleanSheets: 0,
+          }
+        }
+
+        if (event.type === 'GOAL') {
+          matches[event.matchId].goals += 1
+        }
+
+        if (event.type === 'ASSIST') {
+          matches[event.matchId].assists += 1
+        }
+
+        if (event.type === 'CLEAN_SHEET') {
+          matches[event.matchId].cleanSheets += 1
+        }
+      })
+
+      let totalPoints = 0
+
+      Object.values(matches).forEach((match) => {
+        // Goal points
+        const goalPoints = {
+          GK: 7,
+          DEF: 6,
+          MID: 5,
+          ST: 4,
+        }
+
+        totalPoints += match.goals * goalPoints[player.position]
+
+        // Assist points
+        totalPoints += match.assists * 3
+
+        // Goal bonus
+        if (match.goals >= 2) {
+          totalPoints += 3
+        } else if (match.goals === 1) {
+          totalPoints += 1
+        }
+
+        // Clean sheet points
+        const cleanSheetPoints = {
+          GK: 4,
+          DEF: 4,
+          MID: 2,
+          ST: 1,
+        }
+
+        totalPoints +=
+          match.cleanSheets * cleanSheetPoints[player.position]
+      })
+
+      return {
+        id: player.id,
+        name: player.name,
+        photoUrl: player.photoUrl,
+        position: player.position,
+        ovr: player.ovr,
+        price: player.price,
+        totalPoints,
+      }
     })
 
     return res.json({
       success: true,
       data: {
-        players,
+        players: formattedPlayers,
       },
     })
   } catch (error) {
@@ -246,7 +397,7 @@ export const getFantasyPlayers = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: 'Unable to load players',
+      message: 'Unable to fetch fantasy players',
     })
   }
 }
@@ -446,7 +597,7 @@ export const getMyTeam = async (req, res) => {
       include: {
         players: {
           orderBy: {
-          createdAt: 'asc',
+            createdAt: 'asc',
           },
           include: {
             player: {
@@ -457,15 +608,24 @@ export const getMyTeam = async (req, res) => {
                 position: true,
                 ovr: true,
                 price: true,
+
+                events: {
+                  select: {
+                    type: true,
+                    matchId: true,
+                  },
+                },
               },
             },
           },
         },
+
         captain: {
           select: {
             id: true,
           },
         },
+
         viceCaptain: {
           select: {
             id: true,
@@ -491,6 +651,79 @@ export const getMyTeam = async (req, res) => {
       0,
     )
 
+    const goalPoints = {
+      GK: 7,
+      DEF: 6,
+      MID: 5,
+      ST: 4,
+    }
+
+    const cleanSheetPoints = {
+      GK: 4,
+      DEF: 4,
+      MID: 2,
+      ST: 1,
+    }
+
+    const players = team.players.map((item) => {
+      const matches = {}
+
+      item.player.events.forEach((event) => {
+        if (!matches[event.matchId]) {
+          matches[event.matchId] = {
+            goals: 0,
+            assists: 0,
+            cleanSheets: 0,
+          }
+        }
+
+        if (event.type === 'GOAL') {
+          matches[event.matchId].goals += 1
+        }
+
+        if (event.type === 'ASSIST') {
+          matches[event.matchId].assists += 1
+        }
+
+        if (event.type === 'CLEAN_SHEET') {
+          matches[event.matchId].cleanSheets += 1
+        }
+      })
+
+      let totalPoints = 0
+
+      Object.values(matches).forEach((match) => {
+        // Goals
+        totalPoints +=
+          match.goals * goalPoints[item.player.position]
+
+        // Assists
+        totalPoints += match.assists * 3
+
+        // Goal bonus
+        if (match.goals >= 2) {
+          totalPoints += 3
+        } else if (match.goals === 1) {
+          totalPoints += 1
+        }
+
+        // Clean sheets
+        totalPoints +=
+          match.cleanSheets *
+          cleanSheetPoints[item.player.position]
+      })
+
+      return {
+        ...item,
+        player: {
+          ...item.player,
+          totalPoints,
+          // Events are only needed internally for calculation
+          events: undefined,
+        },
+      }
+    })
+
     return res.json({
       success: true,
       data: {
@@ -503,7 +736,7 @@ export const getMyTeam = async (req, res) => {
           squadValue,
           captainId: team.captainId,
           viceCaptainId: team.viceCaptainId,
-          players: team.players,
+          players,
         },
       },
     })

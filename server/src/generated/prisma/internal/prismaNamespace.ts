@@ -407,7 +407,8 @@ export const ModelName = {
   MatchEvent: 'MatchEvent',
   Gameweek: 'Gameweek',
   FantasyTeamGameweekScore: 'FantasyTeamGameweekScore',
-  FantasyPlayerGameweekScore: 'FantasyPlayerGameweekScore'
+  FantasyPlayerGameweekScore: 'FantasyPlayerGameweekScore',
+  FantasyTransfer: 'FantasyTransfer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "league" | "fantasyLeagueMember" | "player" | "fantasyTeam" | "fantasyTeamPlayer" | "match" | "matchEvent" | "gameweek" | "fantasyTeamGameweekScore" | "fantasyPlayerGameweekScore"
+    modelProps: "user" | "league" | "fantasyLeagueMember" | "player" | "fantasyTeam" | "fantasyTeamPlayer" | "match" | "matchEvent" | "gameweek" | "fantasyTeamGameweekScore" | "fantasyPlayerGameweekScore" | "fantasyTransfer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1241,6 +1242,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FantasyTransfer: {
+      payload: Prisma.$FantasyTransferPayload<ExtArgs>
+      fields: Prisma.FantasyTransferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FantasyTransferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FantasyTransferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>
+        }
+        findFirst: {
+          args: Prisma.FantasyTransferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FantasyTransferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>
+        }
+        findMany: {
+          args: Prisma.FantasyTransferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>[]
+        }
+        create: {
+          args: Prisma.FantasyTransferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>
+        }
+        createMany: {
+          args: Prisma.FantasyTransferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FantasyTransferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>[]
+        }
+        delete: {
+          args: Prisma.FantasyTransferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>
+        }
+        update: {
+          args: Prisma.FantasyTransferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>
+        }
+        deleteMany: {
+          args: Prisma.FantasyTransferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FantasyTransferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FantasyTransferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>[]
+        }
+        upsert: {
+          args: Prisma.FantasyTransferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FantasyTransferPayload>
+        }
+        aggregate: {
+          args: Prisma.FantasyTransferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFantasyTransfer>
+        }
+        groupBy: {
+          args: Prisma.FantasyTransferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyTransferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FantasyTransferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FantasyTransferCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1422,6 +1497,19 @@ export const FantasyPlayerGameweekScoreScalarFieldEnum = {
 } as const
 
 export type FantasyPlayerGameweekScoreScalarFieldEnum = (typeof FantasyPlayerGameweekScoreScalarFieldEnum)[keyof typeof FantasyPlayerGameweekScoreScalarFieldEnum]
+
+
+export const FantasyTransferScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  outgoingPlayerId: 'outgoingPlayerId',
+  incomingPlayerId: 'incomingPlayerId',
+  outgoingPrice: 'outgoingPrice',
+  incomingPrice: 'incomingPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type FantasyTransferScalarFieldEnum = (typeof FantasyTransferScalarFieldEnum)[keyof typeof FantasyTransferScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1734,6 +1822,7 @@ export type GlobalOmitConfig = {
   gameweek?: Prisma.GameweekOmit
   fantasyTeamGameweekScore?: Prisma.FantasyTeamGameweekScoreOmit
   fantasyPlayerGameweekScore?: Prisma.FantasyPlayerGameweekScoreOmit
+  fantasyTransfer?: Prisma.FantasyTransferOmit
 }
 
 /* Types for Logging */

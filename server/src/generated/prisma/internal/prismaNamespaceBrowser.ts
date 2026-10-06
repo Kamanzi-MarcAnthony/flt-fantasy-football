@@ -61,7 +61,8 @@ export const ModelName = {
   MatchEvent: 'MatchEvent',
   Gameweek: 'Gameweek',
   FantasyTeamGameweekScore: 'FantasyTeamGameweekScore',
-  FantasyPlayerGameweekScore: 'FantasyPlayerGameweekScore'
+  FantasyPlayerGameweekScore: 'FantasyPlayerGameweekScore',
+  FantasyTransfer: 'FantasyTransfer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -222,6 +223,19 @@ export const FantasyPlayerGameweekScoreScalarFieldEnum = {
 } as const
 
 export type FantasyPlayerGameweekScoreScalarFieldEnum = (typeof FantasyPlayerGameweekScoreScalarFieldEnum)[keyof typeof FantasyPlayerGameweekScoreScalarFieldEnum]
+
+
+export const FantasyTransferScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  outgoingPlayerId: 'outgoingPlayerId',
+  incomingPlayerId: 'incomingPlayerId',
+  outgoingPrice: 'outgoingPrice',
+  incomingPrice: 'incomingPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type FantasyTransferScalarFieldEnum = (typeof FantasyTransferScalarFieldEnum)[keyof typeof FantasyTransferScalarFieldEnum]
 
 
 export const SortOrder = {

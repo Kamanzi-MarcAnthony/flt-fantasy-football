@@ -1,4 +1,5 @@
 import { Router } from 'express'
+
 import {
   getFantasyStatus,
   getAvailableLeagues,
@@ -7,24 +8,29 @@ import {
   createFantasyTeam,
   getMyTeam,
   getFantasyPoints,
+  getFantasyTransferStatus,
   updateTeamCaptains,
   updateFantasyTeam,
   deleteFantasyAccount,
-  getFantasyLeaderboard
+  getFantasyLeaderboard,
 } from '../controllers/fantasyController.js'
+
+import transferRoutes from './transferRoutes.js'
+
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
 
 const router = Router()
 
+// Fantasy status
 router.get(
   '/status',
   authenticate,
   authorize('FANTASY_USER'),
   getFantasyStatus,
-  
 )
 
+// Available leagues
 router.get(
   '/leagues',
   authenticate,
@@ -32,6 +38,7 @@ router.get(
   getAvailableLeagues,
 )
 
+// Join a league
 router.post(
   '/leagues/:leagueId/join',
   authenticate,
@@ -39,6 +46,7 @@ router.post(
   joinLeague,
 )
 
+// Fantasy players
 router.get(
   '/players',
   authenticate,
@@ -46,6 +54,7 @@ router.get(
   getFantasyPlayers,
 )
 
+// Create fantasy team
 router.post(
   '/teams',
   authenticate,
@@ -53,6 +62,7 @@ router.post(
   createFantasyTeam,
 )
 
+// Get my fantasy team
 router.get(
   '/teams/my-team',
   authenticate,
@@ -60,6 +70,7 @@ router.get(
   getMyTeam,
 )
 
+// Fantasy points
 router.get(
   '/points',
   authenticate,
@@ -67,6 +78,15 @@ router.get(
   getFantasyPoints,
 )
 
+// Transfer status
+router.get(
+  '/transfer-status',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getFantasyTransferStatus,
+)
+
+// Team captains
 router.patch(
   '/teams/:teamId/captains',
   authenticate,
@@ -74,6 +94,7 @@ router.patch(
   updateTeamCaptains,
 )
 
+// Update fantasy team
 router.patch(
   '/teams/:teamId',
   authenticate,
@@ -81,6 +102,7 @@ router.patch(
   updateFantasyTeam,
 )
 
+// Delete fantasy account
 router.delete(
   '/account',
   authenticate,
@@ -88,10 +110,18 @@ router.delete(
   deleteFantasyAccount,
 )
 
+// Fantasy leaderboard
 router.get(
   '/leaderboard',
   authenticate,
   authorize('FANTASY_USER'),
   getFantasyLeaderboard,
 )
+
+// Transfers
+router.use(
+  '/transfers',
+  transferRoutes,
+)
+
 export default router

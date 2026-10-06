@@ -96,3 +96,8 @@ export type FantasyTeamGameweekScore = Prisma.FantasyTeamGameweekScoreModel
  * 
  */
 export type FantasyPlayerGameweekScore = Prisma.FantasyPlayerGameweekScoreModel
+/**
+ * Model FantasyTransfer
+ * 
+ */
+export type FantasyTransfer = Prisma.FantasyTransferModel

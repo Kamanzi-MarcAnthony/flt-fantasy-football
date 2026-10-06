@@ -21,6 +21,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['close', 'confirm', 'view-player'])
@@ -95,9 +99,11 @@ const closeModal = () => {
 }
 
 const confirmTransfer = () => {
-  if (!selectedReplacement.value) return
+  if (!selectedReplacement.value || !props.player) return
 
   emit('confirm', {
+    outgoingPlayerId: props.player.id,
+    incomingPlayerId: selectedReplacement.value.id,
     outgoingPlayer: props.player,
     incomingPlayer: selectedReplacement.value,
   })
@@ -504,12 +510,20 @@ watch(
                 </button>
 
                 <button
-                  type="button"
-                  class="rounded-xl bg-[#00EEFF] px-4 py-3 text-sm font-black text-[#010056] transition hover:brightness-110"
-                  @click="confirmTransfer"
-                >
-                  Confirm Transfer
-                </button>
+  type="button"
+  :disabled="loading"
+  @click="confirmTransfer"
+  class="rounded-xl bg-[#00EEFF] px-4 py-3 text-sm font-black text-[#010056] transition hover:brightness-110"
+>
+  <Loader2
+    v-if="loading"
+    class="w-4 h-4 animate-spin"
+  />
+
+  <span>
+    {{ loading ? 'Processing...' : 'Confirm Transfer' }}
+  </span>
+</button>
               </div>
             </div>
 
