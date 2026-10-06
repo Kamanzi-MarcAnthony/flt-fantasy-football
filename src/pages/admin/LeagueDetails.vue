@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import ClearMatchdayDataModal from '../../components/matches/ClearMatchdayDataModal.vue'
 import { useAuthStore } from '../../stores/auth'
 
 import {
@@ -27,6 +28,9 @@ import LeagueFormModal from '../../components/leagues/LeagueFormModal.vue'
 const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
+
+const showClearMatchdayModal = ref(false)
+const clearingMatchday = ref(false)
 
 // --------------------------------------------------
 // League
@@ -338,6 +342,63 @@ const handleLeagueUpdate = async (leagueData) => {
     )
   } finally {
     leagueSaving.value = false
+  }
+}
+
+// --------------------------------------------------
+// Clear Matchday data
+// --------------------------------------------------
+// const clearMatchdayData = async () => {
+//   if (!matchday.value?.match?.id) return
+
+//   clearingMatchday.value = true
+
+//   try {
+//     const response = await api.delete(
+//       `/matches/${matchday.value.match.id}/events`,
+//     )
+
+//     matchday.value.match = response.data.data.match
+
+//     showClearMatchdayModal.value = false
+//   } catch (error) {
+//     console.error('Failed to clear matchday data:', error)
+
+//     alert(
+//       error.response?.data?.message ||
+//         'Unable to clear matchday data.',
+//     )
+//   } finally {
+//     clearingMatchday.value = false
+//   }
+// }
+const clearMatchdayData = async () => {
+  if (!matchday.value?.match?.id) return
+
+  clearingMatchday.value = true
+
+  try {
+    await api.delete(
+      `/matches/${matchday.value.match.id}/events`,
+    )
+
+    // Refresh all data affected by the cleared matchday
+    await Promise.all([
+      fetchMatchday(),
+      fetchLeagueStats(),
+      fetchLeagueLeaderboard(),
+    ])
+
+    showClearMatchdayModal.value = false
+  } catch (error) {
+    console.error('Failed to clear matchday data:', error)
+
+    alert(
+      error.response?.data?.message ||
+        'Unable to clear matchday data.',
+    )
+  } finally {
+    clearingMatchday.value = false
   }
 }
 
@@ -686,6 +747,15 @@ onMounted(() => {
             >
               Award Clean Sheets
             </button>
+
+            <button
+  type="button"
+  class="flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-400/20"
+  @click="showClearMatchdayModal = true"
+>
+  <Trash2 class="h-4 w-4" />
+  Clear Matchday Data
+</button>
           </div>
 
           <div
@@ -1302,5 +1372,12 @@ onMounted(() => {
       @close="showEditLeagueModal = false"
       @submit="handleLeagueUpdate"
     />
+
+    <ClearMatchdayDataModal
+  v-model:visible="showClearMatchdayModal"
+  :loading="clearingMatchday"
+  :matchday="matchday"
+  @confirm="clearMatchdayData"
+/>
   </div>
 </template>
