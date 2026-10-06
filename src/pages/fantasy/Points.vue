@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { computed, ref, watch } from 'vue'
+import PlayerPointsModal from '../../components/fantasy/PlayerPointsModal.vue'
 import FantasyPitch from '../../components/fantasy/FantasyPitch.vue'
 import api from '../../services/api'
 
@@ -17,6 +18,9 @@ const error = ref('')
 const gameweeks = ref([])
 const currentGameweekIndex = ref(-1)
 const pointsData = ref(null)
+
+const selectedPlayer = ref(null)
+const showPlayerModal = ref(false)
 
 const selectedGameweek = computed(() => {
   if (currentGameweekIndex.value < 0) return null
@@ -54,7 +58,6 @@ const playerPoints = computed(() => {
     points[item.player.id] = 0
   })
 
-  // Replace 0 with actual points returned by the API.
   if (pointsData.value?.players) {
     pointsData.value.players.forEach((player) => {
       points[player.id] = player.points
@@ -120,6 +123,16 @@ const loadPoints = async (gameweekId = null) => {
     loading.value = false
   }
 }
+
+const openPlayerModal = (player) => {
+  const playerWithPoints = pointsData.value?.players?.find(
+    (item) => item.id === player.id,
+  )
+
+  selectedPlayer.value = playerWithPoints || player
+  showPlayerModal.value = true
+}
+
 
 const previousGameweek = () => {
   if (!canGoPrevious.value || loading.value) {
@@ -270,6 +283,7 @@ watch(
         :vice-captain-id="team.viceCaptainId"
         stat-type="points"
         :player-points="playerPoints"
+        @player-click="openPlayerModal"
       />
 
       <!-- Loading overlay -->
@@ -284,5 +298,10 @@ watch(
         </div>
       </div>
     </div>
+
+    <PlayerPointsModal
+  v-model:visible="showPlayerModal"
+  :player="selectedPlayer"
+/>
   </div>
 </template>

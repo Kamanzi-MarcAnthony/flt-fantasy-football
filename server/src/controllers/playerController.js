@@ -165,19 +165,17 @@ export const getPlayerById = async (req, res) => {
       })
     }
 
-    const hasStats = player.events.length > 0
+const goals = player.events.filter(
+  (event) => event.type === 'GOAL',
+).length
 
-    const goals = player.events.filter(
-      (event) => event.type === 'GOAL',
-    ).length
+const assists = player.events.filter(
+  (event) => event.type === 'ASSIST',
+).length
 
-    const assists = player.events.filter(
-      (event) => event.type === 'ASSIST',
-    ).length
-
-    const cleanSheets = player.events.filter(
-      (event) => event.type === 'CLEAN_SHEET',
-    ).length
+const cleanSheets = player.events.filter(
+  (event) => event.type === 'CLEAN_SHEET',
+).length
 
     const { events, ...playerData } = player
 
@@ -187,9 +185,9 @@ export const getPlayerById = async (req, res) => {
         player: {
           ...playerData,
           stats: {
-            goals: hasStats ? goals : null,
-            assists: hasStats ? assists : null,
-            cleanSheets: hasStats ? cleanSheets : null,
+            goals,
+            assists,
+            cleanSheets,
           },
         },
       },

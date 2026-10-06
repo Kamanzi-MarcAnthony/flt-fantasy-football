@@ -776,7 +776,8 @@ export const getFantasyPoints = async (req, res) => {
 
     if (
       requestedGameweekId !== null &&
-      (!Number.isInteger(requestedGameweekId) || requestedGameweekId <= 0)
+      (!Number.isInteger(requestedGameweekId) ||
+        requestedGameweekId <= 0)
     ) {
       return res.status(400).json({
         success: false,
@@ -863,18 +864,14 @@ export const getFantasyPoints = async (req, res) => {
           gameweek: null,
           players: [],
           totalPoints: 0,
+          highestGameweekPoints: 0,
+          highestGameweek: null,
         },
       })
     }
 
     // -----------------------------------
     // Determine selected gameweek
-    //
-    // If gameweekId was provided:
-    //   use that gameweek.
-    //
-    // Otherwise:
-    //   use the latest gameweek.
     // -----------------------------------
 
     let selectedGameweek
@@ -915,6 +912,19 @@ export const getFantasyPoints = async (req, res) => {
             position: true,
             ovr: true,
             price: true,
+
+            events: {
+              where: {
+                match: {
+                  gameweekId: selectedGameweek.id,
+                },
+              },
+              select: {
+                id: true,
+                type: true,
+                matchId: true,
+              },
+            },
           },
         },
       },
@@ -941,43 +951,142 @@ export const getFantasyPoints = async (req, res) => {
       },
     })
 
+    // -----------------------------------
+    // Get highest gameweek score
+    // -----------------------------------
+
     const highestGameweekScore =
-  await prisma.fantasyTeamGameweekScore.findFirst({
-    where: {
-      teamId: team.id,
-    },
-    orderBy: {
-      points: 'desc',
-    },
-    select: {
-      points: true,
-      gameweek: {
-        select: {
-          id: true,
-          number: true,
+      await prisma.fantasyTeamGameweekScore.findFirst({
+        where: {
+          teamId: team.id,
         },
-      },
-    },
-  })
+        orderBy: {
+          points: 'desc',
+        },
+        select: {
+          points: true,
+          gameweek: {
+            select: {
+              id: true,
+              number: true,
+            },
+          },
+        },
+      })
 
     // -----------------------------------
-    // Format player points
+    // Scoring rules
     // -----------------------------------
 
-    const players = playerScores.map((item) => ({
-      id: item.player.id,
-      name: item.player.name,
-      photoUrl: item.player.photoUrl,
-      position: item.player.position,
-      ovr: item.player.ovr,
-      price: Number(item.player.price),
+    const GOAL_POINTS = {
+      GK: 7,
+      DEF: 6,
+      MID: 5,
+      ST: 4,
+    }
 
-      // Already includes captain multiplier
-      points: item.points,
+    const CLEAN_SHEET_POINTS = {
+      GK: 4,
+      DEF: 4,
+      MID: 2,
+      ST: 1,
+    }
 
-      isCaptain: item.player.id === team.captainId,
-      isViceCaptain: item.player.id === team.viceCaptainId,
-    }))
+    const ASSIST_POINTS = 3
+
+    // -----------------------------------
+    // Format player points + breakdown
+    // -----------------------------------
+
+    const players = playerScores.map((item) => {
+      const events = item.player.events || []
+
+      const goals = events.filter(
+        (event) => event.type === 'GOAL',
+      ).length
+
+      const assists = events.filter(
+        (event) => event.type === 'ASSIST',
+      ).length
+
+      const cleanSheets = events.filter(
+        (event) => event.type === 'CLEAN_SHEET',
+      ).length
+
+      const breakdown = []
+
+      // Goals
+      if (goals > 0) {
+        const points = goals * GOAL_POINTS[item.player.position]
+
+        breakdown.push({
+          type: 'GOAL',
+          label: 'Goals',
+          detail: `${goals} ${goals === 1 ? 'goal' : 'goals'}`,
+          points,
+        })
+      }
+
+      // Assists
+      if (assists > 0) {
+        breakdown.push({
+          type: 'ASSIST',
+          label: 'Assists',
+          detail: `${assists} ${
+            assists === 1 ? 'assist' : 'assists'
+          }`,
+          points: assists * ASSIST_POINTS,
+        })
+      }
+
+      // Goal bonus
+      if (goals >= 2) {
+        breakdown.push({
+          type: 'BONUS',
+          label: 'Bonus',
+          detail: '2+ goals',
+          points: 3,
+        })
+      } else if (goals === 1) {
+        breakdown.push({
+          type: 'BONUS',
+          label: 'Bonus',
+          detail: '1 goal',
+          points: 1,
+        })
+      }
+
+      // Clean sheet
+      if (cleanSheets > 0) {
+        breakdown.push({
+          type: 'CLEAN_SHEET',
+          label: 'Clean Sheet',
+          detail: `${cleanSheets} ${
+            cleanSheets === 1 ? 'clean sheet' : 'clean sheets'
+          }`,
+          points:
+            cleanSheets *
+            CLEAN_SHEET_POINTS[item.player.position],
+        })
+      }
+
+      return {
+        id: item.player.id,
+        name: item.player.name,
+        photoUrl: item.player.photoUrl,
+        position: item.player.position,
+        ovr: item.player.ovr,
+        price: Number(item.player.price),
+
+        // Already includes captain multiplier.
+        points: item.points,
+
+        isCaptain: item.player.id === team.captainId,
+        isViceCaptain: item.player.id === team.viceCaptainId,
+
+        breakdown,
+      }
+    })
 
     // -----------------------------------
     // Response
@@ -988,23 +1097,21 @@ export const getFantasyPoints = async (req, res) => {
       data: {
         team,
 
-        // Used by the frontend to navigate
-        // between gameweeks.
         gameweeks,
 
-        // Currently selected gameweek.
         gameweek: selectedGameweek,
 
         players,
 
-        // This value already includes the
-        // captain multiplier.
         totalPoints: teamScore?.points ?? 0,
-        highestGameweekPoints: highestGameweekScore?.points ?? 0,
-        highestGameweek: highestGameweekScore?.gameweek ?? null,
+
+        highestGameweekPoints:
+          highestGameweekScore?.points ?? 0,
+
+        highestGameweek:
+          highestGameweekScore?.gameweek ?? null,
       },
     })
-    
   } catch (error) {
     console.error('Get fantasy points error:', error)
 

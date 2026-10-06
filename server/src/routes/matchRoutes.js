@@ -5,6 +5,7 @@ import {
   recordGoal,
   awardCleanSheets,
   getMatchEvents,
+  clearMatchdayData,
 } from '../controllers/matchController.js'
 
 import { authenticate } from '../middleware/authMiddleware.js'
@@ -40,4 +41,10 @@ router.get(
   getMatchEvents,
 )
 
+router.delete(
+  '/matches/:matchId/events',
+  authenticate,
+  authorize('SUPER_ADMIN', 'ADMIN'),
+  clearMatchdayData,
+)
 export default router

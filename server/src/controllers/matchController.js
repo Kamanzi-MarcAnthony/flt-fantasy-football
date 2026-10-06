@@ -661,3 +661,63 @@ export const getMatchEvents = async (req, res) => {
     })
   }
 }
+
+export const clearMatchdayData = async (req, res) => {
+  try {
+    const matchId = Number(req.params.matchId)
+
+    if (!Number.isInteger(matchId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid match ID',
+      })
+    }
+
+    const match = await prisma.match.findUnique({
+      where: {
+        id: matchId,
+      },
+      include: {
+        league: true,
+      },
+    })
+
+    if (!match) {
+      return res.status(404).json({
+        success: false,
+        message: 'Matchday not found',
+      })
+    }
+
+    // Delete all recorded match events
+    const deletedEvents = await prisma.matchEvent.deleteMany({
+      where: {
+        matchId,
+      },
+    })
+
+    // Recalculate fantasy scores after removing the events
+    if (match.gameweekId) {
+      await recalculateGameweekScores(match.gameweekId)
+    }
+
+    // Return the updated match
+    const updatedMatch = await getMatchWithEvents(matchId)
+
+    return res.status(200).json({
+      success: true,
+      message: 'Matchday data cleared successfully',
+      data: {
+        match: updatedMatch,
+        deletedEvents: deletedEvents.count,
+      },
+    })
+  } catch (error) {
+    console.error('Clear matchday data error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to clear matchday data',
+    })
+  }
+}
