@@ -621,3 +621,118 @@ export const updateTeamCaptains = async (req, res) => {
     })
   }
 }
+
+export const updateFantasyTeam = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const teamId = Number(req.params.teamId)
+    const { name } = req.body
+
+    if (!Number.isInteger(teamId) || teamId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid team ID',
+      })
+    }
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Team name is required',
+      })
+    }
+
+    const trimmedName = name.trim()
+
+    if (trimmedName.length > 50) {
+      return res.status(400).json({
+        success: false,
+        message: 'Team name cannot exceed 50 characters',
+      })
+    }
+
+    const team = await prisma.fantasyTeam.findFirst({
+      where: {
+        id: teamId,
+        userId,
+      },
+    })
+
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
+
+    const updatedTeam = await prisma.fantasyTeam.update({
+      where: {
+        id: teamId,
+      },
+      data: {
+        name: trimmedName,
+      },
+      select: {
+        id: true,
+        name: true,
+        leagueId: true,
+      },
+    })
+
+    return res.json({
+      success: true,
+      message: 'Team details updated successfully',
+      data: {
+        team: updatedTeam,
+      },
+    })
+  } catch (error) {
+    console.error('Update fantasy team error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to update team details',
+    })
+  }
+}
+
+export const deleteFantasyAccount = async (req, res) => {
+  try {
+    const userId = req.user.id
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Account not found',
+      })
+    }
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isActive: false,
+        refreshTokenHash: null,
+      },
+    })
+
+    return res.json({
+      success: true,
+      message: 'Account deleted successfully',
+    })
+  } catch (error) {
+    console.error('Delete fantasy account error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to delete account',
+    })
+  }
+}

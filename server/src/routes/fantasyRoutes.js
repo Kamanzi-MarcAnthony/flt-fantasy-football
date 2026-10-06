@@ -6,7 +6,9 @@ import {
   getFantasyPlayers,
   createFantasyTeam,
   getMyTeam,
-  updateTeamCaptains
+  updateTeamCaptains,
+  updateFantasyTeam,
+  deleteFantasyAccount,
 } from '../controllers/fantasyController.js'
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -63,4 +65,17 @@ router.patch(
   updateTeamCaptains,
 )
 
+router.patch(
+  '/teams/:teamId',
+  authenticate,
+  authorize('FANTASY_USER'),
+  updateFantasyTeam,
+)
+
+router.delete(
+  '/account',
+  authenticate,
+  authorize('FANTASY_USER'),
+  deleteFantasyAccount,
+)
 export default router
