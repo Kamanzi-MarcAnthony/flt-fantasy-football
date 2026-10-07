@@ -92,7 +92,7 @@ const handleSignup = async () => {
                         v-model="name"
                         type="text"
                         placeholder="Enter your full name"
-                        class="w-full rounded-lg border bg-white border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
+                        class="w-full rounded-lg border bg-white text-black border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
                     />
                 </div>
 
@@ -110,7 +110,7 @@ const handleSignup = async () => {
                         v-model="email"
                         type="email"
                         placeholder="Enter your email"
-                        class="w-full rounded-lg border bg-white border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
+                        class="w-full rounded-lg border bg-white text-black border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
                     />
                 </div>
 
@@ -129,12 +129,12 @@ const handleSignup = async () => {
                             v-model="password"
                             :type="showPassword ? 'text' : 'password'"
                             placeholder="Create a password"
-                            class="bg-white w-full rounded-lg border border-gray-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
+                            class="bg-white w-full rounded-lg border border-gray-300 text-black px-4 py-3 pr-12 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
                         />
 
                         <button
                             type="button"
-                            class="absolute right-3 top-1/2 -translate-y-1/2"
+                            class="absolute right-3 top-1/2 text-black -translate-y-1/2"
                             @click="showPassword = !showPassword"
                             :aria-label="
                                 showPassword
@@ -174,12 +174,12 @@ const handleSignup = async () => {
                                     : 'password'
                             "
                             placeholder="Confirm your password"
-                            class="bg-white w-full rounded-lg border border-gray-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
+                            class="bg-white text-black w-full rounded-lg border border-gray-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
                         />
 
                         <button
                             type="button"
-                            class="absolute right-3 top-1/2 -translate-y-1/2"
+                            class="absolute right-3 top-1/2 text-black -translate-y-1/2"
                             @click="
                                 showConfirmPassword =
                                     !showConfirmPassword
