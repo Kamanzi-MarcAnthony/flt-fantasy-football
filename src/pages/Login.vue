@@ -129,7 +129,7 @@ const handleLogin = async () => {
                     </label>
 
                     <input id="email" v-model="email" type="email" placeholder="Enter your email"
-                        class="w-full rounded-lg border bg-white border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10" />
+                        class="w-full rounded-lg border bg-white text-black border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10" />
                 </div>
 
                 <div>
@@ -144,12 +144,12 @@ const handleLogin = async () => {
     v-model="password"
     :type="showPassword ? 'text' : 'password'"
     placeholder="Password"
-    class="bg-white w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
+    class="bg-white text-black w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-black/10"
   />
 
   <button
     type="button"
-    class="absolute right-3 top-1/2 -translate-y-1/2"
+    class="absolute right-3 top-1/2 text-black -translate-y-1/2"
     @click="showPassword = !showPassword"
     :aria-label="showPassword ? 'Hide password' : 'Show password'"
   >
