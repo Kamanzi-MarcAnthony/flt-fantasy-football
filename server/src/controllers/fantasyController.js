@@ -1,24 +1,11 @@
 import prisma from '../config/prisma.js'
-
-
+import { getMatchdayStatus } from '../utils/matchday.js'
+import { getTransferInfo } from './transferController.js'
 
 import {
-
  STARTING_BANK,
-
-
-
-  FANTASY_TEAM_SIZE,
-
-
-
+ FANTASY_TEAM_SIZE,
 } from '../constants/fantasy.js'
-
-
-
-import { getMatchdayStatus } from '../utils/matchday.js'
-
-
 
 const getTransferGameweekNumber = async (leagueId, matchDate) => {
   // First, check whether the current matchday already has a match.
@@ -73,112 +60,25 @@ const getTransferGameweekNumber = async (leagueId, matchDate) => {
   return latestGameweek ? latestGameweek.number + 1 : 1
 }
 
-const getTransferInfo = async (teamId, league, matchDate) => {
-  const windowStart = matchDate.minus({ weeks: 1 })
-  const gameweekNumber = await getTransferGameweekNumber(league.id, matchDate)
-  const unlimitedTransfers = gameweekNumber === 1
-
-  const usedTransfers = await prisma.fantasyTransfer.count({
-    where: {
-      teamId,
-      createdAt: {
-        gte: windowStart.toJSDate(),
-        lt: matchDate.toJSDate(),
-      },
-    },
-  })
-
-  const transferLimit = unlimitedTransfers ? null : league.maxTransfers ?? 3
-  const remainingTransfers = unlimitedTransfers
-    ? null
-    : Math.max(0, transferLimit - usedTransfers)
-
-  return {
-    usedTransfers,
-    transferLimit,
-    remainingTransfers,
-    gameweekNumber,
-    unlimitedTransfers,
-  }
-}
-
 
 export const getAvailableLeagues = async (req, res) => {
-
-
-
   try {
-
-
-
     const userId = req.user.id
-
-
-
-
-
-
-
     const leagues = await prisma.league.findMany({
-
-
-
       orderBy: {
-
-
-
         createdAt: 'desc',
-
-
-
       },
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         location: true,
-
-
-
         matchDay: true,
-
-
-
         matchTime: true,
-
-
-
         _count: {
-
-
-
           select: {
-
-
-
             players: true,
-
-
-
             fantasyMembers: true,
-
-
-
           },
-
-
-
         },
 
 
@@ -2187,763 +2087,433 @@ export const createFantasyTeam = async (req, res) => {
 
 
           squadCost,
-
-
-
           playerCount: players.length,
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
   } catch (error) {
-
-
-
-    console.error('Create fantasy team error:', error)
-
-
-
-
-
-
+console.error('Create fantasy team error:', error)
 
     return res.status(500).json({
-
-
-
       success: false,
-
-
-
       message: 'Unable to create fantasy team',
-
-
-
     })
-
-
-
   }
-
-
-
 }
-
-
-
-
-
-
 
 export const getMyTeam = async (req, res) => {
-
-
-
   try {
-
-
-
     const userId = req.user.id
-
-
-
     const leagueId = Number(req.query.leagueId)
-
-
-
-
-
-
-
     if (!Number.isInteger(leagueId)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid league ID',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     const team = await prisma.fantasyTeam.findUnique({
-
-
-
       where: {
-
-
-
         userId_leagueId: {
-
-
-
           userId,
-
-
-
           leagueId,
-
-
-
         },
-
-
-
       },
-
-
-
       include: {
-
-
-
         players: {
-
-
-
           orderBy: {
-
-
-
             createdAt: 'asc',
-
-
-
           },
-
-
-
           include: {
 
-
-
             player: {
-
-
-
               select: {
-
-
-
                 id: true,
-
-
-
                 name: true,
-
-
-
                 photoUrl: true,
-
-
-
                 position: true,
-
-
-
                 ovr: true,
-
-
-
                 price: true,
-
-
-
-
-
-
-
                 events: {
-
-
-
                   select: {
-
-
-
                     type: true,
-
-
-
                     matchId: true,
-
-
-
                   },
-
-
-
                 },
-
-
-
               },
-
-
-
             },
-
-
-
           },
-
-
-
         },
-
-
-
-
-
-
-
         captain: {
-
-
-
           select: {
-
-
-
             id: true,
-
-
-
           },
-
-
-
         },
-
-
-
-
-
-
-
         viceCaptain: {
-
-
-
           select: {
-
-
-
             id: true,
-
-
-
           },
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
-
+    console.log('TEAM RESULT:', team)
     if (!team) {
-
-
-
       return res.status(404).json({
-
-
-
         success: false,
-
-
-
         message: 'Fantasy team not found',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     const squadCost = team.players.reduce(
-
-
-
       (total, item) => total + Number(item.purchasePrice),
-
-
-
       0,
-
-
-
     )
-
-
-
-
-
-
-
     const squadValue = team.players.reduce(
-
-
-
       (total, item) => total + Number(item.player.price),
-
-
-
       0,
-
-
-
     )
-
-
-
-
-
-
-
     const goalPoints = {
-
-
-
       GK: 7,
-
-
-
       DEF: 6,
-
-
-
       MID: 5,
-
-
-
       ST: 4,
-
-
-
     }
-
-
-
-
-
-
-
     const cleanSheetPoints = {
-
-
-
       GK: 4,
-
-
-
       DEF: 4,
-
-
-
       MID: 2,
-
-
-
       ST: 1,
-
-
-
     }
-
-
-
-
-
-
-
     const players = team.players.map((item) => {
-
-
-
       const matches = {}
 
-
-
-
-
-
-
       item.player.events.forEach((event) => {
-
-
-
         if (!matches[event.matchId]) {
-
-
-
           matches[event.matchId] = {
-
-
-
             goals: 0,
-
-
-
             assists: 0,
-
-
-
             cleanSheets: 0,
-
-
-
           }
-
-
-
         }
-
-
-
-
-
-
-
         if (event.type === 'GOAL') {
-
-
-
           matches[event.matchId].goals += 1
-
-
-
         }
-
-
-
-
-
-
-
         if (event.type === 'ASSIST') {
-
-
-
           matches[event.matchId].assists += 1
-
-
-
         }
-
-
-
-
-
-
-
         if (event.type === 'CLEAN_SHEET') {
-
-
-
           matches[event.matchId].cleanSheets += 1
-
-
-
         }
-
-
-
       })
-
-
-
-
-
-
 
       let totalPoints = 0
-
-
-
-
-
-
-
       Object.values(matches).forEach((match) => {
-
-
-
         // Goals
-
-
-
         totalPoints +=
-
-
-
           match.goals * goalPoints[item.player.position]
 
-
-
-
-
-
-
         // Assists
-
-
-
         totalPoints += match.assists * 3
-
-
-
-
-
-
-
         // Goal bonus
-
-
-
         if (match.goals >= 2) {
-
-
-
           totalPoints += 3
-
-
-
         } else if (match.goals === 1) {
-
-
-
           totalPoints += 1
-
-
-
         }
 
-
-
-
-
-
-
         // Clean sheets
-
-
-
         totalPoints +=
-
-
-
           match.cleanSheets *
-
-
-
           cleanSheetPoints[item.player.position]
-
-
-
       })
-
-
-
-
-
-
-
       return {
-
-
-
         ...item,
-
-
-
         player: {
-
-
-
           ...item.player,
-
-
-
           totalPoints,
-
-
-
           // Events are only needed internally for calculation
-
-
-
           events: undefined,
-
-
-
         },
-
-
-
       }
-
-
-
     })
-
-
-
-
-
-
-
     return res.json({
-
-
-
       success: true,
-
-
-
       data: {
-
-
-
         team: {
-
-
-
           id: team.id,
-
-
-
           name: team.name,
-
-
-
           leagueId: team.leagueId,
-
-
-
           bank: Number(team.bank),
-
-
-
           squadCost,
-
-
-
           squadValue,
-
-
-
           captainId: team.captainId,
-
-
-
           viceCaptainId: team.viceCaptainId,
-
-
-
           players,
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
   } catch (error) {
-
-
-
     console.error('Get my team error:', error)
-
-
-
-
-
-
-
     return res.status(500).json({
-
-
-
       success: false,
-
-
-
       message: 'Unable to load fantasy team',
-
-
-
     })
-
-
-
   }
-
-
-
 }
 
+export const getFantasyTeamById = async (req, res) => {
+  try {
+    const teamId = Number(req.params.teamId)
+    const leagueId = Number(req.query.leagueId)
 
+    if (!Number.isInteger(teamId) || teamId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid team ID',
+      })
+    }
 
+    if (!Number.isInteger(leagueId) || leagueId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid league ID',
+      })
+    }
 
+    const team = await prisma.fantasyTeam.findFirst({
+      where: {
+        id: teamId,
+        leagueId,
+      },
 
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+
+        // Needed for transfer information
+        league: {
+          select: {
+            id: true,
+            matchDay: true,
+            matchTime: true,
+            maxTransfers: true,
+          },
+        },
+
+        players: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+
+          include: {
+            player: {
+              select: {
+                id: true,
+                name: true,
+                photoUrl: true,
+                position: true,
+                ovr: true,
+                price: true,
+              },
+            },
+          },
+        },
+
+        captain: {
+          select: {
+            id: true,
+          },
+        },
+
+        viceCaptain: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
+
+    // -----------------------------------
+    // Transfer information
+    // -----------------------------------
+
+    const { matchDate } = getMatchdayStatus(
+      team.league.matchDay,
+      team.league.matchTime,
+    )
+
+    const transferInfo = await getTransferInfo(
+      team.id,
+      team.league,
+      matchDate,
+    )
+
+    // -----------------------------------
+    // Calculate squad financials
+    // -----------------------------------
+
+    const squadCost = team.players.reduce(
+      (total, item) => total + Number(item.purchasePrice),
+      0,
+    )
+
+    const squadValue = team.players.reduce(
+      (total, item) => total + Number(item.player.price),
+      0,
+    )
+
+    // -----------------------------------
+    // Get current Gameweek
+    // -----------------------------------
+
+    const currentGameweek = await prisma.gameweek.findFirst({
+      where: {
+        leagueId,
+      },
+
+      orderBy: {
+        number: 'desc',
+      },
+
+      select: {
+        id: true,
+        number: true,
+        startDate: true,
+        endDate: true,
+      },
+    })
+
+    // -----------------------------------
+    // Get current Gameweek player points
+    // -----------------------------------
+
+    let playerGameweekScores = []
+
+    if (currentGameweek) {
+      playerGameweekScores =
+        await prisma.fantasyPlayerGameweekScore.findMany({
+          where: {
+            teamId: team.id,
+            gameweekId: currentGameweek.id,
+          },
+
+          select: {
+            playerId: true,
+            points: true,
+          },
+        })
+    }
+
+    // Create a quick playerId -> points lookup
+    const playerPointsMap = new Map(
+      playerGameweekScores.map((score) => [
+        score.playerId,
+        Number(score.points ?? 0),
+      ]),
+    )
+
+    // -----------------------------------
+    // Build current squad
+    // -----------------------------------
+
+    const players = team.players.map((item) => ({
+      id: item.player.id,
+      name: item.player.name,
+      photoUrl: item.player.photoUrl,
+      position: item.player.position,
+      ovr: item.player.ovr,
+      price: Number(item.player.price),
+      purchasePrice: Number(item.purchasePrice),
+
+      isCaptain: team.captainId === item.player.id,
+      isViceCaptain: team.viceCaptainId === item.player.id,
+
+      // Points for the CURRENT gameweek only
+      points: playerPointsMap.get(item.player.id) ?? 0,
+    }))
+
+    // -----------------------------------
+    // Get current Gameweek team points
+    // -----------------------------------
+
+    let totalPoints = 0
+
+    if (currentGameweek) {
+      const teamGameweekScore =
+        await prisma.fantasyTeamGameweekScore.findUnique({
+          where: {
+            teamId_gameweekId: {
+              teamId: team.id,
+              gameweekId: currentGameweek.id,
+            },
+          },
+
+          select: {
+            points: true,
+          },
+        })
+
+      totalPoints = Number(teamGameweekScore?.points ?? 0)
+    }
+
+    // -----------------------------------
+    // Return team
+    // -----------------------------------
+
+    return res.json({
+      success: true,
+
+      data: {
+        team: {
+          id: team.id,
+          name: team.name,
+          leagueId: team.leagueId,
+
+          owner: team.user
+            ? {
+                id: team.user.id,
+                name: team.user.name,
+              }
+            : null,
+
+          bank: Number(team.bank),
+          squadCost,
+          squadValue,
+
+          captainId: team.captainId,
+          viceCaptainId: team.viceCaptainId,
+
+          // Current Gameweek total
+          totalPoints,
+
+          // Current Gameweek information
+          gameweek: currentGameweek,
+
+          players,
+        },
+
+        // Current transfer window information
+        transferInfo,
+      },
+    })
+  } catch (error) {
+    console.error('Get fantasy team by ID error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to load fantasy team',
+    })
+  }
+}
 
 
 export const getFantasyPoints = async (req, res) => {
@@ -3232,24 +2802,11 @@ export const getFantasyPoints = async (req, res) => {
 
         viceCaptainId: true,
 
-
-
       },
-
-
-
     })
 
-
-
-
-
-
-
     if (!team) {
-
-
-
+      console.log('TEAM RESULT:', team)
       return res.status(404).json({
 
 

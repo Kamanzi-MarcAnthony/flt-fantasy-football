@@ -1,10 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter  } from 'vue-router'
 import api from '../../services/api'
 
 const route = useRoute()
+const router = useRouter()
 
 const activeTab = ref('gameweek')
 
@@ -17,6 +18,8 @@ const currentGameweek = ref(null)
 const leagueId = computed(() => {
   return Number(route.query.leagueId)
 })
+
+
 
 const loadLeaderboard = async () => {
   try {
@@ -55,6 +58,17 @@ const movementSymbol = (movement) => {
   if (movement === 'down') return '↓'
 
   return '—'
+}
+
+const openFantasyTeam = (teamId) => {
+  if (!teamId) return
+
+  router.push({
+    path: `/fantasy/team/${teamId}`,
+    query: {
+      leagueId: leagueId.value,
+    },
+  })
 }
 
 watch(activeTab, () => {
@@ -237,11 +251,11 @@ onMounted(loadLeaderboard)
           class="relative grid grid-cols-[48px_minmax(0,1fr)_40px_58px] items-center px-4 py-4 transition"
           :class="[
             index !== leaderboard.length - 1
-              ? 'border-b border-white/[0.06]'
+              ? 'border-b border-white/6'
               : '',
             player.isCurrentUser
-              ? 'bg-cyan-400/[0.06]'
-              : 'hover:bg-white/[0.025]',
+              ? 'bg-cyan-4000/6'
+              : 'hover:bg-white/2.5',
           ]"
         >
           <!-- Current user accent -->
@@ -265,25 +279,30 @@ onMounted(loadLeaderboard)
           </div>
 
           <!-- Player -->
-          <div class="min-w-0">
-            <p
-              class="truncate text-sm font-semibold"
-              :class="
-                player.isCurrentUser
-                  ? 'text-cyan-300'
-                  : 'text-white'
-              "
-            >
-              {{ player.name }}
-            </p>
+<div class="min-w-0">
+  <button
+    type="button"
+    class="block max-w-full text-left"
+    @click="openFantasyTeam(player.teamId)"
+  >
+    <p
+      class="truncate text-sm font-semibold transition"
+      :class="
+        player.isCurrentUser
+          ? 'text-cyan-300 hover:text-cyan-200'
+          : 'text-white hover:text-cyan-300'
+          ">
+            {{ player.name }}
+     </p>
+  </button>
 
-            <p
-              v-if="player.isCurrentUser"
-              class="mt-0.5 text-[9px] font-medium uppercase tracking-wide text-cyan-400/50"
-            >
-              You
-            </p>
-          </div>
+  <p
+    v-if="player.isCurrentUser"
+    class="mt-0.5 text-[9px] font-medium uppercase tracking-wide text-cyan-400/50"
+  >
+    You
+  </p>
+</div>
 
           <!-- Movement -->
           <div class="text-center">

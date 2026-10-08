@@ -7,6 +7,7 @@ import {
   getFantasyPlayers,
   createFantasyTeam,
   getMyTeam,
+  getFantasyTeamById,
   getFantasyPoints,
   getFantasyTransferStatus,
   updateTeamCaptains,
@@ -130,6 +131,13 @@ router.get(
   authenticate,
   authorize('FANTASY_USER'),
   getTransferHistory,
+)
+
+router.get(
+  '/teams/:teamId',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getFantasyTeamById,
 )
 
 

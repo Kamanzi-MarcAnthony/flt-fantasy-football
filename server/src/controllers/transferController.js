@@ -786,21 +786,14 @@ await tx.fantasyTransfer.create({
 
     console.error('Make transfer error:', error)
 
-
-
     return res.status(500).json({
-
       success: false,
-
       message: 'Unable to complete transfer',
-
     })
-
   }
-
 }
 
-const getTransferInfo = async (teamId, league, matchDate) => {
+ export const getTransferInfo = async (teamId, league, matchDate) => {
   const windowStart = matchDate.minus({ weeks: 1 })
 
   const gameweekNumber = await getTransferGameweekNumber(
