@@ -991,105 +991,29 @@ export const getFantasyPlayers = async (req, res) => {
 
 
     const players = await prisma.player.findMany({
-
-
-
       where: {
-
-
-
         leagueId,
-
-
-
         deletedAt: null,
-
-
-
       },
-
-
-
       orderBy: [
-
-
-
         { position: 'asc' },
-
-
-
         { price: 'desc' },
-
-
-
         { name: 'asc' },
-
-
-
      ],
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         photoUrl: true,
-
-
-
         position: true,
-
-
-
         ovr: true,
-
-
-
         price: true,
-
-
-
-
-
-
-
         events: {
-
-
-
           select: {
-
-
-
             type: true,
-
-
-
             matchId: true,
-
-
-
           },
-
-
-
         },
-
-
-
       },
-
-
-
     })
 
 
@@ -1456,636 +1380,170 @@ export const getFantasyPlayers = async (req, res) => {
 
 export const createFantasyTeam = async (req, res) => {
 
-
-
   try {
-
-
-
     const userId = req.user.id
-
-
-
-
-
-
-
     const { leagueId, name, playerIds } = req.body
-
-
-
-
-
-
-
     const parsedLeagueId = Number(leagueId)
 
-
-
-
-
-
-
     if (!Number.isInteger(parsedLeagueId)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid league ID',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     if (!name || !name.trim()) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Team name is required',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     if (!Array.isArray(playerIds)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Player IDs must be an array',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     if (playerIds.length !== FANTASY_TEAM_SIZE) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: `Your fantasy team must contain exactly ${FANTASY_TEAM_SIZE} players`,
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     const normalizedPlayerIds = playerIds.map(Number)
 
-
-
-
-
-
-
     if (normalizedPlayerIds.some((id) => !Number.isInteger(id))) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid player ID',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // Prevent duplicate players
 
-
-
     const uniquePlayerIds = [...new Set(normalizedPlayerIds)]
-
-
-
-
-
-
-
     if (uniquePlayerIds.length !== FANTASY_TEAM_SIZE) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'You cannot select the same player more than once',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // Check league membership
-
-
-
     const membership = await prisma.fantasyLeagueMember.findUnique({
-
-
-
       where: {
-
-
-
         userId_leagueId: {
-
-
-
           userId,
-
-
-
           leagueId: parsedLeagueId,
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
-
     if (!membership) {
-
-
-
       return res.status(403).json({
-
-
-
         success: false,
-
-
-
         message: 'You have not joined this league',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // One team per user per league
 
-
-
     const existingTeam = await prisma.fantasyTeam.findUnique({
-
-
-
       where: {
-
-
-
         userId_leagueId: {
-
-
-
           userId,
-
-
-
           leagueId: parsedLeagueId,
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
-
     if (existingTeam) {
-
-
-
       return res.status(409).json({
-
-
-
         success: false,
-
-
-
         message: 'You already have a fantasy team in this league',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // Fetch selected players
 
-
-
     const players = await prisma.player.findMany({
 
-
-
       where: {
-
-
-
         id: {
-
-
-
           in: uniquePlayerIds,
-
-
-
         },
-
-
-
         leagueId: parsedLeagueId,
-
-
-
         deletedAt: null,
-
-
-
       },
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         price: true,
-
-
-
       },
-
-
-
     })
 
-
-
-
-
-
-
     if (players.length !== FANTASY_TEAM_SIZE) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'One or more selected players are invalid',
-
-
-
       })
-
-
-
     }
 
+// Preserve the exact order selected by the user.
+// This order determines the fantasy pitch slots.
 
+const playerMap = new Map(
+  players.map((player) => [player.id, player]),
+)
 
+const orderedPlayers = uniquePlayerIds.map(
+  (playerId) => playerMap.get(playerId),
+)
 
+// Calculate squad cost
 
-
-
-    // Calculate squad cost
-
-
-
-    const squadCost = players.reduce(
-
-
-
-      (total, player) => total + Number(player.price),
-
-
-
-      0,
-
-
-
-    )
-
-
-
-
-
-
-
+const squadCost = orderedPlayers.reduce(
+  (total, player) => total + Number(player.price),
+  0,
+)
     if (squadCost > STARTING_BANK) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: `Your squad costs ${squadCost}M, but you only have ${STARTING_BANK}M`,
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     const bank = STARTING_BANK - squadCost
-
-
-
-
-
-
 
     // Create everything atomically
 
-
-
     const team = await prisma.$transaction(async (tx) => {
-
-
-
       const createdTeam = await tx.fantasyTeam.create({
-
-
-
         data: {
-
-
-
           userId,
-
-
-
           leagueId: parsedLeagueId,
-
-
-
           name: name.trim(),
-
-
-
           bank,
-
-
-
         },
-
-
-
       })
-
-
-
-
-
-
-
-      await tx.fantasyTeamPlayer.createMany({
-
-
-
-        data: players.map((player) => ({
-
-
-
-          teamId: createdTeam.id,
-
-
-
-          playerId: player.id,
-
-
-
-          purchasePrice: player.price,
-
-
-
-        })),
-
-
-
-      })
-
-
-
-
-
-
-
+await tx.fantasyTeamPlayer.createMany({
+  data: orderedPlayers.map((player, index) => ({
+    teamId: createdTeam.id,
+    playerId: player.id,
+    purchasePrice: player.price,
+    pitchSlot: index + 1,
+  })),
+})
       return createdTeam
-
-
-
     })
 
 
-
-
-
-
-
     return res.status(201).json({
-
-
-
       success: true,
-
-
-
       message: 'Fantasy team created successfully',
-
-
-
       data: {
-
-
-
         team: {
-
-
-
           id: team.id,
-
-
-
           name: team.name,
-
-
-
           leagueId: team.leagueId,
-
-
-
           bank: team.bank,
-
-
-
           squadCost,
           playerCount: players.length,
         },
@@ -2121,7 +1579,7 @@ export const getMyTeam = async (req, res) => {
       include: {
         players: {
           orderBy: {
-            createdAt: 'asc',
+            pitchSlot: 'asc',
           },
           include: {
 

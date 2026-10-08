@@ -44,8 +44,12 @@ const profilePlayer = ref(null)
 
 const players = computed(() => {
   return (props.team?.players || [])
-    .map((item) => item.player)
-    .filter(Boolean)
+    .filter((item) => item.player)
+    .sort((a, b) => (a.pitchSlot ?? 999) - (b.pitchSlot ?? 999))
+    .map((item) => ({
+      ...item.player,
+      pitchSlot: item.pitchSlot,
+    }))
 })
 
 const availablePlayers = computed(() => {

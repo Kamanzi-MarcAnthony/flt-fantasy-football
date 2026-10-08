@@ -210,17 +210,17 @@ export const makeTransfer = async (req, res) => {
 
 
 
-const {
-  status,
-  transferStatus,
-  now,
-  matchDate,
-  closeDate,
-  transferCloseDate,
-} = getMatchdayStatus(
-  league.matchDay,
-  league.matchTime
-)
+  const {
+    status,
+    transferStatus,
+    now,
+    matchDate,
+    closeDate,
+    transferCloseDate,
+  } = getMatchdayStatus(
+    league.matchDay,
+    league.matchTime
+  )
 
     const gameweekNumber = await getTransferGameweekNumber(
       parsedLeagueId,
@@ -232,19 +232,19 @@ const {
 
     // Transfers are closed while the matchday is active.
 
-if (transferStatus === 'CLOSED') {
-  return res.status(400).json({
-    success: false,
-    message: 'Transfers are closed for this matchday',
-    data: {
-      transferStatus: 'CLOSED',
-      transferCloseDate: transferCloseDate.toISO(),
-      matchDate: matchDate.toISO(),
-      gameweekNumber,
-      unlimitedTransfers,
-    },
-  })
-}
+    if (transferStatus === 'CLOSED') {
+      return res.status(400).json({
+        success: false,
+        message: 'Transfers are closed for this matchday',
+        data: {
+          transferStatus: 'CLOSED',
+          transferCloseDate: transferCloseDate.toISO(),
+          matchDate: matchDate.toISO(),
+          gameweekNumber,
+          unlimitedTransfers,
+        },
+      })
+    }
 
 
 
@@ -625,82 +625,57 @@ if (transferStatus === 'CLOSED') {
       // Add incoming player and update bank
 
       const updatedTeam = await tx.fantasyTeam.update({
-
         where: {
-
           id: team.id,
-
         },
 
         data: {
-
           bank: newBank,
-
           captainId,
-
           viceCaptainId,
 
           players: {
-
             create: {
-
               playerId: incomingPlayer.id,
-
               purchasePrice: incomingPurchasePrice,
-
+              pitchSlot: outgoingPlayer.pitchSlot,
             },
-
           },
-
         },
-
         include: {
-
           players: {
-
-            include: {
-
-              player: {
-
-                select: {
-
-                  id: true,
-
-                  name: true,
-
-                  photoUrl: true,
-
-                  position: true,
-
-                  ovr: true,
-
-                  price: true,
-
-                },
-
-              },
-
+            orderBy:{
+              pitchSlot: 'asc',
             },
-
+            include: {
+              player: {
+                select: {
+                  id: true,
+                  name: true,
+                  photoUrl: true,
+                  position: true,
+                  ovr: true,
+                  price: true,
+                },
+              },
+            },
           },
-
         },
-
       })
 
 
 
       // Record transfer history
 
-await tx.fantasyTransfer.create({
-  data: {
-    teamId: team.id,
-    outgoingPlayerId: outgoingPlayer.playerId,
-    incomingPlayerId: incomingPlayer.id,
-    outgoingPrice: outgoingSalePrice,
-    incomingPrice: incomingPurchasePrice,
-  },
-})
+    await tx.fantasyTransfer.create({
+      data: {
+        teamId: team.id,
+        outgoingPlayerId: outgoingPlayer.playerId,
+        incomingPlayerId: incomingPlayer.id,
+        outgoingPrice: outgoingSalePrice,
+        incomingPrice: incomingPurchasePrice,
+      },
+    })
 
 
 
@@ -953,23 +928,14 @@ export const getTransferHistory = async (req, res) => {
 
 
     const transfers = await prisma.fantasyTransfer.findMany({
-
       where: {
-
         teamId: team.id,
-
         createdAt: {
-
           gte: windowStart.toJSDate(),
-
           lt: matchDate.toJSDate(),
-
         },
-
       },
-
       orderBy: {
-
         createdAt: 'desc',
 
       },
