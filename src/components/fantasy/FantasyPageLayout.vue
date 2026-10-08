@@ -11,6 +11,8 @@ import { useAuthStore } from '../../stores/auth'
 import api from '../../services/api'
 import EditTeamModal from '../../components/fantasy/EditTeamModal.vue'
 
+
+
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
@@ -21,8 +23,11 @@ const loading = ref(true)
 const error = ref('')
 const team = ref(null)
 const editTeamModalOpen = ref(false)
-
 const leagueId = ref(null)
+const transferHistoryOpen = ref(false)
+const transferHistory = ref([])
+const transferHistoryLoading = ref(false)
+const transferHistoryError = ref('')
 
 const squadValue = computed(() => Number(team.value?.squadValue || 0))
 const squadCost = computed(() => Number(team.value?.squadCost || 0))
@@ -210,6 +215,38 @@ const handleAccountDeleted = () => {
   router.push('/login')
 }
 
+const openTransferHistory = async () => {
+  menuOpen.value = false
+  transferHistoryOpen.value = true
+
+  transferHistory.value = []
+  transferHistoryError.value = ''
+  transferHistoryLoading.value = true
+
+  try {
+    const response = await api.get('/fantasy/transfers/history', {
+      params: {
+        leagueId: leagueId.value,
+      },
+    })
+
+    transferHistory.value =
+      response.data?.data?.transfers || []
+  } catch (error) {
+    console.error('Transfer history error:', error)
+
+    transferHistoryError.value =
+      error.response?.data?.message ||
+      'Unable to load transfer history.'
+  } finally {
+    transferHistoryLoading.value = false
+  }
+}
+
+const closeTransferHistory = () => {
+  transferHistoryOpen.value = false
+}
+
 onMounted(loadTeam)
 </script>
 
@@ -380,6 +417,14 @@ onMounted(loadTeam)
             </button>
 
             <button
+  type="button"
+  class="w-full rounded-xl px-4 py-3 text-left text-sm font-semibold hover:bg-white/5"
+  @click="openTransferHistory"
+>
+  Transfer History
+</button>
+
+            <button
               type="button"
               class="w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-300 hover:bg-red-500/10"
               @click="handleLogout"
@@ -393,6 +438,132 @@ onMounted(loadTeam)
       </div>
     </Transition>
 
+   <!-- Transfer History Modal -->
+<Transition name="fade">
+  <div
+    v-if="transferHistoryOpen"
+    class="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+    @click.self="closeTransferHistory"
+  >
+    <div
+      class="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[#011607] shadow-2xl"
+    >
+
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-white/10 px-6 py-5">
+        <div>
+          <h2 class="text-xl font-bold">
+            Transfer History
+          </h2>
+
+          <p class="mt-1 text-sm text-white/40">
+            Your previous player transfers
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 hover:bg-white/10"
+          @click="closeTransferHistory"
+        >
+          <X :size="20" />
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="max-h-[70vh] overflow-y-auto px-6 py-5">
+
+        <!-- Loading -->
+        <div
+          v-if="transferHistoryLoading"
+          class="flex items-center justify-center py-12"
+        >
+          <p class="text-sm text-white/40">
+            Loading transfer history...
+          </p>
+        </div>
+
+        <!-- Error -->
+        <div
+          v-else-if="transferHistoryError"
+          class="py-12 text-center"
+        >
+          <p class="text-sm text-red-300">
+            {{ transferHistoryError }}
+          </p>
+        </div>
+
+        <!-- Empty -->
+        <div
+          v-else-if="transferHistory.length === 0"
+          class="py-12 text-center"
+        >
+          <p class="text-sm text-white/40">
+            No transfers yet.
+          </p>
+        </div>
+
+        <!-- History -->
+        <div v-else>
+
+          <!-- Table heading -->
+          <div
+            class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-white/10 pb-3 text-xs font-semibold uppercase tracking-wider text-white/40"
+          >
+            <span>
+              Player Out
+            </span>
+
+            <span></span>
+
+            <span>
+              Player In
+            </span>
+          </div>
+
+          <!-- Rows -->
+          <div
+            v-for="transfer in transferHistory"
+            :key="transfer.id"
+            class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-white/5 py-4 last:border-b-0"
+          >
+
+            <!-- Player Out -->
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">
+                {{ transfer.outgoingPlayer?.name || 'Unknown Player' }}
+              </p>
+
+              <p class="mt-1 text-xs text-white/40">
+                {{ formatMoney(transfer.outgoingPrice) }}
+              </p>
+            </div>
+
+            <!-- Arrow -->
+            <div class="text-white/30">
+              →
+            </div>
+
+            <!-- Player In -->
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">
+                {{ transfer.incomingPlayer?.name || 'Unknown Player' }}
+              </p>
+
+              <p class="mt-1 text-xs text-white/40">
+                {{ formatMoney(transfer.incomingPrice) }}
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</Transition>
     <!-- Page content -->
     <main class="mx-auto flex flex-col justify-center items-center px-1 py-6">
       <div v-if="loading" class="flex min-h-100 items-center justify-center">

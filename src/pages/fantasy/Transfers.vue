@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import api from '../../services/api'
 import FantasyPitch from '../../components/fantasy/FantasyPitch.vue'
 import TransferModal from '../../components/fantasy/TransferModal.vue'
@@ -27,8 +27,16 @@ const transferSubmitting = ref(false)
 const transferStatus = ref('OPEN')
 const remainingTransfers = ref(3)
 const transferLimit = ref(3)
+const unlimitedTransfers = ref(false)
+const gameweekNumber = ref(null)
+
 
 const transferModalOpen = ref(false)
+
+const transferWindowEndsAt = ref(null)
+const countdown = ref('')
+let countdownInterval = null
+
 const selectedPlayer = ref(null)
 
 const playerProfileOpen = ref(false)
@@ -56,6 +64,10 @@ const bank = computed(() => {
 
 const transfersAreOpen = computed(() => {
   return transferStatus.value === 'OPEN'
+})
+
+const transfersAreUnlimited = computed(() => {
+  return unlimitedTransfers.value
 })
 
 const transferStatusLabel = computed(() => {
@@ -110,9 +122,7 @@ const loadTransferStatus = async () => {
     transferStatusLoading.value = true
 
     /*
-     * We try to use the team data first.
-     * If the backend already provides transfer information,
-     * use that instead of making an unnecessary request.
+     * Use transfer information already provided by the team first.
      */
     if (props.team?.transferStatus) {
       transferStatus.value = props.team.transferStatus
@@ -122,24 +132,22 @@ const loadTransferStatus = async () => {
       props.team?.remainingTransfers !== undefined &&
       props.team?.remainingTransfers !== null
     ) {
-      remainingTransfers.value =
-        Number(props.team.remainingTransfers)
+      remainingTransfers.value = Number(
+        props.team.remainingTransfers,
+      )
     }
 
     if (
       props.team?.transferLimit !== undefined &&
       props.team?.transferLimit !== null
     ) {
-      transferLimit.value =
-        Number(props.team.transferLimit)
+      transferLimit.value = Number(
+        props.team.transferLimit,
+      )
     }
 
     /*
-     * Keep this request for now if your getMyTeam response
-     * does not yet include transfer information.
-     *
-     * If /fantasy/transfer-status does not exist, the error
-     * is safely handled below.
+     * Load the current transfer window status.
      */
     try {
       const response = await api.get(
@@ -152,39 +160,82 @@ const loadTransferStatus = async () => {
       )
 
       const data = response.data?.data || {}
+      if (data.transferCloseDate) {
+        transferWindowEndsAt.value = data.transferCloseDate
+      }
 
       transferStatus.value =
         data.transferStatus ||
         transferStatus.value ||
         'OPEN'
 
+      /*
+       * Gameweek information.
+       *
+       * GW1 is the only gameweek with unlimited transfers.
+       */
+      if (
+        data.gameweekNumber !== undefined &&
+        data.gameweekNumber !== null
+      ) {
+        gameweekNumber.value = Number(
+          data.gameweekNumber,
+        )
+      }
+
+      /*
+       * Prefer an explicit backend flag if available.
+       * Otherwise fall back to Gameweek 1.
+       */
+      if (data.unlimitedTransfers !== undefined) {
+        unlimitedTransfers.value =
+          Boolean(data.unlimitedTransfers)
+      } else {
+        unlimitedTransfers.value =
+          gameweekNumber.value === 1
+      }
+
+      /*
+       * If the backend says this is Gameweek 1,
+       * force unlimited mode even if transferLimit is 3.
+       */
+      if (gameweekNumber.value === 1) {
+        unlimitedTransfers.value = true
+      }
+
       if (
         data.remainingTransfers !== undefined &&
         data.remainingTransfers !== null
       ) {
-        remainingTransfers.value =
-          Number(data.remainingTransfers)
+        remainingTransfers.value = Number(
+          data.remainingTransfers,
+        )
       }
 
       if (
         data.transferLimit !== undefined &&
         data.transferLimit !== null
       ) {
-        transferLimit.value =
-          Number(data.transferLimit)
+        transferLimit.value = Number(
+          data.transferLimit,
+        )
       }
     } catch (error) {
-      /*
-       * The transfer endpoint itself will still enforce
-       * whether transfers are open or closed.
-       *
-       * This prevents the page from breaking if the
-       * status endpoint hasn't been added yet.
-       */
       console.warn(
         'Transfer status endpoint unavailable:',
         error,
       )
+
+      if (transferWindowEndsAt.value) {
+  updateCountdown()
+}
+
+      /*
+       * If the endpoint isn't available, fall back to
+       * the information already available on the team.
+       */
+      unlimitedTransfers.value =
+      gameweekNumber.value === 1
     }
   } finally {
     transferStatusLoading.value = false
@@ -194,16 +245,6 @@ const loadTransferStatus = async () => {
 const openTransferModal = (player) => {
   transferError.value = ''
   transferSuccess.value = ''
-
-  if (!transfersAreOpen.value) {
-    return
-  }
-
-  if (remainingTransfers.value <= 0) {
-    transferError.value =
-      'You have no transfers remaining for this transfer window.'
-    return
-  }
 
   selectedPlayer.value = player
   transferModalOpen.value = true
@@ -227,11 +268,14 @@ const confirmTransfer = async (transfer) => {
       return
     }
 
-    if (remainingTransfers.value <= 0) {
-      transferError.value =
-        'You have no transfers remaining for this transfer window.'
-      return
-    }
+if (
+  !transfersAreUnlimited.value &&
+  remainingTransfers.value <= 0
+) {
+  transferError.value =
+    'You have no transfers remaining for this transfer window.'
+  return
+}
 
     const response = await api.post('/fantasy/transfers', {
       leagueId: props.team.leagueId,
@@ -254,20 +298,42 @@ const confirmTransfer = async (transfer) => {
       transferStatus.value = data.transferStatus
     }
 
+    if (data.unlimitedTransfers !== undefined) {
+  unlimitedTransfers.value =
+    Boolean(data.unlimitedTransfers)
+}
+
+if (
+  data.gameweekNumber !== undefined &&
+  data.gameweekNumber !== null
+) {
+  gameweekNumber.value = Number(
+    data.gameweekNumber,
+  )
+}
+
+/*
+ * GW1 always remains unlimited even if the backend
+ * doesn't return unlimitedTransfers on the transfer response.
+ */
+if (gameweekNumber.value === 1) {
+  unlimitedTransfers.value = true
+}
+
     // IMPORTANT:
     // Send the updated team back to the parent immediately.
     if (data.team) {
       emit('team-updated', data.team)
     }
 
-    transferSuccess.value = 
+    transferSuccess.value =
       response.data?.message || 'Transfer completed successfully.'
     closeTransferModal()
 
     setTimeout(() => {
       window.location.reload()
     }, 300)
-    
+
   } catch (error) {
     console.error('Transfer error:', error)
     console.error('Response:', error.response?.data)
@@ -290,14 +356,162 @@ const viewPlayer = (player) => {
   playerProfileOpen.value = true
 }
 
+const makeCaptain = async (player) => {
+  if (!player || player.id === props.team?.captainId) return
+
+  try {
+    transferError.value = ''
+    transferSuccess.value = ''
+
+    const currentCaptainId = props.team?.captainId
+    const currentViceCaptainId = props.team?.viceCaptainId
+
+    let captainId = player.id
+    let viceCaptainId = currentViceCaptainId
+
+    // If this player is currently vice captain,
+    // swap the existing captain to vice captain.
+    if (player.id === currentViceCaptainId) {
+      viceCaptainId = currentCaptainId
+    }
+
+    if (!captainId || !viceCaptainId) {
+      transferError.value =
+        'Please select both a captain and vice captain.'
+      return
+    }
+
+    const response = await api.patch(
+      `/fantasy/teams/${props.team.id}/captains`,
+      {
+        captainId,
+        viceCaptainId,
+      },
+    )
+
+    const data = response.data?.data || {}
+
+    if (data.team) {
+      emit('team-updated', data.team)
+    }
+
+    transferSuccess.value =
+      response.data?.message ||
+      'Captain updated successfully.'
+
+    closeTransferModal()
+
+  } catch (error) {
+    console.error('Update captain error:', error)
+
+    transferError.value =
+      error.response?.data?.message ||
+      error.message ||
+      'Unable to update captain.'
+  }
+}
+
+const makeViceCaptain = async (player) => {
+  if (!player || player.id === props.team?.viceCaptainId) return
+
+  try {
+    transferError.value = ''
+    transferSuccess.value = ''
+
+    const currentCaptainId = props.team?.captainId
+    const currentViceCaptainId = props.team?.viceCaptainId
+
+    let captainId = currentCaptainId
+    let viceCaptainId = player.id
+
+    // If this player is currently captain,
+    // swap the existing vice captain to captain.
+    if (player.id === currentCaptainId) {
+      captainId = currentViceCaptainId
+    }
+
+    if (!captainId || !viceCaptainId) {
+      transferError.value =
+        'Please select both a captain and vice captain.'
+      return
+    }
+
+    const response = await api.patch(
+      `/fantasy/teams/${props.team.id}/captains`,
+      {
+        captainId,
+        viceCaptainId,
+      },
+    )
+
+    const data = response.data?.data || {}
+
+    if (data.team) {
+      emit('team-updated', data.team)
+    }
+
+    transferSuccess.value =
+      response.data?.message ||
+      'Vice captain updated successfully.'
+
+    closeTransferModal()
+
+  } catch (error) {
+    console.error('Update vice captain error:', error)
+
+    transferError.value =
+      error.response?.data?.message ||
+      error.message ||
+      'Unable to update vice captain.'
+  }
+}
+
 const closePlayerProfile = () => {
   playerProfileOpen.value = false
   profilePlayer.value = null
 }
 
+const updateCountdown = () => {
+  if (!transferWindowEndsAt.value) {
+    countdown.value = ''
+    return
+  }
+
+  const end = new Date(transferWindowEndsAt.value).getTime()
+  const now = Date.now()
+  const difference = end - now
+
+  if (difference <= 0) {
+    countdown.value = 'Window closed'
+    return
+  }
+
+  const totalSeconds = Math.floor(difference / 1000)
+
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (days > 0) {
+    countdown.value = `${days}d ${hours}h ${minutes}m`
+  } else if (hours > 0) {
+    countdown.value = `${hours}h ${minutes}m ${seconds}s`
+  } else {
+    countdown.value = `${minutes}m ${seconds}s`
+  }
+}
+
 onMounted(() => {
   loadLeaguePlayers()
   loadTransferStatus()
+  countdownInterval = setInterval(updateCountdown, 1000)
+})
+
+onUnmounted(() => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+  }
 })
 </script>
 
@@ -337,26 +551,49 @@ onMounted(() => {
           </div>
 
           <p class="mt-1 text-[10px] text-white/40">
-            {{ transferStatusDescription }}
+            <template v-if="transfersAreUnlimited && transfersAreOpen">
+              Unlimited transfers are available for Gameweek 1.
+            </template>
+
+            <template v-else>
+              {{ transferStatusDescription }}
+            </template>
           </p>
         </div>
 
-        <div class="text-right">
-          <p
-            class="text-[10px] uppercase tracking-wide text-white/40"
-          >
-            Remaining
-          </p>
+<div class="text-right">
+  <p
+    class="text-[10px] uppercase tracking-wide text-white/40"
+  >
+    {{ transfersAreUnlimited ? 'Transfers' : 'Remaining' }}
+  </p>
 
-          <p class="mt-1 text-2xl font-black text-white">
-            {{ remainingTransfers }}
-          </p>
+  <p class="mt-1 text-2xl font-black text-white">
+    {{ transfersAreUnlimited ? '∞' : remainingTransfers }}
+  </p>
 
-          <p class="text-[9px] text-white/40">
-            of {{ transferLimit }} Transfers
-          </p>
-        </div>
+  <p class="text-[9px] text-white/40">
+    {{
+      transfersAreUnlimited
+        ? 'Unlimited • Gameweek 1'
+        : `of ${transferLimit} Transfers`
+    }}
+  </p>
+</div>
       </div>
+
+      <div
+  v-if="transfersAreOpen && countdown"
+  class="mt-3 flex items-center justify-between border-t border-white/10 pt-3"
+>
+  <p class="text-[10px] uppercase tracking-wide text-white/40">
+    Transfer window ends in
+  </p>
+
+  <p class="text-sm font-bold text-white">
+    {{ countdown }}
+  </p>
+</div>
     </section>
 
     <!-- ===================================================== -->
@@ -414,11 +651,6 @@ onMounted(() => {
           :captain-id="team?.captainId"
           :vice-captain-id="team?.viceCaptainId"
           stat-type="ovr"
-          :class="{
-            'pointer-events-none opacity-60':
-              !transfersAreOpen ||
-              remainingTransfers <= 0,
-          }"
           @player-click="openTransferModal"
         />
       </div>
@@ -450,16 +682,20 @@ onMounted(() => {
     <!-- TRANSFER MODAL -->
     <!-- ===================================================== -->
 
-    <TransferModal
-      :open="transferModalOpen"
-      :player="selectedPlayer"
-      :available-players="availablePlayers"
-      :bank="bank"
-      :loading="transferSubmitting"
-      @close="closeTransferModal"
-      @confirm="confirmTransfer"
-      @view-player="viewPlayer"
-    />
+<TransferModal
+  :open="transferModalOpen"
+  :player="selectedPlayer"
+  :available-players="availablePlayers"
+  :bank="bank"
+  :loading="transferSubmitting"
+  :captain-id="team?.captainId"
+  :vice-captain-id="team?.viceCaptainId"
+  @close="closeTransferModal"
+  @confirm="confirmTransfer"
+  @view-player="viewPlayer"
+  @make-captain="makeCaptain"
+  @make-vice-captain="makeViceCaptain"
+/>
 
     <!-- ===================================================== -->
     <!-- PLAYER PROFILE -->

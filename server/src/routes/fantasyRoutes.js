@@ -16,6 +16,7 @@ import {
 } from '../controllers/fantasyController.js'
 
 import transferRoutes from './transferRoutes.js'
+import  { getTransferHistory } from '../controllers/transferController.js'
 
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -123,5 +124,13 @@ router.use(
   '/transfers',
   transferRoutes,
 )
+
+router.get(
+  '/history',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getTransferHistory,
+)
+
 
 export default router
