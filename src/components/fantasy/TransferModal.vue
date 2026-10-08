@@ -38,8 +38,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'close', 
-  'confirm', 
+  'close',
+  'confirm',
   'view-player',
   'make-captain',
   'make-vice-captain',
@@ -172,9 +172,9 @@ watch(
 
           <!-- HEADER -->
           <div
-            class="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4"
+            class="flex  shrink-0 items-center justify-between border-b border-white/10 px-5 py-4"
           >
-            <div>
+            <div >
               <p
                 class="text-[10px] font-medium uppercase tracking-widest text-white/40"
               >
@@ -203,12 +203,12 @@ watch(
 
             <div
               v-if="!transferStarted"
-              class="p-5"
+              class="p-5 flex flex-col  gap-2"
             >
 
               <!-- Player -->
               <div
-                class="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]"
+                class="overflow-hidden rounded-2xl border border-white/10 bg-white/3"
               >
                 <div class="flex">
 
@@ -349,7 +349,7 @@ watch(
 
               <!-- Selected Player -->
               <div
-                class="rounded-xl border border-red-400/10 bg-red-400/5 p-4"
+                class="rounded-xl border flex flex-col gap-2 border-red-400/10 bg-red-400/5 p-4"
               >
                 <p
                   class="text-[9px] font-bold uppercase tracking-widest text-red-300/60"

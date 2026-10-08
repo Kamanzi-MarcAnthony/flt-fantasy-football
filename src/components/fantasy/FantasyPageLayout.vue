@@ -262,7 +262,8 @@ onMounted(loadTeam)
             Fantasy
           </p>
 
-          <h1 class="mt-0.5 font-sans text-3xl font-bold">
+          <h1 class="mt-0.5 text-3xl tracking-tight"
+            style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600;">
             {{ team?.name || 'My Team' }}
           </h1>
         </div>

@@ -83,7 +83,7 @@ onMounted(loadLeaderboard)
 
     <!-- Header -->
     <section
-      class="relative mb-4 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#05056b] via-[#09094b] to-[#18003d] px-5 pb-5 pt-6"
+      class="relative mb-4 overflow-hidden flex flex-col justify-between gap-3 rounded-2xl border border-white/10 bg-linear-to-br  from-[#05056b] via-[#09094b] to-[#18003d] py-5 px-4"
     >
       <!-- Decorative glow -->
       <div
@@ -102,17 +102,14 @@ onMounted(loadLeaderboard)
         </p>
 
         <h1 class="mt-1 text-2xl font-black tracking-tight text-white">
-          Leaderboard
+          Leaderboards
         </h1>
 
-        <p class="mt-1 text-xs text-white/40">
-          See who's leading the league.
-        </p>
       </div>
 
       <!-- Gameweek / Overall -->
       <div
-        class="relative mt-6 grid grid-cols-2 overflow-hidden rounded-xl border border-white/10 bg-[#11114d]/80"
+        class="relative mt-6  grid grid-cols-2 overflow-hidden rounded-xl border border-white/10 bg-[#11114d]/80"
       >
         <!-- Active indicator -->
         <div
@@ -153,9 +150,9 @@ onMounted(loadLeaderboard)
     </section>
 
     <!-- Context -->
-    <div class="mb-3 flex items-center justify-between px-1">
+    <div class="mb-3  px-5  h-14 flex items-center justify-between px-1">
       <div>
-        <p class="text-xs font-semibold text-white">
+        <p class="text-md font-regular text-white">
           {{
             activeTab === 'gameweek'
               ? `Gameweek ${currentGameweek?.number || 1}`
@@ -163,13 +160,13 @@ onMounted(loadLeaderboard)
           }}
         </p>
 
-        <p class="mt-0.5 text-[10px] text-white/30">
+        <!-- <p class="mt-0.5 text-[11px] text-white/50">
           {{
             activeTab === 'gameweek'
-              ? 'Current gameweek rankings'
+              ? 'Current gameweeks rankings'
               : 'Cumulative points'
           }}
-        </p>
+        </p> -->
       </div>
 
       <div

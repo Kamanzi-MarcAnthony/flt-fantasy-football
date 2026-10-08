@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     token: null,
+     refreshToken: null,
     isAuthenticated: false,
     loading: false,
     error: null,
@@ -23,10 +24,11 @@ export const useAuthStore = defineStore('auth', {
           password,
         })
 
-        const { token, user } = response.data.data
+        const { token, refreshToken, user } = response.data.data
 
         this.user = user
         this.token = token
+        this.refreshToken = refreshToken
         this.isAuthenticated = true
 
         this.saveAuth()
@@ -47,6 +49,7 @@ export const useAuthStore = defineStore('auth', {
         JSON.stringify({
           user: this.user,
           token: this.token,
+          refreshToken: this.refreshToken,
           isAuthenticated: this.isAuthenticated,
         }),
       )
@@ -62,6 +65,7 @@ export const useAuthStore = defineStore('auth', {
 
         this.user = auth.user
         this.token = auth.token
+        this.refreshToken = auth.refreshToken
         this.isAuthenticated = auth.isAuthenticated
       } catch (error) {
         console.error('Failed to load authentication:', error)
@@ -72,6 +76,7 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.user = null
       this.token = null
+      this.refreshToken = null
       this.isAuthenticated = false
       this.error = null
 
