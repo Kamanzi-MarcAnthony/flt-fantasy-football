@@ -516,19 +516,19 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full space-y-5 md:w-2/3">
+  <div class="w-full space-y-4 flex flex-col gap-2 md:w-2/3">
 
     <!-- ===================================================== -->
     <!-- TRANSFER WINDOW -->
     <!-- ===================================================== -->
 
     <section
-      class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#24002d] px-4 py-4"
+      class="relative overflow-hidden  rounded-2xl border border-white/10 bg-[#24002d] px-4 py-4"
     >
       <div
-        class="flex items-center justify-between gap-4"
+        class="flex items-center h-18 justify-between gap-4 pb-3"
       >
-        <div>
+        <div class="flex flex-col h-full p-2  justify-between">
           <p
             class="text-[10px] font-medium uppercase tracking-widest text-white/40"
           >
@@ -624,7 +624,7 @@ onUnmounted(() => {
 
     <section>
       <div
-        class="mb-3 flex items-center justify-between"
+        class="mb-3 flex items-center px-5  h-13 justify-between"
       >
         <div>
           <h2 class="text-base font-bold text-white">
@@ -644,7 +644,7 @@ onUnmounted(() => {
       </div>
 
       <div
-        class="rounded-2xl border border-white/10 bg-white/[0.02] p-1"
+        class=" bg-white/2 p-1"
       >
         <FantasyPitch
           :players="players"

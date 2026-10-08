@@ -144,7 +144,9 @@ const getDisplayedStat = (player) => {
 
                 <!-- OVR / Points -->
                 <p
-                  class="text-base font-black leading-none text-white"
+                  class="text-base leading-none text-[#fffff]"
+                  style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600;"
+
                 >
                 {{ getDisplayedStat(player) }}
                 </p>
@@ -166,7 +168,7 @@ const getDisplayedStat = (player) => {
               class="flex h-[30%] items-center justify-center border-t border-white/10 bg-[#010056] px-1.5"
             >
               <p
-                class="w-full uppercase truncate text-center text-[10px] font-bold leading-none text-white"
+                class="w-full uppercase truncate text-center text-[11px] font-bold leading-none text-white"
               >
                 {{ player.name }}
               </p>
@@ -174,11 +176,11 @@ const getDisplayedStat = (player) => {
             <!-- CAPTAIN -->
             <!-- =============================================== -->
 
-              <span 
+              <span
                 v-if="captainId === player.id"
                 class="flex h-5 w-6 items-center justify-center rounded-full bg-[#00EEFF] text-[9px] font-black text-violet-950 shadow-lg"
               >C</span>
-              
+
             <!-- =============================================== -->
             <!-- VICE CAPTAIN -->
             <!-- =============================================== -->

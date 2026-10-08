@@ -1,11 +1,14 @@
+import crypto from 'crypto'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import prisma from '../config/prisma.js'
 
-const generateRefreshToken = () => {
+const generateRefreshToken = (userId) => {
   return jwt.sign(
     {
       type: 'refresh',
+      userId,
+      jti: crypto.randomUUID(),
     },
     process.env.JWT_SECRET,
     {
@@ -63,7 +66,7 @@ if (!user || !user.isActive) {
     )
 
     // Long-lived refresh token
-    const refreshToken = generateRefreshToken()
+  const refreshToken = generateRefreshToken(user.id)
 
     // Store only the hashed refresh token
     const refreshTokenHash = await bcrypt.hash(
@@ -127,36 +130,33 @@ export const refreshToken = async (req, res) => {
       })
     }
 
-    const users = await prisma.user.findMany({
-      where: {
-        refreshTokenHash: {
-          not: null,
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        isActive: true,
-        refreshTokenHash: true,
-      },
-    })
+const user = await prisma.user.findUnique({
+  where: {
+    id: decoded.userId,
+  },
+  select: {
+    id: true,
+    name: true,
+    email: true,
+    role: true,
+    isActive: true,
+    refreshTokenHash: true,
+  },
+})
 
-    let user = null
-
-    for (const candidate of users) {
-      if (
-        candidate.refreshTokenHash &&
-        (await bcrypt.compare(
-          refreshToken,
-          candidate.refreshTokenHash,
-        ))
-      ) {
-        user = candidate
-        break
-      }
-    }
+if (
+  !user ||
+  !user.refreshTokenHash ||
+  !(await bcrypt.compare(
+    refreshToken,
+    user.refreshTokenHash,
+  ))
+) {
+  return res.status(401).json({
+    success: false,
+    message: 'Invalid refresh token',
+  })
+}
 
     if (!user) {
       return res.status(401).json({
@@ -186,7 +186,7 @@ export const refreshToken = async (req, res) => {
 
     // Rotate the refresh token.
     // This gives the active session another 2 hours.
-    const newRefreshToken = generateRefreshToken()
+    const newRefreshToken = generateRefreshToken(user.id)
 
     const newRefreshTokenHash = await bcrypt.hash(
       newRefreshToken,
@@ -303,7 +303,7 @@ export const register = async (req, res) => {
     )
 
     // Generate refresh token
-    const refreshToken = generateRefreshToken()
+    const refreshToken = generateRefreshToken(user.id)
 
     const refreshTokenHash = await bcrypt.hash(
       refreshToken,
