@@ -1,4 +1,6 @@
 <script setup>
+import { ref, watch } from 'vue'
+
 const props = defineProps({
   players: {
     type: Array,
@@ -27,7 +29,76 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['player-click'])
+const pitchPlayers = ref([])
+const draggedIndex = ref(null)
+
+const syncPitchPlayers = () => {
+  pitchPlayers.value = [...(props.players || [])]
+    .sort((a, b) => (a.pitchSlot ?? 999) - (b.pitchSlot ?? 999))
+}
+
+watch(
+  () => props.players,
+  () => {
+    syncPitchPlayers()
+  },
+  { immediate: true, deep: true },
+)
+
+const handleDragStart = (index, event) => {
+  draggedIndex.value = index
+
+  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.setData('text/plain', String(index))
+}
+
+const handleDragOver = (event) => {
+  event.preventDefault()
+  event.dataTransfer.dropEffect = 'move'
+}
+
+const handleDrop = (targetIndex, event) => {
+  event.preventDefault()
+
+  const sourceIndex = draggedIndex.value
+
+  if (
+    sourceIndex === null ||
+    sourceIndex === targetIndex ||
+    sourceIndex < 0 ||
+    targetIndex < 0
+  ) {
+    draggedIndex.value = null
+    return
+  }
+
+  const updated = [...pitchPlayers.value]
+
+  // Swap players
+  const temp = updated[sourceIndex]
+  updated[sourceIndex] = updated[targetIndex]
+  updated[targetIndex] = temp
+
+  // Keep their slot numbers tied to the physical positions
+
+const reordered = updated.map((player, index) => ({
+  ...player,
+  pitchSlot: index + 1,
+}))
+
+pitchPlayers.value = reordered
+
+emit('pitch-reordered', reordered)
+
+  draggedIndex.value = null
+}
+
+const handleDragEnd = () => {
+  draggedIndex.value = null
+}
+
+
+const emit = defineEmits(['player-click', 'pitch-reordered',])
 
 const getPlayerPoints = (player) => {
   return Number(props.playerPoints[player.id] || 0)
@@ -86,15 +157,21 @@ const getDisplayedStat = (player) => {
       class="relative grid min-h-140 grid-cols-3 grid-rows-3 gap-4 p-4 sm:p-14"
     >
       <div
-        v-for="(player, index) in players"
-        :key="player.id || index"
+        v-for="(player, index) in pitchPlayers"
+        :key="player?.id || `slot-${index}`"
         class="flex items-center justify-center"
+        @dragover="handleDragOver"
+        @drop="handleDrop(index, $event)"
       >
         <!-- Player -->
         <button
           type="button"
           class="flex flex-col items-center"
+          :draggable="true"
           @click="emit('player-click', player)"
+          @dragstart="handleDragStart(index, $event)"
+          @dragend="handleDragEnd"
+
         >
 
           <!-- ================================================= -->

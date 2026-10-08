@@ -5434,19 +5434,153 @@ export const getFantasyLeaderboard = async (req, res) => {
 
 
       success: false,
-
-
-
       message: 'Unable to load leaderboard',
+    })
+  }
+}
 
+export const updatePitchSlots = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const teamId = Number(req.params.teamId)
+    const { slots } = req.body || {}
 
+    // ---------------------------------------------------------
+    // Validate team ID
+    // ---------------------------------------------------------
 
+    if (!Number.isInteger(teamId) || teamId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid team ID',
+      })
+    }
+
+    // ---------------------------------------------------------
+    // Validate slots
+    // ---------------------------------------------------------
+
+    if (!Array.isArray(slots) || slots.length !== 9) {
+      return res.status(400).json({
+        success: false,
+        message: 'Exactly 9 pitch slots are required',
+      })
+    }
+
+    const normalizedSlots = slots.map((slot) => ({
+      playerId: Number(slot.playerId),
+      pitchSlot: Number(slot.pitchSlot),
+    }))
+
+    // Every player ID must be valid
+    if (
+      normalizedSlots.some(
+        (slot) =>
+          !Number.isInteger(slot.playerId) ||
+          slot.playerId <= 0,
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid player ID',
+      })
+    }
+
+    // Slots must be exactly 1-9
+    const slotNumbers = normalizedSlots
+      .map((slot) => slot.pitchSlot)
+      .sort((a, b) => a - b)
+
+    const expectedSlots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    if (
+      JSON.stringify(slotNumbers) !==
+      JSON.stringify(expectedSlots)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Pitch slots must contain each slot from 1 to 9 exactly once',
+      })
+    }
+
+    // ---------------------------------------------------------
+    // Get team
+    // ---------------------------------------------------------
+
+    const team = await prisma.fantasyTeam.findFirst({
+      where: {
+        id: teamId,
+        userId,
+      },
+      include: {
+        players: {
+          select: {
+            id: true,
+            playerId: true,
+          },
+        },
+      },
     })
 
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
 
+    // ---------------------------------------------------------
+    // Make sure submitted players belong to this team
+    // ---------------------------------------------------------
 
+    const teamPlayerIds = team.players
+      .map((item) => item.playerId)
+      .sort((a, b) => a - b)
+
+    const submittedPlayerIds = normalizedSlots
+      .map((slot) => slot.playerId)
+      .sort((a, b) => a - b)
+
+    if (
+      JSON.stringify(teamPlayerIds) !==
+      JSON.stringify(submittedPlayerIds)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Submitted players do not match the team squad',
+      })
+    }
+
+    // ---------------------------------------------------------
+    // Update atomically
+    // ---------------------------------------------------------
+
+    await prisma.$transaction(
+      normalizedSlots.map((slot) =>
+        prisma.fantasyTeamPlayer.update({
+          where: {
+            teamId_playerId: {
+              teamId,
+              playerId: slot.playerId,
+            },
+          },
+          data: {
+            pitchSlot: slot.pitchSlot,
+          },
+        }),
+      ),
+    )
+
+    return res.json({
+      success: true,
+      message: 'Pitch arrangement updated successfully',
+    })
+  } catch (error) {
+    console.error('Update pitch slots error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to update pitch arrangement',
+    })
   }
-
-
-
 }

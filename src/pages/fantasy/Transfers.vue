@@ -34,6 +34,10 @@ const gameweekNumber = ref(null)
 const transferModalOpen = ref(false)
 
 const transferWindowEndsAt = ref(null)
+
+const pitchSaving = ref(false)
+const pitchSaveError = ref('')
+
 const countdown = ref('')
 let countdownInterval = null
 
@@ -506,6 +510,39 @@ const updateCountdown = () => {
   }
 }
 
+const handlePitchReordered = async (updatedPlayers) => {
+  if (!props.team?.id) {
+    return
+  }
+
+  try {
+    pitchSaving.value = true
+    pitchSaveError.value = ''
+
+    const slots = updatedPlayers.map((player, index) => ({
+      playerId: player.id,
+      pitchSlot: index + 1,
+    }))
+
+    await api.patch(
+      `/fantasy/teams/${props.team.id}/slots`,
+      {
+        slots,
+      },
+    )
+
+    console.log('Pitch arrangement saved successfully')
+  } catch (error) {
+    console.error('Failed to save pitch arrangement:', error)
+
+    pitchSaveError.value =
+      error.response?.data?.message ||
+      'Unable to save pitch arrangement.'
+  } finally {
+    pitchSaving.value = false
+  }
+}
+
 onMounted(() => {
   loadLeaguePlayers()
   loadTransferStatus()
@@ -656,6 +693,7 @@ onUnmounted(() => {
           :vice-captain-id="team?.viceCaptainId"
           stat-type="ovr"
           @player-click="openTransferModal"
+          @pitch-reordered="handlePitchReordered"
         />
       </div>
     </section>
