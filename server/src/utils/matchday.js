@@ -67,11 +67,19 @@ const getMatchdaySchedule = (matchDay, matchTime) => {
     .startOf('day')
     .plus({ days: 1 })
 
-  return {
-    now,
-    matchDate,
-    closeDate,
-  }
+const transferOpenDate = matchDate
+  .startOf('day')
+  .minus({ days: 6 })
+
+const transferCloseDate = matchDate.minus({ hours: 4 })
+
+return {
+  now,
+  matchDate,
+  closeDate,
+  transferOpenDate,
+  transferCloseDate,
+}
 }
 
 export const getMatchdayStatus = (matchDay, matchTime) => {
@@ -79,6 +87,8 @@ export const getMatchdayStatus = (matchDay, matchTime) => {
     now,
     matchDate,
     closeDate,
+    transferOpenDate,
+    transferCloseDate,
   } = getMatchdaySchedule(matchDay, matchTime)
 
   let status = 'UPCOMING'
@@ -86,6 +96,12 @@ export const getMatchdayStatus = (matchDay, matchTime) => {
   if (now >= matchDate && now < closeDate) {
     status = 'ACTIVE'
   }
+
+  let transferStatus = 'OPEN'
+
+if (now >= transferCloseDate && now < closeDate) {
+  transferStatus = 'CLOSED'
+}
 
   /*
    * If we're past today's scheduled matchday,
@@ -101,9 +117,12 @@ export const getMatchdayStatus = (matchDay, matchTime) => {
 
   return {
     status,
+    transferStatus,
     now,
     matchDate,
     closeDate,
+    transferOpenDate,
+    transferCloseDate,
   }
 }
 

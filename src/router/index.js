@@ -32,6 +32,23 @@ const router = createRouter({
     },
 
     // =========================================================
+    // STANDALONE FANTASY TEAM VIEW
+    // =========================================================
+    // IMPORTANT:
+    // This is intentionally OUTSIDE FantasyLayout.
+    // It will NOT show the Fantasy sidebar/header/navigation.
+
+    {
+      path: '/fantasy/team/:teamId',
+      name: 'OtherFantasyTeam',
+      component: () => import('../pages/fantasy/OtherFantasyTeam.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['FANTASY_USER'],
+      },
+    },
+
+    // =========================================================
     // ADMIN PORTAL
     // =========================================================
 
@@ -94,7 +111,8 @@ const router = createRouter({
         {
           path: 'fantasy-players',
           name: 'admin-fantasy-players',
-          component: () => import('../pages/admin/FantasyPlayers.vue'),
+          component: () =>
+            import('../pages/admin/FantasyPlayers.vue'),
         },
       ],
     },
@@ -126,7 +144,8 @@ const router = createRouter({
     {
       path: '/fantasy/team/captains',
       name: 'FantasySelectCaptains',
-      component: () => import('../pages/fantasy/SelectCaptains.vue'),
+      component: () =>
+        import('../pages/fantasy/SelectCaptains.vue'),
       meta: {
         requiresAuth: true,
         roles: ['FANTASY_USER'],
@@ -152,7 +171,7 @@ const router = createRouter({
         },
 
         // -----------------------------------------------------
-        // Persistent Fantasy Page Layout
+        // PERSISTENT FANTASY PAGE LAYOUT
         // -----------------------------------------------------
 
         {
@@ -162,25 +181,28 @@ const router = createRouter({
 
           children: [
             // -------------------------------------------------
-            // Main Fantasy Pages
+            // MAIN FANTASY PAGES
             // -------------------------------------------------
 
             {
               path: 'team',
               name: 'fantasy-team',
-              component: () => import('../pages/fantasy/MyTeam.vue'),
+              component: () =>
+                import('../pages/fantasy/MyTeam.vue'),
             },
 
             {
               path: 'transfers',
               name: 'fantasy-transfers',
-              component: () => import('../pages/fantasy/Transfers.vue'),
+              component: () =>
+                import('../pages/fantasy/Transfers.vue'),
             },
 
             {
               path: 'points',
               name: 'fantasy-points',
-              component: () => import('../pages/fantasy/Points.vue'),
+              component: () =>
+                import('../pages/fantasy/Points.vue'),
             },
 
             {
@@ -191,13 +213,14 @@ const router = createRouter({
             },
 
             // -------------------------------------------------
-            // Other Fantasy Pages
+            // OTHER FANTASY PAGES
             // -------------------------------------------------
 
             {
               path: 'profile',
               name: 'fantasy-profile',
-              component: () => import('../pages/fantasy/Profile.vue'),
+              component: () =>
+                import('../pages/fantasy/Profile.vue'),
             },
           ],
         },
@@ -236,9 +259,17 @@ router.beforeEach((to) => {
   const isFantasyRoute = to.path.startsWith('/fantasy')
   const isAdminRoute = to.path.startsWith('/admin')
 
+  // -----------------------------------------------------------
+  // Authentication
+  // -----------------------------------------------------------
+
   if (requiresAuth && !authStore.isAuthenticated) {
     return '/login'
   }
+
+  // -----------------------------------------------------------
+  // Fantasy access
+  // -----------------------------------------------------------
 
   if (
     isFantasyRoute &&
@@ -246,6 +277,10 @@ router.beforeEach((to) => {
   ) {
     return '/login'
   }
+
+  // -----------------------------------------------------------
+  // Admin access
+  // -----------------------------------------------------------
 
   if (
     isAdminRoute &&

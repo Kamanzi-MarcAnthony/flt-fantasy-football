@@ -7,6 +7,7 @@ import {
   getFantasyPlayers,
   createFantasyTeam,
   getMyTeam,
+  getFantasyTeamById,
   getFantasyPoints,
   getFantasyTransferStatus,
   updateTeamCaptains,
@@ -16,6 +17,7 @@ import {
 } from '../controllers/fantasyController.js'
 
 import transferRoutes from './transferRoutes.js'
+import  { getTransferHistory } from '../controllers/transferController.js'
 
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -123,5 +125,20 @@ router.use(
   '/transfers',
   transferRoutes,
 )
+
+router.get(
+  '/history',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getTransferHistory,
+)
+
+router.get(
+  '/teams/:teamId',
+  authenticate,
+  authorize('FANTASY_USER'),
+  getFantasyTeamById,
+)
+
 
 export default router

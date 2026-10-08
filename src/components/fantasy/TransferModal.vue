@@ -25,9 +25,25 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+    captainId: {
+    type: Number,
+    default: null,
+  },
+
+  viceCaptainId: {
+    type: Number,
+    default: null,
+  },
 })
 
-const emit = defineEmits(['close', 'confirm', 'view-player'])
+const emit = defineEmits([
+  'close', 
+  'confirm', 
+  'view-player',
+  'make-captain',
+  'make-vice-captain',
+])
 
 const transferStarted = ref(false)
 const selectedReplacement = ref(null)
@@ -81,6 +97,26 @@ const viewPlayer = () => {
   if (!props.player) return
 
   emit('view-player', props.player)
+}
+
+const isCaptain = computed(() => {
+  return props.player?.id === props.captainId
+})
+
+const isViceCaptain = computed(() => {
+  return props.player?.id === props.viceCaptainId
+})
+
+const makeCaptain = () => {
+  if (!props.player || isCaptain.value) return
+
+  emit('make-captain', props.player)
+}
+
+const makeViceCaptain = () => {
+  if (!props.player || isViceCaptain.value) return
+
+  emit('make-vice-captain', props.player)
 }
 
 const goBack = () => {
@@ -249,22 +285,57 @@ watch(
               </div>
 
               <!-- View Player -->
-              <button
-                type="button"
-                class="mt-4 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10"
-                @click="viewPlayer"
-              >
-                View Player
-              </button>
+<button
+  type="button"
+  class="mt-4 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10"
+  @click="viewPlayer"
+>
+  View Player
+</button>
 
-              <!-- Transfer Out -->
-              <button
-                type="button"
-                class="mt-3 w-full rounded-xl bg-[#00EEFF] px-4 py-3 text-sm font-black text-[#010056] transition hover:brightness-110"
-                @click="startTransfer"
-              >
-                Transfer Out
-              </button>
+<!-- Captain Controls -->
+<div class="mt-3 grid grid-cols-2 gap-2">
+
+  <!-- Make Captain -->
+  <button
+    type="button"
+    :disabled="isCaptain"
+    class="rounded-xl border px-3 py-3 text-xs font-bold transition"
+    :class="
+      isCaptain
+        ? 'cursor-not-allowed border-cyan-400/20 bg-cyan-400/10 text-cyan-300'
+        : 'border-white/10 bg-white/5 text-white hover:border-cyan-400/30 hover:bg-cyan-400/10'
+    "
+    @click="makeCaptain"
+  >
+    {{ isCaptain ? '✓ Captain' : 'Make Captain' }}
+  </button>
+
+  <!-- Make Vice Captain -->
+  <button
+    type="button"
+    :disabled="isViceCaptain"
+    class="rounded-xl border px-3 py-3 text-xs font-bold transition"
+    :class="
+      isViceCaptain
+        ? 'cursor-not-allowed border-purple-400/20 bg-purple-400/10 text-purple-300'
+        : 'border-white/10 bg-white/5 text-white hover:border-purple-400/30 hover:bg-purple-400/10'
+    "
+    @click="makeViceCaptain"
+  >
+    {{ isViceCaptain ? '✓ Vice Captain' : 'Make Vice Captain' }}
+  </button>
+
+</div>
+
+<!-- Transfer Out -->
+<button
+  type="button"
+  class="mt-3 w-full rounded-xl bg-[#00EEFF] px-4 py-3 text-sm font-black text-[#010056] transition hover:brightness-110"
+  @click="startTransfer"
+>
+  Transfer Out
+</button>
             </div>
 
             <!-- ================================================= -->
