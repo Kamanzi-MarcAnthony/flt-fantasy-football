@@ -31,6 +31,7 @@ export type FantasyTeamPlayerAvgAggregateOutputType = {
   teamId: number | null
   playerId: number | null
   purchasePrice: runtime.Decimal | null
+  pitchSlot: number | null
 }
 
 export type FantasyTeamPlayerSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type FantasyTeamPlayerSumAggregateOutputType = {
   teamId: number | null
   playerId: number | null
   purchasePrice: runtime.Decimal | null
+  pitchSlot: number | null
 }
 
 export type FantasyTeamPlayerMinAggregateOutputType = {
@@ -45,6 +47,7 @@ export type FantasyTeamPlayerMinAggregateOutputType = {
   teamId: number | null
   playerId: number | null
   purchasePrice: runtime.Decimal | null
+  pitchSlot: number | null
   createdAt: Date | null
 }
 
@@ -53,6 +56,7 @@ export type FantasyTeamPlayerMaxAggregateOutputType = {
   teamId: number | null
   playerId: number | null
   purchasePrice: runtime.Decimal | null
+  pitchSlot: number | null
   createdAt: Date | null
 }
 
@@ -61,6 +65,7 @@ export type FantasyTeamPlayerCountAggregateOutputType = {
   teamId: number
   playerId: number
   purchasePrice: number
+  pitchSlot: number
   createdAt: number
   _all: number
 }
@@ -71,6 +76,7 @@ export type FantasyTeamPlayerAvgAggregateInputType = {
   teamId?: true
   playerId?: true
   purchasePrice?: true
+  pitchSlot?: true
 }
 
 export type FantasyTeamPlayerSumAggregateInputType = {
@@ -78,6 +84,7 @@ export type FantasyTeamPlayerSumAggregateInputType = {
   teamId?: true
   playerId?: true
   purchasePrice?: true
+  pitchSlot?: true
 }
 
 export type FantasyTeamPlayerMinAggregateInputType = {
@@ -85,6 +92,7 @@ export type FantasyTeamPlayerMinAggregateInputType = {
   teamId?: true
   playerId?: true
   purchasePrice?: true
+  pitchSlot?: true
   createdAt?: true
 }
 
@@ -93,6 +101,7 @@ export type FantasyTeamPlayerMaxAggregateInputType = {
   teamId?: true
   playerId?: true
   purchasePrice?: true
+  pitchSlot?: true
   createdAt?: true
 }
 
@@ -101,6 +110,7 @@ export type FantasyTeamPlayerCountAggregateInputType = {
   teamId?: true
   playerId?: true
   purchasePrice?: true
+  pitchSlot?: true
   createdAt?: true
   _all?: true
 }
@@ -196,6 +206,7 @@ export type FantasyTeamPlayerGroupByOutputType = {
   teamId: number
   playerId: number
   purchasePrice: runtime.Decimal
+  pitchSlot: number | null
   createdAt: Date
   _count: FantasyTeamPlayerCountAggregateOutputType | null
   _avg: FantasyTeamPlayerAvgAggregateOutputType | null
@@ -227,6 +238,7 @@ export type FantasyTeamPlayerWhereInput = {
   teamId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   playerId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   purchasePrice?: Prisma.DecimalFilter<"FantasyTeamPlayer"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.IntNullableFilter<"FantasyTeamPlayer"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FantasyTeamPlayer"> | Date | string
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
   team?: Prisma.XOR<Prisma.FantasyTeamScalarRelationFilter, Prisma.FantasyTeamWhereInput>
@@ -237,6 +249,7 @@ export type FantasyTeamPlayerOrderByWithRelationInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   player?: Prisma.PlayerOrderByWithRelationInput
   team?: Prisma.FantasyTeamOrderByWithRelationInput
@@ -251,6 +264,7 @@ export type FantasyTeamPlayerWhereUniqueInput = Prisma.AtLeast<{
   teamId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   playerId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   purchasePrice?: Prisma.DecimalFilter<"FantasyTeamPlayer"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.IntNullableFilter<"FantasyTeamPlayer"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FantasyTeamPlayer"> | Date | string
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
   team?: Prisma.XOR<Prisma.FantasyTeamScalarRelationFilter, Prisma.FantasyTeamWhereInput>
@@ -261,6 +275,7 @@ export type FantasyTeamPlayerOrderByWithAggregationInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.FantasyTeamPlayerCountOrderByAggregateInput
   _avg?: Prisma.FantasyTeamPlayerAvgOrderByAggregateInput
@@ -277,11 +292,13 @@ export type FantasyTeamPlayerScalarWhereWithAggregatesInput = {
   teamId?: Prisma.IntWithAggregatesFilter<"FantasyTeamPlayer"> | number
   playerId?: Prisma.IntWithAggregatesFilter<"FantasyTeamPlayer"> | number
   purchasePrice?: Prisma.DecimalWithAggregatesFilter<"FantasyTeamPlayer"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.IntNullableWithAggregatesFilter<"FantasyTeamPlayer"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FantasyTeamPlayer"> | Date | string
 }
 
 export type FantasyTeamPlayerCreateInput = {
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
   player: Prisma.PlayerCreateNestedOneWithoutTeamPlayersInput
   team: Prisma.FantasyTeamCreateNestedOneWithoutPlayersInput
@@ -292,11 +309,13 @@ export type FantasyTeamPlayerUncheckedCreateInput = {
   teamId: number
   playerId: number
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
 }
 
 export type FantasyTeamPlayerUpdateInput = {
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   player?: Prisma.PlayerUpdateOneRequiredWithoutTeamPlayersNestedInput
   team?: Prisma.FantasyTeamUpdateOneRequiredWithoutPlayersNestedInput
@@ -307,6 +326,7 @@ export type FantasyTeamPlayerUncheckedUpdateInput = {
   teamId?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -315,11 +335,13 @@ export type FantasyTeamPlayerCreateManyInput = {
   teamId: number
   playerId: number
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
 }
 
 export type FantasyTeamPlayerUpdateManyMutationInput = {
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -328,6 +350,7 @@ export type FantasyTeamPlayerUncheckedUpdateManyInput = {
   teamId?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -351,6 +374,7 @@ export type FantasyTeamPlayerCountOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -359,6 +383,7 @@ export type FantasyTeamPlayerAvgOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrder
 }
 
 export type FantasyTeamPlayerMaxOrderByAggregateInput = {
@@ -366,6 +391,7 @@ export type FantasyTeamPlayerMaxOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -374,6 +400,7 @@ export type FantasyTeamPlayerMinOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -382,6 +409,7 @@ export type FantasyTeamPlayerSumOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
   purchasePrice?: Prisma.SortOrder
+  pitchSlot?: Prisma.SortOrder
 }
 
 export type FantasyTeamPlayerCreateNestedManyWithoutPlayerInput = {
@@ -470,6 +498,7 @@ export type FantasyTeamPlayerUncheckedUpdateManyWithoutTeamNestedInput = {
 
 export type FantasyTeamPlayerCreateWithoutPlayerInput = {
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
   team: Prisma.FantasyTeamCreateNestedOneWithoutPlayersInput
 }
@@ -478,6 +507,7 @@ export type FantasyTeamPlayerUncheckedCreateWithoutPlayerInput = {
   id?: number
   teamId: number
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
 }
 
@@ -515,11 +545,13 @@ export type FantasyTeamPlayerScalarWhereInput = {
   teamId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   playerId?: Prisma.IntFilter<"FantasyTeamPlayer"> | number
   purchasePrice?: Prisma.DecimalFilter<"FantasyTeamPlayer"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.IntNullableFilter<"FantasyTeamPlayer"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FantasyTeamPlayer"> | Date | string
 }
 
 export type FantasyTeamPlayerCreateWithoutTeamInput = {
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
   player: Prisma.PlayerCreateNestedOneWithoutTeamPlayersInput
 }
@@ -528,6 +560,7 @@ export type FantasyTeamPlayerUncheckedCreateWithoutTeamInput = {
   id?: number
   playerId: number
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
 }
 
@@ -561,11 +594,13 @@ export type FantasyTeamPlayerCreateManyPlayerInput = {
   id?: number
   teamId: number
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
 }
 
 export type FantasyTeamPlayerUpdateWithoutPlayerInput = {
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.FantasyTeamUpdateOneRequiredWithoutPlayersNestedInput
 }
@@ -574,6 +609,7 @@ export type FantasyTeamPlayerUncheckedUpdateWithoutPlayerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   teamId?: Prisma.IntFieldUpdateOperationsInput | number
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -581,6 +617,7 @@ export type FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   teamId?: Prisma.IntFieldUpdateOperationsInput | number
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -588,11 +625,13 @@ export type FantasyTeamPlayerCreateManyTeamInput = {
   id?: number
   playerId: number
   purchasePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: number | null
   createdAt?: Date | string
 }
 
 export type FantasyTeamPlayerUpdateWithoutTeamInput = {
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   player?: Prisma.PlayerUpdateOneRequiredWithoutTeamPlayersNestedInput
 }
@@ -601,6 +640,7 @@ export type FantasyTeamPlayerUncheckedUpdateWithoutTeamInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -608,6 +648,7 @@ export type FantasyTeamPlayerUncheckedUpdateManyWithoutTeamInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
   purchasePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pitchSlot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -618,6 +659,7 @@ export type FantasyTeamPlayerSelect<ExtArgs extends runtime.Types.Extensions.Int
   teamId?: boolean
   playerId?: boolean
   purchasePrice?: boolean
+  pitchSlot?: boolean
   createdAt?: boolean
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
   team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
@@ -628,6 +670,7 @@ export type FantasyTeamPlayerSelectCreateManyAndReturn<ExtArgs extends runtime.T
   teamId?: boolean
   playerId?: boolean
   purchasePrice?: boolean
+  pitchSlot?: boolean
   createdAt?: boolean
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
   team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
@@ -638,6 +681,7 @@ export type FantasyTeamPlayerSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   teamId?: boolean
   playerId?: boolean
   purchasePrice?: boolean
+  pitchSlot?: boolean
   createdAt?: boolean
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
   team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
@@ -648,10 +692,11 @@ export type FantasyTeamPlayerSelectScalar = {
   teamId?: boolean
   playerId?: boolean
   purchasePrice?: boolean
+  pitchSlot?: boolean
   createdAt?: boolean
 }
 
-export type FantasyTeamPlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teamId" | "playerId" | "purchasePrice" | "createdAt", ExtArgs["result"]["fantasyTeamPlayer"]>
+export type FantasyTeamPlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teamId" | "playerId" | "purchasePrice" | "pitchSlot" | "createdAt", ExtArgs["result"]["fantasyTeamPlayer"]>
 export type FantasyTeamPlayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
   team?: boolean | Prisma.FantasyTeamDefaultArgs<ExtArgs>
@@ -676,6 +721,7 @@ export type $FantasyTeamPlayerPayload<ExtArgs extends runtime.Types.Extensions.I
     teamId: number
     playerId: number
     purchasePrice: runtime.Decimal
+    pitchSlot: number | null
     createdAt: Date
   }, ExtArgs["result"]["fantasyTeamPlayer"]>
   composites: {}
@@ -1106,6 +1152,7 @@ export interface FantasyTeamPlayerFieldRefs {
   readonly teamId: Prisma.FieldRef<"FantasyTeamPlayer", 'Int'>
   readonly playerId: Prisma.FieldRef<"FantasyTeamPlayer", 'Int'>
   readonly purchasePrice: Prisma.FieldRef<"FantasyTeamPlayer", 'Decimal'>
+  readonly pitchSlot: Prisma.FieldRef<"FantasyTeamPlayer", 'Int'>
   readonly createdAt: Prisma.FieldRef<"FantasyTeamPlayer", 'DateTime'>
 }
     

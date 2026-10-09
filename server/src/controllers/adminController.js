@@ -501,3 +501,64 @@ export const deleteFantasyUser = async (req, res) => {
     })
   }
 }
+
+export const backfillPitchSlots = async (req, res) => {
+  try {
+    const teams = await prisma.fantasyTeam.findMany({
+      select: {
+        id: true,
+        name: true,
+        players: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+          select: {
+            id: true,
+            playerId: true,
+            pitchSlot: true,
+            player: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    let updatedCount = 0
+
+    for (const team of teams) {
+      for (let index = 0; index < team.players.length; index++) {
+        const teamPlayer = team.players[index]
+        const pitchSlot = index + 1
+
+        await prisma.fantasyTeamPlayer.update({
+          where: {
+            id: teamPlayer.id,
+          },
+          data: {
+            pitchSlot,
+          },
+        })
+
+        updatedCount++
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: 'Pitch slots backfilled successfully',
+      teamsProcessed: teams.length,
+      playersUpdated: updatedCount,
+    })
+  } catch (error) {
+    console.error('Backfill pitch slots error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to backfill pitch slots',
+      error: error.message,
+    })
+  }
+}

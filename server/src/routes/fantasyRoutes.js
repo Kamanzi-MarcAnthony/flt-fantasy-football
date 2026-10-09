@@ -14,6 +14,7 @@ import {
   updateFantasyTeam,
   deleteFantasyAccount,
   getFantasyLeaderboard,
+  updatePitchSlots
 } from '../controllers/fantasyController.js'
 
 import transferRoutes from './transferRoutes.js'
@@ -138,6 +139,13 @@ router.get(
   authenticate,
   authorize('FANTASY_USER'),
   getFantasyTeamById,
+)
+
+router.patch(
+  '/teams/:teamId/slots',
+  authenticate,
+  authorize('FANTASY_USER'),
+  updatePitchSlots,
 )
 
 

@@ -6,7 +6,9 @@ import {
   updateAdminStatus,
   resetAdminPassword,
   getFantasyUsers,
-  deleteFantasyUser,
+  backfillPitchSlots,
+  deleteFantasyUser
+
 } from '../controllers/adminController.js'
 import { authenticate } from '../middleware/authMiddleware.js'
 import { authorize } from '../middleware/roleMiddleware.js'
@@ -60,5 +62,12 @@ router.delete(
   authenticate,
   authorize('SUPER_ADMIN'),
   deleteFantasyUser,
+)
+
+router.post(
+  '/backfill-pitch-slots',
+  authenticate,
+  authorize('SUPER_ADMIN', 'ADMIN'),
+  backfillPitchSlots,
 )
 export default router

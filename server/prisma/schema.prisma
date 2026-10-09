@@ -102,6 +102,7 @@ model FantasyTeamPlayer {
   teamId        Int
   playerId      Int
   purchasePrice Decimal     @db.Decimal(10, 2)
+  pitchSlot     Int?
   createdAt     DateTime    @default(now())
   player        Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
   team          FantasyTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)

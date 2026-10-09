@@ -34,6 +34,10 @@ const gameweekNumber = ref(null)
 const transferModalOpen = ref(false)
 
 const transferWindowEndsAt = ref(null)
+
+const pitchSaving = ref(false)
+const pitchSaveError = ref('')
+
 const countdown = ref('')
 let countdownInterval = null
 
@@ -44,8 +48,12 @@ const profilePlayer = ref(null)
 
 const players = computed(() => {
   return (props.team?.players || [])
-    .map((item) => item.player)
-    .filter(Boolean)
+    .filter((item) => item.player)
+    .sort((a, b) => (a.pitchSlot ?? 999) - (b.pitchSlot ?? 999))
+    .map((item) => ({
+      ...item.player,
+      pitchSlot: item.pitchSlot,
+    }))
 })
 
 const availablePlayers = computed(() => {
@@ -375,11 +383,11 @@ const makeCaptain = async (player) => {
       viceCaptainId = currentCaptainId
     }
 
-    if (!captainId || !viceCaptainId) {
-      transferError.value =
-        'Please select both a captain and vice captain.'
-      return
-    }
+    // if (!captainId || !viceCaptainId) {
+    //   transferError.value =
+    //     'Please select both a captain and vice captain.'
+    //   return
+    // }
 
     const response = await api.patch(
       `/fantasy/teams/${props.team.id}/captains`,
@@ -430,11 +438,11 @@ const makeViceCaptain = async (player) => {
       captainId = currentViceCaptainId
     }
 
-    if (!captainId || !viceCaptainId) {
-      transferError.value =
-        'Please select both a captain and vice captain.'
-      return
-    }
+    // if (!captainId || !viceCaptainId) {
+    //   transferError.value =
+    //     'Please select both a captain and vice captain.'
+    //   return
+    // }
 
     const response = await api.patch(
       `/fantasy/teams/${props.team.id}/captains`,
@@ -499,6 +507,39 @@ const updateCountdown = () => {
     countdown.value = `${hours}h ${minutes}m ${seconds}s`
   } else {
     countdown.value = `${minutes}m ${seconds}s`
+  }
+}
+
+const handlePitchReordered = async (updatedPlayers) => {
+  if (!props.team?.id) {
+    return
+  }
+
+  try {
+    pitchSaving.value = true
+    pitchSaveError.value = ''
+
+    const slots = updatedPlayers.map((player, index) => ({
+      playerId: player.id,
+      pitchSlot: index + 1,
+    }))
+
+    await api.patch(
+      `/fantasy/teams/${props.team.id}/slots`,
+      {
+        slots,
+      },
+    )
+
+    console.log('Pitch arrangement saved successfully')
+  } catch (error) {
+    console.error('Failed to save pitch arrangement:', error)
+
+    pitchSaveError.value =
+      error.response?.data?.message ||
+      'Unable to save pitch arrangement.'
+  } finally {
+    pitchSaving.value = false
   }
 }
 
@@ -651,7 +692,14 @@ onUnmounted(() => {
           :captain-id="team?.captainId"
           :vice-captain-id="team?.viceCaptainId"
           stat-type="ovr"
+          :editable="true"
+          :class="{
+          'pointer-events-none opacity-60':
+            !transfersAreOpen ||
+            remainingTransfers <= 0,
+          }"
           @player-click="openTransferModal"
+          @pitch-reordered="handlePitchReordered"
         />
       </div>
     </section>

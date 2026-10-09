@@ -158,6 +158,7 @@ export const FantasyTeamPlayerScalarFieldEnum = {
   teamId: 'teamId',
   playerId: 'playerId',
   purchasePrice: 'purchasePrice',
+  pitchSlot: 'pitchSlot',
   createdAt: 'createdAt'
 } as const
 

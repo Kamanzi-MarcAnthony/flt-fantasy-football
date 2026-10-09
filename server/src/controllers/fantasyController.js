@@ -991,105 +991,29 @@ export const getFantasyPlayers = async (req, res) => {
 
 
     const players = await prisma.player.findMany({
-
-
-
       where: {
-
-
-
         leagueId,
-
-
-
         deletedAt: null,
-
-
-
       },
-
-
-
       orderBy: [
-
-
-
         { position: 'asc' },
-
-
-
         { price: 'desc' },
-
-
-
         { name: 'asc' },
-
-
-
      ],
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         photoUrl: true,
-
-
-
         position: true,
-
-
-
         ovr: true,
-
-
-
         price: true,
-
-
-
-
-
-
-
         events: {
-
-
-
           select: {
-
-
-
             type: true,
-
-
-
             matchId: true,
-
-
-
           },
-
-
-
         },
-
-
-
       },
-
-
-
     })
 
 
@@ -1456,636 +1380,170 @@ export const getFantasyPlayers = async (req, res) => {
 
 export const createFantasyTeam = async (req, res) => {
 
-
-
   try {
-
-
-
     const userId = req.user.id
-
-
-
-
-
-
-
     const { leagueId, name, playerIds } = req.body
-
-
-
-
-
-
-
     const parsedLeagueId = Number(leagueId)
 
-
-
-
-
-
-
     if (!Number.isInteger(parsedLeagueId)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid league ID',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     if (!name || !name.trim()) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Team name is required',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     if (!Array.isArray(playerIds)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Player IDs must be an array',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     if (playerIds.length !== FANTASY_TEAM_SIZE) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: `Your fantasy team must contain exactly ${FANTASY_TEAM_SIZE} players`,
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     const normalizedPlayerIds = playerIds.map(Number)
 
-
-
-
-
-
-
     if (normalizedPlayerIds.some((id) => !Number.isInteger(id))) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid player ID',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // Prevent duplicate players
 
-
-
     const uniquePlayerIds = [...new Set(normalizedPlayerIds)]
-
-
-
-
-
-
-
     if (uniquePlayerIds.length !== FANTASY_TEAM_SIZE) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'You cannot select the same player more than once',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // Check league membership
-
-
-
     const membership = await prisma.fantasyLeagueMember.findUnique({
-
-
-
       where: {
-
-
-
         userId_leagueId: {
-
-
-
           userId,
-
-
-
           leagueId: parsedLeagueId,
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
-
     if (!membership) {
-
-
-
       return res.status(403).json({
-
-
-
         success: false,
-
-
-
         message: 'You have not joined this league',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // One team per user per league
 
-
-
     const existingTeam = await prisma.fantasyTeam.findUnique({
-
-
-
       where: {
-
-
-
         userId_leagueId: {
-
-
-
           userId,
-
-
-
           leagueId: parsedLeagueId,
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
-
     if (existingTeam) {
-
-
-
       return res.status(409).json({
-
-
-
         success: false,
-
-
-
         message: 'You already have a fantasy team in this league',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     // Fetch selected players
 
-
-
     const players = await prisma.player.findMany({
 
-
-
       where: {
-
-
-
         id: {
-
-
-
           in: uniquePlayerIds,
-
-
-
         },
-
-
-
         leagueId: parsedLeagueId,
-
-
-
         deletedAt: null,
-
-
-
       },
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         price: true,
-
-
-
       },
-
-
-
     })
 
-
-
-
-
-
-
     if (players.length !== FANTASY_TEAM_SIZE) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'One or more selected players are invalid',
-
-
-
       })
-
-
-
     }
 
+// Preserve the exact order selected by the user.
+// This order determines the fantasy pitch slots.
 
+const playerMap = new Map(
+  players.map((player) => [player.id, player]),
+)
 
+const orderedPlayers = uniquePlayerIds.map(
+  (playerId) => playerMap.get(playerId),
+)
 
+// Calculate squad cost
 
-
-
-    // Calculate squad cost
-
-
-
-    const squadCost = players.reduce(
-
-
-
-      (total, player) => total + Number(player.price),
-
-
-
-      0,
-
-
-
-    )
-
-
-
-
-
-
-
+const squadCost = orderedPlayers.reduce(
+  (total, player) => total + Number(player.price),
+  0,
+)
     if (squadCost > STARTING_BANK) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: `Your squad costs ${squadCost}M, but you only have ${STARTING_BANK}M`,
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
-
     const bank = STARTING_BANK - squadCost
-
-
-
-
-
-
 
     // Create everything atomically
 
-
-
     const team = await prisma.$transaction(async (tx) => {
-
-
-
       const createdTeam = await tx.fantasyTeam.create({
-
-
-
         data: {
-
-
-
           userId,
-
-
-
           leagueId: parsedLeagueId,
-
-
-
           name: name.trim(),
-
-
-
           bank,
-
-
-
         },
-
-
-
       })
-
-
-
-
-
-
-
-      await tx.fantasyTeamPlayer.createMany({
-
-
-
-        data: players.map((player) => ({
-
-
-
-          teamId: createdTeam.id,
-
-
-
-          playerId: player.id,
-
-
-
-          purchasePrice: player.price,
-
-
-
-        })),
-
-
-
-      })
-
-
-
-
-
-
-
+await tx.fantasyTeamPlayer.createMany({
+  data: orderedPlayers.map((player, index) => ({
+    teamId: createdTeam.id,
+    playerId: player.id,
+    purchasePrice: player.price,
+    pitchSlot: index + 1,
+  })),
+})
       return createdTeam
-
-
-
     })
 
 
-
-
-
-
-
     return res.status(201).json({
-
-
-
       success: true,
-
-
-
       message: 'Fantasy team created successfully',
-
-
-
       data: {
-
-
-
         team: {
-
-
-
           id: team.id,
-
-
-
           name: team.name,
-
-
-
           leagueId: team.leagueId,
-
-
-
           bank: team.bank,
-
-
-
           squadCost,
           playerCount: players.length,
         },
@@ -2121,7 +1579,7 @@ export const getMyTeam = async (req, res) => {
       include: {
         players: {
           orderBy: {
-            createdAt: 'asc',
+            pitchSlot: 'asc',
           },
           include: {
 
@@ -3992,417 +3450,134 @@ export const getFantasyPoints = async (req, res) => {
 
 
 export const updateTeamCaptains = async (req, res) => {
-
-
-
   try {
-
-
-
     const userId = req.user.id
-
-
-
     const teamId = Number(req.params.teamId)
-
-
-
-
-
-
 
     const { captainId, viceCaptainId } = req.body
 
-
-
-
-
-
-
     if (!Number.isInteger(teamId)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid team ID',
-
-
-
       })
-
-
-
     }
 
+    // Allow null/empty values while editing.
+    const parsedCaptainId =
+      captainId === null || captainId === undefined || captainId === ''
+        ? null
+        : Number(captainId)
 
+    const parsedViceCaptainId =
+      viceCaptainId === null || viceCaptainId === undefined || viceCaptainId === ''
+        ? null
+        : Number(viceCaptainId)
 
-
-
-
-
-    const parsedCaptainId = Number(captainId)
-
-
-
-    const parsedViceCaptainId = Number(viceCaptainId)
-
-
-
-
-
-
-
+    // If a value was provided, it must be a valid integer.
     if (
-
-
-
-      !Number.isInteger(parsedCaptainId) ||
-
-
-
-      !Number.isInteger(parsedViceCaptainId)
-
-
-
+      (parsedCaptainId !== null && !Number.isInteger(parsedCaptainId)) ||
+      (parsedViceCaptainId !== null && !Number.isInteger(parsedViceCaptainId))
     ) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
-        message: 'Captain and vice captain are required',
-
-
-
+        message: 'Invalid captain or vice captain',
       })
-
-
-
     }
 
-
-
-
-
-
-
-    if (parsedCaptainId === parsedViceCaptainId) {
-
-
-
+    // Prevent the same player from being both.
+    if (
+      parsedCaptainId !== null &&
+      parsedViceCaptainId !== null &&
+      parsedCaptainId === parsedViceCaptainId
+    ) {
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Captain and vice captain must be different players',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     const team = await prisma.fantasyTeam.findFirst({
-
-
-
       where: {
-
-
-
         id: teamId,
-
-
-
         userId,
-
-
-
       },
-
-
-
       include: {
-
-
-
         players: {
-
-
-
           select: {
-
-
-
             playerId: true,
-
-
-
           },
-
-
-
         },
-
-
-
       },
-
-
-
     })
 
-
-
-
-
-
-
     if (!team) {
-
-
-
       return res.status(404).json({
-
-
-
         success: false,
-
-
-
         message: 'Fantasy team not found',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     const playerIds = team.players.map((item) => item.playerId)
 
-
-
-
-
-
-
+    // Validate captain only if one was provided.
     if (
-
-
-
-      !playerIds.includes(parsedCaptainId) ||
-
-
-
-      !playerIds.includes(parsedViceCaptainId)
-
-
-
+      parsedCaptainId !== null &&
+      !playerIds.includes(parsedCaptainId)
     ) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
-        message: 'Captain and vice captain must be players in your team',
-
-
-
+        message: 'Captain must be a player in your team',
       })
-
-
-
     }
 
-
-
-
-
-
+    // Validate vice captain only if one was provided.
+    if (
+      parsedViceCaptainId !== null &&
+      !playerIds.includes(parsedViceCaptainId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vice captain must be a player in your team',
+      })
+    }
 
     const updatedTeam = await prisma.fantasyTeam.update({
-
-
-
       where: {
-
-
-
         id: teamId,
-
-
-
       },
-
-
-
       data: {
-
-
-
         captainId: parsedCaptainId,
-
-
-
         viceCaptainId: parsedViceCaptainId,
-
-
-
       },
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         leagueId: true,
-
-
-
         bank: true,
-
-
-
         captainId: true,
-
-
-
         viceCaptainId: true,
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
 
     return res.json({
-
-
-
       success: true,
-
-
-
       message: 'Captain and vice captain updated successfully',
-
-
-
       data: {
-
-
-
         team: {
-
-
-
           ...updatedTeam,
-
-
-
           bank: Number(updatedTeam.bank),
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
   } catch (error) {
-
-
-
     console.error('Update team captains error:', error)
 
-
-
-
-
-
-
     return res.status(500).json({
-
-
-
       success: false,
-
-
-
       message: 'Unable to update captain and vice captain',
-
-
-
     })
-
-
-
   }
-
-
-
 }
 
 
@@ -5976,19 +5151,153 @@ export const getFantasyLeaderboard = async (req, res) => {
 
 
       success: false,
-
-
-
       message: 'Unable to load leaderboard',
+    })
+  }
+}
 
+export const updatePitchSlots = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const teamId = Number(req.params.teamId)
+    const { slots } = req.body || {}
 
+    // ---------------------------------------------------------
+    // Validate team ID
+    // ---------------------------------------------------------
 
+    if (!Number.isInteger(teamId) || teamId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid team ID',
+      })
+    }
+
+    // ---------------------------------------------------------
+    // Validate slots
+    // ---------------------------------------------------------
+
+    if (!Array.isArray(slots) || slots.length !== 9) {
+      return res.status(400).json({
+        success: false,
+        message: 'Exactly 9 pitch slots are required',
+      })
+    }
+
+    const normalizedSlots = slots.map((slot) => ({
+      playerId: Number(slot.playerId),
+      pitchSlot: Number(slot.pitchSlot),
+    }))
+
+    // Every player ID must be valid
+    if (
+      normalizedSlots.some(
+        (slot) =>
+          !Number.isInteger(slot.playerId) ||
+          slot.playerId <= 0,
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid player ID',
+      })
+    }
+
+    // Slots must be exactly 1-9
+    const slotNumbers = normalizedSlots
+      .map((slot) => slot.pitchSlot)
+      .sort((a, b) => a - b)
+
+    const expectedSlots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    if (
+      JSON.stringify(slotNumbers) !==
+      JSON.stringify(expectedSlots)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Pitch slots must contain each slot from 1 to 9 exactly once',
+      })
+    }
+
+    // ---------------------------------------------------------
+    // Get team
+    // ---------------------------------------------------------
+
+    const team = await prisma.fantasyTeam.findFirst({
+      where: {
+        id: teamId,
+        userId,
+      },
+      include: {
+        players: {
+          select: {
+            id: true,
+            playerId: true,
+          },
+        },
+      },
     })
 
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fantasy team not found',
+      })
+    }
 
+    // ---------------------------------------------------------
+    // Make sure submitted players belong to this team
+    // ---------------------------------------------------------
 
+    const teamPlayerIds = team.players
+      .map((item) => item.playerId)
+      .sort((a, b) => a - b)
+
+    const submittedPlayerIds = normalizedSlots
+      .map((slot) => slot.playerId)
+      .sort((a, b) => a - b)
+
+    if (
+      JSON.stringify(teamPlayerIds) !==
+      JSON.stringify(submittedPlayerIds)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Submitted players do not match the team squad',
+      })
+    }
+
+    // ---------------------------------------------------------
+    // Update atomically
+    // ---------------------------------------------------------
+
+    await prisma.$transaction(
+      normalizedSlots.map((slot) =>
+        prisma.fantasyTeamPlayer.update({
+          where: {
+            teamId_playerId: {
+              teamId,
+              playerId: slot.playerId,
+            },
+          },
+          data: {
+            pitchSlot: slot.pitchSlot,
+          },
+        }),
+      ),
+    )
+
+    return res.json({
+      success: true,
+      message: 'Pitch arrangement updated successfully',
+    })
+  } catch (error) {
+    console.error('Update pitch slots error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to update pitch arrangement',
+    })
   }
-
-
-
 }
