@@ -3450,417 +3450,134 @@ export const getFantasyPoints = async (req, res) => {
 
 
 export const updateTeamCaptains = async (req, res) => {
-
-
-
   try {
-
-
-
     const userId = req.user.id
-
-
-
     const teamId = Number(req.params.teamId)
-
-
-
-
-
-
 
     const { captainId, viceCaptainId } = req.body
 
-
-
-
-
-
-
     if (!Number.isInteger(teamId)) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Invalid team ID',
-
-
-
       })
-
-
-
     }
 
+    // Allow null/empty values while editing.
+    const parsedCaptainId =
+      captainId === null || captainId === undefined || captainId === ''
+        ? null
+        : Number(captainId)
 
+    const parsedViceCaptainId =
+      viceCaptainId === null || viceCaptainId === undefined || viceCaptainId === ''
+        ? null
+        : Number(viceCaptainId)
 
-
-
-
-
-    const parsedCaptainId = Number(captainId)
-
-
-
-    const parsedViceCaptainId = Number(viceCaptainId)
-
-
-
-
-
-
-
+    // If a value was provided, it must be a valid integer.
     if (
-
-
-
-      !Number.isInteger(parsedCaptainId) ||
-
-
-
-      !Number.isInteger(parsedViceCaptainId)
-
-
-
+      (parsedCaptainId !== null && !Number.isInteger(parsedCaptainId)) ||
+      (parsedViceCaptainId !== null && !Number.isInteger(parsedViceCaptainId))
     ) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
-        message: 'Captain and vice captain are required',
-
-
-
+        message: 'Invalid captain or vice captain',
       })
-
-
-
     }
 
-
-
-
-
-
-
-    if (parsedCaptainId === parsedViceCaptainId) {
-
-
-
+    // Prevent the same player from being both.
+    if (
+      parsedCaptainId !== null &&
+      parsedViceCaptainId !== null &&
+      parsedCaptainId === parsedViceCaptainId
+    ) {
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
         message: 'Captain and vice captain must be different players',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     const team = await prisma.fantasyTeam.findFirst({
-
-
-
       where: {
-
-
-
         id: teamId,
-
-
-
         userId,
-
-
-
       },
-
-
-
       include: {
-
-
-
         players: {
-
-
-
           select: {
-
-
-
             playerId: true,
-
-
-
           },
-
-
-
         },
-
-
-
       },
-
-
-
     })
 
-
-
-
-
-
-
     if (!team) {
-
-
-
       return res.status(404).json({
-
-
-
         success: false,
-
-
-
         message: 'Fantasy team not found',
-
-
-
       })
-
-
-
     }
-
-
-
-
-
-
 
     const playerIds = team.players.map((item) => item.playerId)
 
-
-
-
-
-
-
+    // Validate captain only if one was provided.
     if (
-
-
-
-      !playerIds.includes(parsedCaptainId) ||
-
-
-
-      !playerIds.includes(parsedViceCaptainId)
-
-
-
+      parsedCaptainId !== null &&
+      !playerIds.includes(parsedCaptainId)
     ) {
-
-
-
       return res.status(400).json({
-
-
-
         success: false,
-
-
-
-        message: 'Captain and vice captain must be players in your team',
-
-
-
+        message: 'Captain must be a player in your team',
       })
-
-
-
     }
 
-
-
-
-
-
+    // Validate vice captain only if one was provided.
+    if (
+      parsedViceCaptainId !== null &&
+      !playerIds.includes(parsedViceCaptainId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vice captain must be a player in your team',
+      })
+    }
 
     const updatedTeam = await prisma.fantasyTeam.update({
-
-
-
       where: {
-
-
-
         id: teamId,
-
-
-
       },
-
-
-
       data: {
-
-
-
         captainId: parsedCaptainId,
-
-
-
         viceCaptainId: parsedViceCaptainId,
-
-
-
       },
-
-
-
       select: {
-
-
-
         id: true,
-
-
-
         name: true,
-
-
-
         leagueId: true,
-
-
-
         bank: true,
-
-
-
         captainId: true,
-
-
-
         viceCaptainId: true,
-
-
-
       },
-
-
-
     })
-
-
-
-
-
-
 
     return res.json({
-
-
-
       success: true,
-
-
-
       message: 'Captain and vice captain updated successfully',
-
-
-
       data: {
-
-
-
         team: {
-
-
-
           ...updatedTeam,
-
-
-
           bank: Number(updatedTeam.bank),
-
-
-
         },
-
-
-
       },
-
-
-
     })
-
-
-
   } catch (error) {
-
-
-
     console.error('Update team captains error:', error)
 
-
-
-
-
-
-
     return res.status(500).json({
-
-
-
       success: false,
-
-
-
       message: 'Unable to update captain and vice captain',
-
-
-
     })
-
-
-
   }
-
-
-
 }
 
 

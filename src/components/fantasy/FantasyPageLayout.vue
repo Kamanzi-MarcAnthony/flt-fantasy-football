@@ -583,6 +583,7 @@ onMounted(loadTeam)
         <component
             :is="Component"
             :team="team"
+            @team-updated="handleTeamUpdated"
         />
     </RouterView>
     </main>

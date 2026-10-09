@@ -27,6 +27,11 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+
+  editable: {
+  type: Boolean,
+  default: false,
+}
 })
 
 const pitchPlayers = ref([])
@@ -160,17 +165,17 @@ const getDisplayedStat = (player) => {
         v-for="(player, index) in pitchPlayers"
         :key="player?.id || `slot-${index}`"
         class="flex items-center justify-center"
-        @dragover="handleDragOver"
-        @drop="handleDrop(index, $event)"
+        @dragover="editable && handleDragOver($event)"
+        @drop="editable && handleDrop(index, $event)"
       >
         <!-- Player -->
         <button
           type="button"
           class="flex flex-col items-center"
-          :draggable="true"
+          :draggable="editable"
           @click="emit('player-click', player)"
-          @dragstart="handleDragStart(index, $event)"
-          @dragend="handleDragEnd"
+          @dragstart="editable && handleDragStart(index, $event)"
+          @dragend="editable && handleDragEnd"
 
         >
 

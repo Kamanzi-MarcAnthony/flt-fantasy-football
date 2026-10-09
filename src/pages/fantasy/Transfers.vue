@@ -383,11 +383,11 @@ const makeCaptain = async (player) => {
       viceCaptainId = currentCaptainId
     }
 
-    if (!captainId || !viceCaptainId) {
-      transferError.value =
-        'Please select both a captain and vice captain.'
-      return
-    }
+    // if (!captainId || !viceCaptainId) {
+    //   transferError.value =
+    //     'Please select both a captain and vice captain.'
+    //   return
+    // }
 
     const response = await api.patch(
       `/fantasy/teams/${props.team.id}/captains`,
@@ -438,11 +438,11 @@ const makeViceCaptain = async (player) => {
       captainId = currentViceCaptainId
     }
 
-    if (!captainId || !viceCaptainId) {
-      transferError.value =
-        'Please select both a captain and vice captain.'
-      return
-    }
+    // if (!captainId || !viceCaptainId) {
+    //   transferError.value =
+    //     'Please select both a captain and vice captain.'
+    //   return
+    // }
 
     const response = await api.patch(
       `/fantasy/teams/${props.team.id}/captains`,
@@ -692,6 +692,12 @@ onUnmounted(() => {
           :captain-id="team?.captainId"
           :vice-captain-id="team?.viceCaptainId"
           stat-type="ovr"
+          :editable="true"
+          :class="{
+          'pointer-events-none opacity-60':
+            !transfersAreOpen ||
+            remainingTransfers <= 0,
+          }"
           @player-click="openTransferModal"
           @pitch-reordered="handlePitchReordered"
         />
